@@ -1,0 +1,34 @@
+package com.rabbit.fitness.dao;
+
+import com.rabbit.fitness.pojo.Knowledge;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+public interface KnowledgeMapper {
+    int deleteByPrimaryKey(Integer knlgId);
+
+    int insert(Knowledge record);
+
+    int insertSelective(Knowledge record);
+
+    Knowledge selectByPrimaryKey(Integer knlgId);
+
+    int updateByPrimaryKeySelective(Knowledge record);
+
+    int updateByPrimaryKey(Knowledge record);
+
+    /*分页显示*/
+    List<Knowledge> selKnowBypage(@Param("currentPage") Integer currentPage, @Param("pageSize") Integer pageSize);
+
+    /*检测重复*/
+    @Select("select *from knowledge where knlg_title=#{knlgTitle}")
+    Knowledge selKnowByTitle(String knlgTitle);
+
+    /*批量删除*/
+    int deleteKnowledges(Integer[] knowledgesId);
+
+    /*次数加1*/
+    Integer updateKnowLedgeCount(Knowledge knowledge);
+}

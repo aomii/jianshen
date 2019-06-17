@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SUI Mobile 使用</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+
+
+<!---->
+    <link  href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!--    <link rel="stylesheet" href="../css/materialize.min.css" media="screen,projection" />-->
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/fancybox/jquery.fancybox.css" rel="stylesheet">
+    <link href="../css/flexslider.css" rel="stylesheet" />
+    <link href="../css/style.css" rel="stylesheet" />
+
+
+    <style type="text/css">
+        .video-btn{
+
+
+            position: absolute;
+            width:1080px;
+            height: 500px;
+            background:black;
+            top:1000px;
+            left: 0px;
+            right: 0px;
+            margin: 0 auto;
+            display: none;
+            z-index: 101;
+        }
+        .video-area{
+            width:100%;
+            height: 100%;
+            background:black;
+        }
+        iframe{
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-shut{
+            height:25px;
+            width:25px;
+            border-radius: 12.5px;
+            font-size:medium;
+            color:black;
+            float:left;
+            text-align: center;
+            font-weight: bolder;
+            background: white;
+            display: block;
+            position: absolute;
+            top: -15px;
+            right: -15px;
+
+        }
+        #shadow{
+            position: absolute;
+            opacity: 0.5;
+            filter:alpha(opacity=50);
+            bottom:0;
+            left: 0;
+            right: 0;
+            top: 0;
+            background:black;
+            z-index: 100;
+            display: none;
+        }
+    </style>
+
+
+    <script src="../js/a.js"></script>
+
+
+
+</head>
+<body>
+<!-- page集合的容器，里面放多个平行的.page，其他.page作为内联页面由路由控制展示 -->
+<div class="page-group">
+    <!-- 单个page ,第一个.page默认被展示-->
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <a class="icon icon-me pull-left open-panel"></a>
+            <h1 class="title">场馆管理系统</h1>
+        </header>
+
+        <!-- 工具栏 -->
+        <nav class="bar bar-tab">
+            <a class="tab-item external active" href="#">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">首页</span>
+            </a>
+            <a class="tab-item external" href="#">
+                <span class="icon icon-star"></span>
+                <span class="tab-label">收藏</span>
+            </a>
+            <a class="tab-item external" href="#">
+                <span class="icon icon-settings"></span>
+                <span class="tab-label">设置</span>
+            </a>
+        </nav>
+
+        <!-- 这里是页面内容区 -->
+        <div class="content">
+            <div class="content-block">
+
+
+                <header class="bar bar-nav">
+                    <h1 class='title'>TUTU健身</h1>
+                </header>
+                <div class="content">
+                    <div class="buttons-tab">
+                        <a href="#tab1" class="tab-link active button">首页</a>
+                        <a href="#tab2" class="tab-link button">服务</a>
+                        <a href="#tab3" class="tab-link button">场馆</a>
+                        <a href="#tab4" class="tab-link button">登录</a></div>
+                    <div class="buttons-tab">
+                        <a href="#tab5" class="tab-link button">注册</a>
+                        <a href="#tab6" class="tab-link button">关于我们</a>
+                        <a href="#tab7" class="tab-link button">联系我们</a>
+                        <a href="#tab8" class="tab-link button">教练团队</a>
+                    </div>
+                    <div class="content-block">
+                        <div class="tabs">
+                            <div id="tab1" class="tab active">
+                                <div class="content-block">
+                                    <!-- 轮播图区域 -->
+                                    <section id="banner">
+
+                                        <!-- Slider -->
+                                        <div id="main-slider" class="flexslider">
+                                            <ul class="slides">
+                                                <li>
+                                                    <img src="../img/slides/2.jpg" alt="" />
+                                                    <div class="flex-caption">
+                                                        <h3>追求完美</h3>
+                                                        <p>音符让音乐有了旋律，运动让生命充满健康。</p>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <img src="../img/slides/1.jpg" alt="" />
+                                                    <div class="flex-caption">
+                                                        <h3>不断进步</h3>
+                                                        <p>运动是快乐的源泉，快乐是生命的财富。</p>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <!-- end slider -->
+                                    </section>
+
+
+                                    <section class="dishes">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="aligncenter"><h2 class="aligncenter">最优质的服务 @ tutu健身</h2><p>生命在于运动，运动源于健康。。</p></div>
+                                                    <br/>
+                                                </div>
+                                            </div>
+
+                                            <div class="row service-v1 margin-bottom-40">
+                                                <div class="col-md-4 md-margin-bottom-40">
+                                                    <a href="./fitness-gyms.html">
+                                                        <div class="card small">
+                                                            <div class="card-image">
+                                                                <img class="img-responsive" src="../img/service1.jpg" alt="">
+                                                                <span class="card-title">健身场馆</span>
+                                                            </div>
+                                                            <div class="card-content">
+                                                                <p>
+                                                                    通过有规律的有氧运动锻炼，人体心脏功能更强，脉搏输出量更多，则供氧能力更强，脉搏数会适当减少。
+                                                                </p>
+                                                                <p>
+                                                                    一个心肺功能好的人可以参加较长时间的有氧运动，且运动恢复也较快。
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4 md-margin-bottom-40">
+                                                    <a href="./fitness-coaches.html">
+                                                        <div class="card small">
+                                                            <div class="card-image">
+                                                                <img class="img-responsive" src="../img/service2.jpg" alt="">
+                                                                <span class="card-title">健身教练</span>
+                                                            </div>
+                                                            <div class="card-content">
+                                                                <p>
+                                                                    大多数健身俱乐部有一个主要的锻炼区，其中主要包括负重训练，包括哑铃、杠铃和相关的健身器材。
+                                                                </p>
+                                                                <p>
+                                                                    这个区域通常包括镜子，使用者可以监察他们的锻炼过程中保持正确的姿势。
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4 md-margin-bottom-40">
+                                                    <a href="./fitness-knowledge.html">
+                                                        <div class="card small">
+                                                            <div class="card-image">
+                                                                <img class="img-responsive" src="../img/service3.jpg" alt="">
+                                                                <span class="card-title">健身知识</span>
+                                                            </div>
+                                                            <div class="card-content">
+                                                                <p>
+                                                                    一个生物体吸收，使用食物和液体来保持正常的功能，生长，以及自我维护的有机过程。
+                                                                </p>
+                                                                <p>
+                                                                    一种追求营养成分和全部食物的最佳搭配，达到身体的最佳健康状态。
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4 md-margin-bottom-40">
+                                                    <a href="./fitness-courses.html">
+                                                        <div class="card small">
+                                                            <div class="card-image">
+                                                                <img class="img-responsive" src="../img/service3.jpg" alt="">
+                                                                <span class="card-title">健身课程</span>
+                                                            </div>
+                                                            <div class="card-content">
+                                                                <p>
+                                                                    一个生物体吸收，使用食物和液体来保持正常的功能，生长，以及自我维护的有机过程。
+                                                                </p>
+                                                                <p>
+                                                                    一种追求营养成分和全部食物的最佳搭配，达到身体的最佳健康状态。
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-4 md-margin-bottom-40">
+                                                    <a href="./fitness-qicai.html">
+                                                        <div class="card small">
+                                                            <div class="card-image">
+                                                                <img class="img-responsive" src="../img/service3.jpg" alt="">
+                                                                <span class="card-title">健身器材</span>
+                                                            </div>
+                                                            <div class="card-content">
+                                                                <p>
+                                                                    一个生物体吸收，使用食物和液体来保持正常的功能，生长，以及自我维护的有机过程。
+                                                                </p>
+                                                                <p>
+                                                                    一种追求营养成分和全部食物的最佳搭配，达到身体的最佳健康状态。
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <div>
+                                        <div class="container">
+
+                                            <section class="services">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="aligncenter"><h2 class="aligncenter">我们的视频</h2><br/></div>
+                                                        <br/>
+                                                    </div>
+                                                </div>
+                                                <div class="video-main" style="height: 290px;margin-left: 35%;margin-top: 20px;">
+                                                    <a href="javascript:;" class="video" id="video"><img src="../img/dev1.png"></a>
+                                                </div>
+                                                <div class="video-btn" id="video-btn">
+                                                    <div class="video-area" id="video-area"></div>
+                                                    <a class="video-shut" id="video-shut">×</a>
+                                                </div>
+                                                <div id="shadow"></div>
+                                            </section>
+
+                                        </div>
+                                        <section id="content">
+                                            <div class="container">
+
+                                                <section class="services">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="aligncenter"><h2 class="aligncenter">我们的服务</h2><br/></div>
+                                                            <br/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-sm-4 info-blocks">
+                                                            <i class="icon-info-blocks material-icons">track_changes</i>
+
+                                                            <div class="info-blocks-in">
+                                                                <h3>有氧运动</h3>
+                                                                <p>通过有规律的有氧运动锻炼，人体心脏功能更强，脉搏输出量更多，则供氧能力更强，脉搏数会适当减少。</p>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-sm-4 info-blocks">
+                                                            <i class="icon-info-blocks material-icons">settings_input_svideo</i>
+                                                            <div class="info-blocks-in">
+                                                                <h3>团操课程</h3>
+                                                                <p>与国际潮流课程保持同步，随时为会员带来当下流行课程。</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4 info-blocks">
+                                                            <i class="icon-info-blocks material-icons">queue_music</i>
+                                                            <div class="info-blocks-in">
+                                                                <h3>咨询</h3>
+                                                                <p>以最真诚的态度带给您最优质的服务，让我们与您一起健康生活。</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-4 info-blocks">
+                                                            <i class="icon-info-blocks material-icons">my_location</i>
+                                                            <div class="info-blocks-in">
+                                                                <h3>MMA课程</h3>
+                                                                <p>在课程中释放激情、摆脱束缚，让烦恼和压力统统走开！</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4 info-blocks">
+                                                            <i class="icon-info-blocks material-icons">shuffle</i>
+                                                            <div class="info-blocks-in">
+                                                                <h3>钢管舞课程</h3>
+                                                                <p>让你拥有强劲的核心力量及柔韧度，在钢管上翩翩起舞！</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4 info-blocks">
+                                                            <i class="icon-info-blocks material-icons">tab_unselected</i>
+                                                            <div class="info-blocks-in">
+                                                                <h3>壶铃训练课程</h3>
+                                                                <p>进行壶铃训练时，可以做各种推、举、提、抛和蹲跳等练习，能够有效提高整体的爆发力，是一种全能通用型的训练。</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                            </div>
+                                        </section>
+
+
+                                        <section class="section-padding gray-bg">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="section-title text-center">
+                                                            <h2>我们的健身工作室</h2>
+                                                            <p>无论您是身处CBD，还是住宅型会所。
+
+                                                                tutu健身房都竭力打造一流的健身环境恭候您的大驾，汇聚所有高端健身区域，包括有氧区、单功能力量区、自有力量区、团操房、瑜伽房、单身房、游泳、SPA等诸多功能区域，成为运动狂欢派对的绝对选择。
+
+                                                                我们的私教区域将是你理想的健康场所，私教为你量身定做健身、营养计划，并适配W-boxing，W-posture，Gymstick等特色课程，让你简单融入，高效产出。</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <div class="about-text">
+                                                            <p>选择tutu健身，从此开启健康快乐的生活，让我们与你一起，携手走向幸福美满的生活，tutu健身始终呵护您的健康，让我们迈向幸福的明天。</p>
+
+                                                            <ul class="withArrow">
+                                                                <li><span class="fa fa-angle-right"></span> 享受生活</li>
+                                                                <li><span class="fa fa-angle-right"></span> 健康成长</li>
+                                                                <li><span class="fa fa-angle-right"></span> 运动快乐</li>
+                                                                <li><span class="fa fa-angle-right"></span> 迈向未来</li>
+                                                            </ul>
+                                                            <a href="#" class="btn btn-primary waves-effect waves-dark">了解更多</a>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6">
+                                                        <div class="about-image">
+                                                            <img src="../img/about.jpg" alt="About Images">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+
+
+                                        <footer>
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-sm-3">
+                                                        <div class="widget">
+                                                            <h5 class="widgetheading">联系方式</h5>
+                                                            <address>
+                                                                <strong>Bootstrap company Inc</strong><br>
+                                                                JC Main Road, Near Silnile tower<br>
+                                                                Pin-21542 NewYork US.</address>
+                                                            <p>
+                                                                <i class="icon-phone"></i> (123) 456-789 - 1255-12584 <br>
+                                                                <i class="icon-envelope-alt"></i> email@domainname.com
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="widget">
+                                                            <h5 class="widgetheading">友情链接</h5>
+                                                            <ul class="link-list">
+                                                                <li><a class="waves-effect waves-dark" href="#">Latest Events</a></li>
+                                                                <li><a class="waves-effect waves-dark" href="#">Terms and conditions</a></li>
+                                                                <li><a class="waves-effect waves-dark" href="#">Privacy policy</a></li>
+                                                                <li><a class="waves-effect waves-dark" href="#">Career</a></li>
+                                                                <li><a class="waves-effect waves-dark" href="#">Contact us</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="widget">
+                                                            <h5 class="widgetheading">最新动态</h5>
+                                                            <ul class="link-list">
+                                                                <li><a class="waves-effect waves-dark" href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
+                                                                <li><a class="waves-effect waves-dark" href="#">Pellentesque et pulvinar enim. Quisque at tempor ligula</a></li>
+                                                                <li><a class="waves-effect waves-dark" href="#">Natus error sit voluptatem accusantium doloremque</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="widget">
+                                                            <h5 class="widgetheading">相关新闻</h5>
+                                                            <ul class="link-list">
+                                                                <li><a class="waves-effect waves-dark" href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
+                                                                <li><a class="waves-effect waves-dark" href="#">Pellentesque et pulvinar enim. Quisque at tempor ligula</a></li>
+                                                                <li><a class="waves-effect waves-dark" href="#">Natus error sit voluptatem accusantium doloremque</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </footer>
+                                    </div>
+                                    <a href="#" class="scrollup waves-effect waves-dark"><i class="fa fa-angle-up active"></i></a>
+                                    <!-- javascript
+                                        ================================================== -->
+                                    <!-- Placed at the end of the document so the pages load faster -->
+                                    <script src="../js/jquery-3.4.0.min.js"></script>
+                                    <script src="../js/jquery.easing.1.3.js"></script>
+                                    <script src="../materialize/js/materialize.min.js"></script>
+                                    <script src="../js/bootstrap.min.js"></script>
+                                    <script src="../js/jquery.fancybox.pack.js"></script>
+                                    <script src="../js/jquery.fancybox-media.js"></script>
+                                    <script src="../js/jquery.flexslider.js"></script>
+                                    <script src="../js/animate.js"></script>
+                                    <!-- Vendor Scripts -->
+                                    <script src="../js/modernizr.custom.js"></script>
+                                    <script src="../js/jquery.isotope.min.js"></script>
+                                    <script src="../js/jquery.magnific-popup.min.js"></script>
+                                    <script src="../js/animate.js"></script>
+                                    <script src="../js/custom.js"></script>    <script type="text/javascript">
+
+                                    var obtn=document.getElementById('video');
+                                    var ovideo=document.getElementById('video-btn');
+                                    var oatn=document.getElementById('video-area');
+                                    var oshut=document.getElementById('video-shut');
+                                    var oshadow=document.getElementById('shadow');
+                                    obtn.onclick=function () {
+                                        ovideo.style.display='block';
+                                        oshadow.style.display='block';
+                                        oatn.innerHTML='<iframe src="//player.bilibili.com/player.html?aid=3924738&cid=6316317&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>';
+                                    }
+                                    oshut.onclick= function () {
+
+                                        ovideo.style.display='none';
+                                        oshadow.style.display='none';
+                                        oatn.innerHTML="";
+                                    }
+
+                                </script>
+                                    <script th:inline="javascript">
+                                        var text =$("#loginSuccessP").text();
+                                        if(text != '' ){
+                                            $(".unLogin").css("display", "none");
+                                            $(".loginSuccess").css("display","block");
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                            <div id="tab2" class="tab">
+                                <div class="content-block">
+                                    <p>This is tab 2 content</p>
+                                </div>
+                            </div>
+                            <div id="tab4" class="tab">
+                                <div class="content-block">
+                                    <p>This is tab 4 content</p>
+                                </div>
+                            </div>
+                            <div id="tab5" class="tab">
+                                <div class="content-block">
+                                    <p>This is tab 5content</p>
+                                </div>
+                            </div>
+                            <div id="tab6" class="tab">
+                            <div class="content-block">
+                                <p>This is tab 6 content</p>
+                            </div>
+                        </div>
+                            <div id="tab7" class="tab">
+                            <div class="content-block">
+                                <p>This is tab 7content</p>
+                            </div>
+                        </div>
+                            <div id="tab8" class="tab">
+                            <div class="content-block">
+                                <p>This is tab 3 content</p>
+                            </div>
+
+
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 其他的单个page内联页（如果有） -->
+    <div class="page">...</div>
+</div>
+
+<!-- popup, panel 等放在这里 -->
+<div class="panel-overlay"></div>
+<!-- Left Panel with Reveal effect -->
+<div class="panel panel-left panel-reveal">
+    <div class="content-block">
+        <p>这是一个侧栏</p>
+        <p></p>
+        <!-- Click on link with "close-panel" class will close panel -->
+        <p><a href="#" class="close-panel">关闭</a></p>
+    </div>
+</div>
+
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
+<!-- 默认必须要执行$.init(),实际业务里一般不会在HTML文档里执行，通常是在业务页面代码的最后执行 -->
+<!-- <script>$.init()</script> -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.init();
+    });
+</script>
+</body>
+</html>

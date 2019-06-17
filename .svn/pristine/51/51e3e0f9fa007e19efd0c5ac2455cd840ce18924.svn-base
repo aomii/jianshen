@@ -1,0 +1,23 @@
+package com.rabbit.fitness.gym.service.impl;
+
+import com.rabbit.fitness.dao.GrecruitCoachMapper;
+import com.rabbit.fitness.gym.service.RecruitCoachService;
+import com.rabbit.fitness.pojo.GrecruitCoach;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class RecruitCoachServiceImpl  implements RecruitCoachService {
+
+    @Autowired
+    private GrecruitCoachMapper grecruitCoachMapper;
+
+    @Override
+    public List<GrecruitCoach> list(Integer grid) {
+//        System.out.println(grecruitCoachMapper.selectCoach(2006));
+//        return  null;
+        return grecruitCoachMapper.findAllCoach(grid);
+    }
+}

@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>购物车</title>
+
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/materialize/css/materialize.min.css}" media="screen,projection" />
+<link th:href="@{/css/fancybox/jquery.fancybox.css}" rel="stylesheet">
+<link th:href="@{/css/flexslider.css}" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.3/style/weui.min.css">
+<link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.1/css/jquery-weui.min.css">
+<script th:src="@{/js/jquery-3.4.0.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+
+<link rel="stylesheet" href="./css/reset.css" th:href="@{./css/reset.css}">
+<link rel="stylesheet" href="./css/carts.css" th:href="@{./css/carts.css}">
+
+</head>
+<body>
+<div id="wrapper">
+<header>
+	<div class="navbar navbar-default navbar-static-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="index.html"><i class="icon-info-blocks material-icons">location_on</i>tutu健身</a>
+			</div>
+			<div class="navbar-collapse collapse ">
+				<ul class="nav navbar-nav">
+					<li><a class="waves-effect waves-dark" href="/index.html">主页面</a></li>
+					<li class="dropdown">
+						<a href="#" data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark">关于我们<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a class="waves-effect waves-dark" href="/about.html">公司详情</a></li>
+							<li><a class="waves-effect waves-dark" href="#">我们团队</a></li>
+							<li><a class="waves-effect waves-dark" href="#">相关新闻</a></li>
+							<li><a class="waves-effect waves-dark" href="#">投资我们</a></li>
+						</ul>
+					</li>
+					<li><a class="waves-effect waves-dark" href="services.html">服务</a></li>
+					<li><a class="waves-effect waves-dark" href="portfolio.html">场馆</a></li>
+					<li><a class="waves-effect waves-dark" href="coaches.html">教练团队</a></li>
+					<li><a class="waves-effect waves-dark" href="contact.html">联系我们</a></li>
+					<li><a class="waves-effect waves-dark" href="static-login.html">登录</a></li>
+					<li><a class="waves-effect waves-dark" href="static-register.html">注册</a></li>
+					<li class="dropdown waves-person loginSuccess active" style="display: none">
+						<a data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark" href="#">欢迎您，<p id="loginSuccessP"></p>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a class="waves-effect waves-dark" href="/personal.html">个人信息</a></li>
+							<li><a class="waves-effect waves-dark" href="#">设置</a></li>
+							<li><a class="waves-effect waves-dark" href="/logout">退出</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</header>
+<section class="cartMain">
+	<div class="cartMain_hd">
+		<ul class="order_lists cartTop">
+			<li class="list_chk">
+				<!--所有商品全选-->
+				<input type="checkbox" id="all" class="whole_check">
+				<label for="all"></label>
+				全选
+			</li>
+			<li class="list_con">商品信息</li>
+			<li class="list_info">商品参数</li>
+			<li class="list_price">单价</li>
+			<li class="list_amount">数量</li>
+			<li class="list_sum">金额</li>
+			<li class="list_op">操作</li>
+		</ul>
+	</div>
+
+	<div class="cartBox">
+		<div class="shop_info">
+			<div class="all_check">
+				<!--店铺全选-->
+				<input type="checkbox" id="shop_a" class="shopChoice">
+				<label for="shop_a" class="shop"></label>
+			</div>
+			<div class="shop_name">
+				店铺：<a href="javascript:;">tutu健身馆</a>
+			</div>
+		</div>
+		<div class="order_content">
+			<ul class="order_lists">
+				<li class="list_chk">
+					<input type="checkbox" id="checkbox_2" class="son_check">
+					<label for="checkbox_2"></label>
+				</li>
+				<li class="list_con">
+					<div class="list_img"><a href="javascript:;"><img src="images/1.png" alt=""></a></div>
+					<div class="list_text"><a href="javascript:;" th:text="${product_name}"></a></div>
+				</li>
+				<li class="list_info">
+					<p>规格：默认</p>
+					<p>尺寸：16*16*3(cm)</p>
+				</li>
+				<li class="list_price">
+					<p class="price">￥980</p>
+				</li>
+				<li class="list_amount">
+					<div class="amount_box">
+						<a href="javascript:;" class="reduce reSty">-</a>
+						<input type="text" value="1" class="sum">
+						<a href="javascript:;" class="plus">+</a>
+					</div>
+				</li>
+				<li class="list_sum">
+					<p class="sum_price">￥980</p>
+				</li>
+				<li class="list_op">
+					<p class="del"><a href="javascript:;" class="delBtn">移除商品</a></p>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+
+
+	<!--底部-->
+	<div class="bar-wrapper">
+		<div class="bar-right">
+			<div class="piece">已选商品<strong class="piece_num">0</strong>件</div>
+			<div class="totalMoney">共计: <strong class="total_text">0.00</strong></div>
+			<div class="calBtn"><a href="javascript:;">结算</a></div>
+		</div>
+	</div>
+</section>
+<section class="model_bg"></section>
+<section class="my_model">
+	<p class="title">删除宝贝<span class="closeModel">X</span></p>
+	<p>您确认要删除该宝贝吗？</p>
+	<div class="opBtn"><a href="javascript:;" class="dialog-sure">确定</a><a href="javascript:;" class="dialog-close">关闭</a></div>
+</section>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/carts.js"></script>
+<script>
+
+</script>
+
+<div style="text-align:center;margin:50px 0; font:normal 14px/24px 'MicroSoft YaHei';">
+
+</div>
+	</div>
+</body>
+</html>

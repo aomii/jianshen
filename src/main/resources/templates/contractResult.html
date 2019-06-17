@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>签约结果</title>
+    <script th:src="@{/js/jquery-3.4.0.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<span th:text="${session.conResult}"></span></br>
+
+<a href="/index.html">
+    <button>返回首页</button>
+</a>
+</body>
+
+</html>

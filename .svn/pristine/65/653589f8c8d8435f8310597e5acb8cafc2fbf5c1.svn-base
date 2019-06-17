@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/themes/default/easyui.css}">
+    <link rel="stylesheet" th:href="@{/css/themes/icon.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery.easyui.min.js}"></script>
+    <script th:src="@{/js/easyui-lang-zh_CN.js}"></script>
+</head>
+<body>
+<table id="dg"></table>
+
+<div id="toolbar">
+    <div th:inline="none">
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="openAddDialog()">添加</a>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="openModifyDialog()">修改</a>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deleteCoach()">删除</a>
+    </div>
+    <div>
+        教练名<input type="text" id="selCname">
+       <!-- <shiro:hasRole name="超级管理员">-->
+            所属场馆<input type="text" id="gymlistid" class="easyui-combobox" data-options="url:'/gym/list',valueField:'gid',textField:'gname'">
+    <!--    </shiro:hasRole>-->
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchCoach()">查找</a>
+    </div>
+</div>
+
+
+<!--定义模态框-->
+<div id="dig" class="easyui-dialog" data-options="closed:true,modal:true,buttons:'#but'" style="padding: 20px;height: 400px;width: 600px">
+    <form id="ff" method="post" enctype="multipart/form-data">
+        <table>
+            <input type="hidden" name="cid" id="updateneeedid">
+            <tr>
+                <td>姓名</td>
+                <td>
+                    <input type="text" name="cname" class="eaysui-validatebox" data-options="required:true">
+                </td>
+                <td>性别</td>
+                <td>
+                    <select name="cgender">
+                        <option>男</option>
+                        <option>女</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>年龄</td>
+                <td>
+                    <input type="text" name="cage">
+                </td>
+                <td>教练类型</td>
+                <td>
+                   <input type="text" name="type">
+                </td>
+            </tr>
+            <tr>
+                <td>电话</td>
+                <td>
+                    <input type="text" name="contact">
+                </td>
+                <td>月薪</td>
+                <td>
+                    <input type="text" name="cprice">
+                </td>
+            </tr>
+            <tr>
+                <td>空闲日期</td>
+                <td>
+                    <input type="text" name="freeday">
+                </td>
+                <td>空闲时间</td>
+                <td>
+                    <input type="text" name="freetime">
+                </td>
+            </tr>
+            <tr>
+                <td>昵称</td>
+                <td>
+                    <input type="text" name="cnickname">
+                </td>
+                <td>信息状态</td>
+                <td>
+                    <input type="text" name="secret">
+                </td>
+            </tr>
+            <tr>
+                <td>流派</td>
+                <td>
+                    <input type="text" name="liupai">
+                </td>
+                <td>是否私教</td>
+                <td>
+                    <select name="jieke">
+                        <option>是</option>
+                        <option>否</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>头像</td>
+                <td>
+                    <input type="hidden" name="cpic">
+                    <input type="file" name="cPhoto">
+                </td>
+            </tr>
+            <!--以下是添加user表信息-->
+            <tr id="user_tr">
+                <td>用户名</td>
+                <td>
+                    <input type="text" name="user.userName" id="userName">
+                </td>
+                <td>用户密码</td>
+                <td>
+                    <input type="text" name="user.password">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="hidden" name="user.userType" value="3">
+                    <input type="hidden" name="user.role.roleId" value="3">
+                    <input type="hidden" name="user.userDescription" value="教练">
+                    <input type="hidden" name="user.salt" id="salt">
+                </td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+<!--定义模态框按钮-->
+<div id="but">
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="operate()">保存</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="closeDialog()">关闭</a>
+</div>
+
+
+
+<script th:inline="none">
+    $(function () {
+        $('#dg').datagrid({
+            url:'/coach/selCoach',
+            title:"教练列表",
+            pagination:true,
+            rownumbers:true,
+            striped:true,
+            fitColumns:true,
+            toolbar:'#toolbar',
+            pageNumber:1,
+            pageSize:5,
+            pageList:[5,10,15],
+            columns:[[
+                {checkbox:true},
+                {field:'cid',title:'编号',width:100,align:'center'},
+                {field:'cage',title:'年龄',width:100,align:'center'},
+                {field:'cname',title:'姓名',width:150,align:'center'},
+                {field:'cgender',title:'性别',width:100,align:'center'},
+                {field:'cpic',title:'头像',width:220,align:'center'},
+                {field:'type',title:'教练类型',width:150,align:'center'},
+                {field:'contact',title:'电话',width:200,align:'center'},
+                {field:'liupai',title:'流派',width:100,align:'center'},
+                {field:'freetime',title:'空闲时间',width:200,align:'center'},
+                {field:'cprice',title:'月薪(元)',width:100,align:'center'},
+                {field:'freeday',title:'空闲日期',width:200,align:'center'},
+                {field:'secret',title:'信息状态',width:100,align:'center'},
+                {field:'cnickname',title:'昵称',width:100,align:'center'},
+                {field:'jieke',title:'是否私教',width:100,align:'center'}
+            ]]
+        });
+    })
+    
+    function searchCoach() {
+        var  params={};
+        params.cname=$("#selCname").val();
+        params.gid = $("#gymlistid").combobox("getValue");
+        $("#dg").datagrid("reload",params);
+    }
+
+    var url;
+    /*添加模态框*/
+    function openAddDialog() {
+        /*打开模态框并设置标题*/
+        $("#dig").dialog("open").dialog("setTitle","添加教练");
+        $("#user_tr").show();
+        url="/coach/simAddCoach";
+    }
+    /*修改教练打开模态框*/
+    function openModifyDialog() {
+        /*获取被选中的行数据*/
+        var rows=$("#dg").datagrid("getSelections");
+        /*逻辑判断只能选择一行数据*/
+        if(rows.length!=1){
+            $.messager.alert("系统提示","请选择一条要编辑的数据")
+            return;
+        }
+        /*打开模态框*/
+        $("#dig").dialog("open").dialog("setTitle","修改教练信息");
+        $("#updateneeedid").val(rows[0].cid);
+        $("#user_tr").hide();//隐藏元素 ;
+        /*通过表格的load函数回显数据*/
+        $("#ff").form("load",rows[0]);
+        url="/coach/updateCoach";
+    }
+    /*根据用户名的改变设置盐值*/
+    $(document).ready(function () {
+        var userName = document.getElementById("userName");
+        userName.onblur = function() {
+            var userName = $("#userName").val();
+            $("#salt").val(userName);
+        }
+    })
+
+
+    /*模态框操作函数*/
+    function operate() {
+        /*提交表单*/
+        $("#ff").form("submit",{
+            url:url,
+            success:function (result) {
+                /*将返回的数据格式化为json格式*/
+                result=eval("("+result+")");
+                if(result.code==0){
+                    $.messager.alert('系统提示','操作成功');
+                    /*关闭模态框*/
+                    closeDialog();
+                    /*清空表单*/
+                    $("#ff").form("clear");
+                    /*刷新数据表格*/
+                    $("#dg").datagrid("reload");
+                }
+                else {
+                    $.messager.alert("系统提示",result.message);
+                }
+            }
+        })
+    }
+    /*关闭模态框*/
+    function closeDialog() {
+        $("#dig").dialog("close");
+        $("#ff").form("clear");
+    }
+    /*删除*/
+    function deleteCoach() {
+        /*获取所选行数据*/
+        var rows=$("#dg").datagrid("getSelections");
+        /*判断所选不能为0*/
+        if(rows.length!=1){
+            $.messager.alert("系统提示","请选择一条数据")
+            return;
+        }
+        /*提示框提示确认删除*/
+        $.messager.confirm("系统提示","确认删除？",function (r) {
+            if(r){
+                /*将所选行的教练id放入数组*/
+                var cid=rows[0].cid;
+                /*通过ajax请求发送至后端删除*/
+                $.get("/coach/deleteCoach","cid="+cid,function (data) {
+                    if(data.code==0){
+                        $.messager.alert("系统提示",data.message);
+                        /*刷新表格*/
+                        $("#dg").datagrid("reload");
+                    }else{
+                        $.messager.alert("系统提示",data.message);
+                    }
+                },"json")
+            }
+        })
+    }
+    
+</script>
+</body>
+</html>

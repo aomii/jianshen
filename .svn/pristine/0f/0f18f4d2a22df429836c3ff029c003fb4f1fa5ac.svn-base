@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <meta content="Improve user experience with real-time usabilty testing on mobile/web prototypes. Session replays, conversion funnel and heats map of real users. Get it NOW.." name="description">
+    <meta name="robots" content="index, follow"/>
+    <meta name="googlebot" content="index, follow"/>
+    <meta name="keywords" content="Mobile App protoyping, Clickable Wireframes, Application prototyping"/>
+    <meta name="author" content="CANVASFLIP.COM"/>
+    <meta name="copyright" content="CANVASFLIP.COM"/>
+    <link rel="alternate" href="feed/index.php" title="Inspire By CanvasFlip RSS Feed" type="application/rss+xml" />
+    <title>Free Prototyping and User Experience Testing Tool for iOS &amp; Android Apps. CanvasFlip</title>
+
+    <!-- Google Tag Manager -->
+
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({'gtm.start':
+                new Date().getTime(), event: 'gtm.js'});
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+
+    })(window, document, 'script', 'dataLayer', 'GTM-KJFVQWF');</script>
+
+    <!-- End Google Tag Manager -->
+
+    <!--PROGRESS BAR - ALWAYS SET TO TOP SO THAT THIS PIECE OF CODE GETS EXECUTED AT VERY FIRST PLACE-->
+    <style>
+        .pace {
+            -webkit-pointer-events: none;
+            pointer-events: none;
+
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+        .pace-inactive {
+            display: none;
+        }
+        .pace .pace-progress {
+            background: #00aeee;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            right: 100%;
+            width: 100%;
+            height: 2px;
+            -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+            -ms-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+            -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+        }
+    </style>
+    <script src="../js/pace.min.js" type="text/javascript"></script>
+
+    <link rel="shortcut icon" href="../favicon.png" type="image/x-icon">
+    <link rel="icon" href="../favicon.png" sizes="64x64">
+
+    <!-- Custom Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Bootstrap CSS-->
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- Bootstrap Material Design -->
+    <link href="../css/bootstrap-material-design.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/ripples.min.css" rel="stylesheet" type="text/css"/>
+
+    <!--Index CSS -->
+    <link href="../css/index-style.css?v=1.66" rel="stylesheet" type="text/css"/>
+
+    <!--Inspire CSS--->
+    <link href="../css/inspire.css?v=1.66" rel="stylesheet" type="text/css"/>
+
+    <!--  Libraries -->
+    <script src="../js/jquery-3.4.0.min.js" type="text/javascript"></script>
+    <script src="../js/angular.min.js" type="text/javascript"></script>
+</head>
+
+<body ng-app="mainApp" ng-controller="indexCtrl">
+
+<!-- Google Tag Manager (noscript) -->
+
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KJFVQWF"
+
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<!--Mobile navbar backdrop -->
+<div ng-cloak class="modal-backdrop" ng-show="showBackDrop" ng-click="hideNavMobile($event)"></div>
+<div id="sidebar-wrapper" class="hidden-lg hidden-md hidden-sm navbar-collapse navbar-responsive-collapse">
+    <i ng-click="hideNavMobile($event)" class="material-icons btn-sidebar-close">close</i>
+    <ul class="sidebar-nav nav navbar-nav">
+        <li class="btn btn-block" ng-click="hideNavMobile($event)" data-ga data-ga-action="click" data-ga-category="Header Navigation Mobile " data-ga-title="Home Lnk"><a href="index.php" class="account-setting-seperator">Home</a></li>
+        <li class="btn btn-block" ng-click="hideNavMobile($event)" data-ga data-ga-action="click" data-ga-category="Header Navigation Mobile " data-ga-title="features Lnk"><a href="key-features.php" class="account-setting-seperator">Features</a></li>
+        <li class="btn btn-block" ng-click="hideNavMobile($event)" data-ga data-ga-action="click" data-ga-category="Header Navigation Mobile " data-ga-title="inspire Lnk"><a href="inspire.php" class="account-setting-seperator" >Inspire</a></li>
+        <li class="btn btn-block" ng-click="hideNavMobile($event)" data-ga data-ga-action="click" data-ga-category="Header Navigation Mobile " data-ga-title="pricing Lnk"><a href="pricing.php" class="account-setting-seperator">Pricing</a></li>
+        <li class="btn btn-block" ng-click="hideNavMobile($event)" data-ga data-ga-action="click" data-ga-category="Header Navigation Mobile " data-ga-title="Inspire"><a href="visual-inspector" class="account-setting-seperator">Visual Inspector <span class="badge"> New</span> </a></li>
+        <li class="btn btn-block" ng-click="hideNavMobile($event)" data-ga data-ga-action="click" data-ga-category="Header Navigation Mobile " data-ga-title="request a demo Lnk"><a href="request-demo.php" class="account-setting-seperator" style="padding-left: 0;">Request A Demo</a></li>
+        <li class="btn btn-block" ng-cloak ng-show="user.id > 0" ng-click="hideNavMobile($event)" data-ga data-ga-action="click" data-ga-category="Header Navigation Mobile " data-ga-title="My Account Lnk">
+            <a ng-cloak href="dashboard.php" class="account-setting-seperator">My Account</a>
+        </li>
+        <li class="btn btn-block" ng-cloak ng-show="user.id > 0" ng-click="hideNavMobile($event)" data-ga data-ga-action="click" data-ga-category="Header Navigation Mobile " data-ga-title="Logout Lnk">
+            <a ng-cloak ng-click="logout()" href="javascript:void(0);" class="account-setting-seperator">Logout</a>
+        </li>
+        <li class="btn btn-block" ng-cloak ng-hide="user.id > 0" ng-click="hideNavMobile($event)" data-ga data-ga-action="click" data-ga-category="Header Navigation Mobile " data-ga-title="Login Lnk">
+            <a data-toggle="modal" data-target="#loginModal" class="account-setting-seperator polyglot" data-lang-ja="ログイン">Login</a>
+        </li>
+    </ul>
+</div>
+<div class="headerWrapper container-fluid">
+    <header>
+        <nav class="navbar navbar-default navbar-static-top hidden-sm hidden-md hidden-lg mainContainer">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" ng-click="showNavMobile($event)" data-ga data-ga-action="click" data-ga-category="Header Navigation Mobile " data-ga-title="Open Mobile Nav Lnk">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a
+                        href="#"
+                        class="pull-left" data-ga data-ga-action="click" data-ga-category="Header Navigation" data-ga-title="Logo CF Img"><img class="cf-logo" src="images/cf_logo.png"></a>
+                <a class="navbar-brand logo-text"  data-ga data-ga-action="click" data-ga-category="Header Navigation " data-ga-title="Logo CF Img"
+                   href="#">
+                    <span>Canvas</span>Flip
+                </a>
+            </div>
+        </nav>
+        <nav class="navbar navbar-default navbar-static-top hidden-xs mainContainer" role="navigation" >
+            <div class="navbar-header">
+                <a  data-ga data-ga-action="click" data-ga-category="Header Navigation " data-ga-title="Logo CF Img"
+                    href="#"
+                    class="pull-left">
+                    <img class="cf-logo" src="images/cf_logo.png" />
+                </a>
+                <a class="navbar-brand logo-text"  data-ga data-ga-action="click" data-ga-category="Header Navigation " data-ga-title="Logo CF Img"
+                   href="#">
+                    <span>Canvas</span>Flip
+                </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a  data-ga data-ga-action="click" data-ga-category="Header Navigation " data-ga-title="Features"
+                        href="key-features.php">
+                        Features</a>
+                </li>
+                <li>
+                    <a data-ga data-ga-action="click" data-ga-category="Header Navigation " data-ga-title="User Testing"
+                       href="user-testing.php"
+                    ><span class="polyglot" data-lang-ja="ユーザーテスト">User Testing</span></a>
+                </li>
+                <li>
+                    <a data-ga data-ga-action="click" data-ga-category="Header Navigation " data-ga-title="Pricing"
+                       href="pricing.php">
+                        Pricing
+                    </a>
+                </li>
+                <li>
+                    <a data-ga data-ga-action="click" data-ga-category="Header Navigation " data-ga-title="Inspire"
+                       href="visual-inspector">
+                        Visual Inspector <span class="badge"> New</span>
+                    </a>
+                </li>
+
+                <li ng-cloak ng-hide="user.id > 0">
+                    <a style="border:1px solid #00aeee;color: #00aeee;" data-ga data-ga-action="click" data-ga-category="Header Navigation " data-ga-title="request a demo"
+                       href="request-demo.php">
+                        Request A Demo
+                    </a>
+                </li>
+                <li class="btn-logout-login" ng-cloak ng-show="user.id > 0">
+                    <a href="dashboard.php" class="btn" data-ga data-ga-action="click" data-ga-category="Header Navigation " data-ga-title="My Account">My Account</a>
+                </li>
+                <li class="btn-logout-login" ng-cloak ng-show="user.id > 0" data-ga data-ga-action="click" data-ga-category="Header Navigation " data-ga-title="Logout">
+                    <a ng-cloak ng-click="logout()" href="javascript:void(0);" class="btn">Logout</a>
+                </li>
+                <li class="btn-logout-login" ng-cloak ng-hide="user.id > 0">
+                    <a data-toggle="modal" data-target="#loginModal" class="btn polyglot" data-lang-ja="ログイン" data-ga data-ga-action="click" data-ga-category="Header Navigation " data-ga-title="Login">Login</a>
+                </li>
+
+            </ul>
+        </nav>
+
+    </header>
+</div>        <main>
+    <!--Referral banner start-->
+    <section class="whats-new-banner-wrapper refrerral-banner-wrapper" ng-if="user.id == 0 && refCodeBy != ''" ng-cloak>
+        <a data-ga="" data-ga-title="Closed Referral Banner" data-ga-action="Click" data-ga-category=" referral Banner" onclick="$('.whats-new-banner-wrapper').slideUp(300);" class="close close-referral-banner" data-dismiss="alert" aria-label="close">
+            close
+            <span>×</span>
+        </a>
+        <div class="section">
+            <h2>Pssst... Your friend <b>{{refCodeBy}}</b> has gifted you #FreeSubscription</h2>
+            <p>CanvasFlip is one-stop solution for prototyping, user testing and design hand-offs.
+                <span class="text-highlighted">Sign Up before 31st July</span> to get 1-month of unlimited access to all premium features.
+            </p>
+            <a data-ga="" data-ga-action="click" data-ga-category="Whats-new " data-ga-title="Claim your subscription" data-toggle="modal" data-target="#loginModal" class="btn btn-block btn-solid">
+                Sign Up Now
+            </a>
+        </div>
+    </section>
+
+    <!--Referral banner end -->
+
+    <div class="divider clearfix"></div>
+
+    <div class="divider clearfix"></div>
+
+    <div class="divider clearfix"></div>
+
+    <div class="divider clearfix"></div>
+
+    <div class="divider clearfix"></div>
+
+    <div class="divider clearfix"></div>
+
+    <div class="divider clearfix"></div>
+
+    <div class="divider clearfix"></div>
+
+    <div class="divider clearfix"></div>
+
+    <div class="divider clearfix"></div>
+
+    <div class="divider clearfix"></div>
+
+    <!--Import Footer -->
+
+    <div class="divider clearfix"></div>
+
+    <div class="divider clearfix"></div>
+    <!--UserEngagement Modal -->
+    <!--UserEngagement Modal -->
+           </main>
+
+<!--Import Copyright -->
+<footer>
+    <p class="text-center footer-text">&copy; 2017 CanvasFlip. <a data-ga data-ga-action="click" data-ga-category="copyright " data-ga-title="T&C Lnk" href="tnc.php" target="_blank">Privacy Policy</a> & <a href="tnc.php" target="_blank">Terms of Use</a></p>
+</footer>
+<!--Import Login Modal -->
+<!--Login Modal -->
+
+<!--Import Contact Us Modal -->
+<!--Contact Modal -->
+
+
+<!--Intro Video Modal -->
+<div id="introVideoFull" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <iframe id="iframeIntroVideo" width="100%" height="360" src="" frameborder="0" allowfullscreen autoplay></iframe>
+        </div>
+    </div>
+</div>
+
+<!--  Libraries -->
+<script src="../js/angular-route.min.js" type="text/javascript"></script>
+<!--<script src="../js/bootstrap.min.js" type="text/javascript"></script>-->
+<!--<script src="../js/material.min.js" type="text/javascript"></script>-->
+<!--<script src="../js/ripples.min.js" type="text/javascript"></script>-->
+<!--<script src="../js/timeago.js" type="text/javascript"></script>-->
+<!--&lt;!&ndash;  Modules &ndash;&gt;-->
+<!--<script src="../js/mainApp.js?v=1.66"></script>-->
+
+<!--&lt;!&ndash;  Controllers &ndash;&gt;-->
+<!--<script src="../js/indexCtrl.js?v=1.66"></script>-->
+<!--<script src="../js/loginCtrl.js?v=1.66"></script>-->
+<!--<script src="../js/contactFormCtrl.js?v=1.66"></script>-->
+
+<!--&lt;!&ndash; User Engagement JS&ndash;&gt;-->
+<!--<script src="../js/userEngagementActions.js?v=1.66" type="text/javascript"></script>-->
+
+<!--&lt;!&ndash;  APIs &ndash;&gt;-->
+<!--<script src="../js/GoogleAnalytics.js?v=1.66" type="text/javascript"></script>-->
+<!--<script src="https://apis.google.com/js/platform.js" async defer></script>-->
+
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+    var pathname = window.location.pathname;
+    if (pathname.indexOf('inspire.php') < 0 || pathname.indexOf('prototyping-with-balsamiq') < 0) {
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/559280764900cd981226463e/default';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    }
+
+</script>
+<!--End of Tawk.to Script-->
+<!-- Facebook Widget Integration -->
+<div id="fb-root"></div>
+<script type="text/javascript">
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id))
+            return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_IN/sdk.js#xfbml=1&appId=295076370612119&version=v2.3";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+
+
+<!--Import intercom api and settings -->
+<script>
+    window.intercomSettings = {
+        app_id: "bdmguisi"
+    };
+</script>
+<script>
+    try {
+        //Track if user has created a prototype
+        if (window.location.host.indexOf('canvasflip.com') !== -1) {
+            (function () {
+                var w = window;
+                var ic = w.Intercom;
+                if (typeof ic === "function") {
+                    ic('reattach_activator');
+                    ic('update', intercomSettings);
+                } else {
+                    var d = document;
+                    var i = function () {
+                        i.c(arguments)
+                    };
+                    i.q = [];
+                    i.c = function (args) {
+                        i.q.push(args)
+                    };
+                    w.Intercom = i;
+                    function l() {
+                        var s = d.createElement('script');
+                        s.type = 'text/javascript';
+                        s.async = true;
+                        s.src = 'https://widget.intercom.io/widget/bdmguisi';
+                        var x = d.getElementsByTagName('script')[0];
+                        x.parentNode.insertBefore(s, x);
+                    }
+                    if (w.attachEvent) {
+                        w.attachEvent('onload', l);
+                    } else {
+                        w.addEventListener('load', l, false);
+                    }
+                }
+            })()
+        }
+    } catch (e) {
+
+    }
+</script>
+<script type="text/javascript">
+    try {
+        if (window.location.host.indexOf('canvasflip.com') !== -1)
+            Intercom('trackEvent', 'Visited Landing Page', {"source": "home"});
+    } catch (e) {
+    }
+</script>
+</body>
+</html>

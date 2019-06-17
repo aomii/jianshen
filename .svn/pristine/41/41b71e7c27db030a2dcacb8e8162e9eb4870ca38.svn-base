@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>运动知识</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link  href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="materialize/css/materialize.min.css" media="screen,projection" />
+    <link href="./css/bootstrap.min.css" rel="stylesheet" />
+    <link href="./css/fancybox/jquery.fancybox.css" rel="stylesheet">
+    <link href="./css/flexslider.css" rel="stylesheet" />
+    <link href="./css/style.css" rel="stylesheet" />
+    <!--========am====-->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        .table-responsive {
+            color:blue;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper" class="home-page">
+    <!--引入头部-->
+    <div th:insert="head::head"></div>
+    <br>
+
+
+
+    <!--=====am===================== -->
+
+    <div class="row" style="width:1210px;margin:0 auto;" id="qicai">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="#">首页</a></li>
+            </ol>
+        </div>
+
+
+        <div th:each="knowledge,state:${info.list}">
+            <div class="col-md-4">
+                <p><a th:href="@{|/knowledge/info?knlgId=${knowledge.knlgId}|}" style='color:green'>[[${knowledge.knlgTitle}]]</a></p>
+
+                <p><font color="#FF0000">观看次数：[[${knowledge.knlgViewcount}]]</font></p>
+                <p>发表日期：[[${knowledge.knlgPosttime}]]</p>
+            </div>
+        </div>
+        <br>
+        <!--引入分页菜单-->
+        <div th:insert="knowleagePage::page"></div>
+
+
+    </div>
+</body>
+<!-- javascript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="./js/jquery.js"></script>
+<script src="./js/jquery.easing.1.3.js"></script>
+<script src="./materialize/js/materialize.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/jquery.fancybox.pack.js"></script>
+<script src="./js/jquery.fancybox-media.js"></script>
+<script src="./js/jquery.flexslider.js"></script>
+<script src="./js/animate.js"></script>
+<!-- Vendor Scripts -->
+<script src="./js/modernizr.custom.js"></script>
+<script src="./js/jquery.isotope.min.js"></script>
+<script src="./js/jquery.magnific-popup.min.js"></script>
+<script src="./js/animate.js"></script>
+<script>
+
+</script>
+</html>

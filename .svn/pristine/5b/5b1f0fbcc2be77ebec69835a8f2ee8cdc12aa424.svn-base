@@ -1,0 +1,60 @@
+package com.rabbit.fitness.dao;
+
+import com.rabbit.fitness.coach.vo.CoachVO;
+import com.rabbit.fitness.pojo.Coach;
+import com.rabbit.fitness.pojo.Communication;
+import com.rabbit.fitness.pojo.Order;
+import com.rabbit.fitness.pojo.Student;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
+
+public interface CoachMapper {
+    int deleteByPrimaryKey(Integer cid);
+
+    int insert(Coach record);
+
+    int insertSelective(Coach record);
+
+    Coach selectByPrimaryKey(Integer cid);
+
+    int updateByPrimaryKeySelective(Coach record);
+
+    int updateByPrimaryKey(Coach record);
+
+    @Select("select * from student where cid=#{param2} limit #{param1}, #{param3}")
+    List<Student> queryCoachByPage(Integer page, Integer cid,Integer count);
+
+    @Select("select * from order where cid=#{cid}")
+    List<Order> queryOrderByPage(@Param("currentPage") Integer currentPage, @Param("pageSize") Integer pageSize, @Param("cid") Integer cid);
+
+    @Update("update  cocah set gids=#{param2} where cid=#{param1}")
+    void signGym(Integer cid, Integer gid);
+
+
+    List<Coach> queryCoachAll(@Param("currentPage") Integer currentPage, @Param("pageSize") Integer pageSize,@Param("vo") CoachVO vo);
+
+    /*查找教练名下学生*/
+    @Select("select * from student where cid=#{cid}")
+    List<Student> queryStudentByCid(int cid);
+
+    @Select("select count(*) from coach")
+    Integer selMaxIndex();
+
+    @Select("select * from coach limit #{param1},#{param2}")
+    List<Coach> roundSelCoach(int startIndex, Integer count);
+
+    @Select("select * from coach where uid=#{uid}")
+    Coach queryCoachByUid(Integer uid);
+
+    Integer updateByUidKeySelective(Coach coach, Integer uid);
+
+    @Insert("insert into communication(send_name,receive_name,message,is_read) values(#{sendName},#{receiveName},#{message},#{isRead})")
+    void insertComm(Communication communication);
+
+    @Select("SELECT * from communication  where (send_name=#{param1}  and  receive_name=#{param2}) or  (send_name=#{param2} and  receive_name=#{param1}) ORDER BY time desc limit #{param3},#{param4}")
+    List<Communication> queryChatRecord(Integer sendName, Integer receiveName,Integer startIndex,Integer selCount);
+}

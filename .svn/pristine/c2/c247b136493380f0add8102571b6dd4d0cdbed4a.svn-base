@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.fitness.dao.CoachMapper">
+  <resultMap id="BaseResultMap" type="com.rabbit.fitness.pojo.Coach">
+    <id column="cid" jdbcType="INTEGER" property="cid" />
+    <result column="cname" jdbcType="VARCHAR" property="cname" />
+    <result column="cgender" jdbcType="VARCHAR" property="cgender" />
+    <result column="cpic" jdbcType="VARCHAR" property="cpic" />
+    <result column="signid" jdbcType="INTEGER" property="signid" />
+    <result column="cmoney" jdbcType="DOUBLE" property="cmoney" />
+    <result column="gid" jdbcType="INTEGER" property="gid" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="contact" jdbcType="VARCHAR" property="contact" />
+    <result column="isauth" jdbcType="VARCHAR" property="isauth" />
+    <result column="freetime" jdbcType="VARCHAR" property="freetime" />
+    <result column="freeday" jdbcType="VARCHAR" property="freeday" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="friendids" jdbcType="VARCHAR" property="friendids" />
+    <result column="secret" jdbcType="VARCHAR" property="secret" />
+    <result column="logaddress" jdbcType="VARCHAR" property="logaddress" />
+    <result column="cage" jdbcType="INTEGER" property="cage" />
+    <result column="liupai" jdbcType="VARCHAR" property="liupai" />
+    <result column="jieke" jdbcType="VARCHAR" property="jieke" />
+    <result column="cprice" jdbcType="DOUBLE" property="cprice" />
+    <result column="cnickname" jdbcType="VARCHAR" property="cnickname" />
+  </resultMap>
+
+
+
+
+  <select id="queryCoachAll" resultMap="BaseResultMap">
+    select * from coach
+    <where>
+      <if test="vo.cname != null and '' != vo.cname">
+        and cname like concat('%',#{vo.cname},'%')
+      </if>
+      <if test="vo.gid != null and ''!= vo.gid">
+        and gid = #{vo.gid}
+      </if>
+    </where>
+  </select>
+
+
+
+
+  <sql id="Base_Column_List">
+    cid, cname, cgender, cpic, signid, cmoney, gid, type, contact, isauth, freetime, 
+    freeday, uid, friendids, secret, logaddress, cage, liupai, jieke, cprice, cnickname
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from coach
+    where cid = #{cid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from coach
+    where cid = #{cid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rabbit.fitness.pojo.Coach">
+    insert into coach (cid, cname, cgender, 
+      cpic, signid, cmoney, 
+      gid, type, contact, 
+      isauth, freetime, freeday, 
+      uid, friendids, secret, 
+      logaddress, cage, liupai, 
+      jieke, cprice, cnickname
+      )
+    values (#{cid,jdbcType=INTEGER}, #{cname,jdbcType=VARCHAR}, #{cgender,jdbcType=VARCHAR}, 
+      #{cpic,jdbcType=VARCHAR}, #{signid,jdbcType=INTEGER}, #{cmoney,jdbcType=DOUBLE}, 
+      #{gid,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
+      #{isauth,jdbcType=VARCHAR}, #{freetime,jdbcType=VARCHAR}, #{freeday,jdbcType=VARCHAR}, 
+      #{uid,jdbcType=INTEGER}, #{friendids,jdbcType=VARCHAR}, #{secret,jdbcType=VARCHAR}, 
+      #{logaddress,jdbcType=VARCHAR}, #{cage,jdbcType=INTEGER}, #{liupai,jdbcType=VARCHAR}, 
+      #{jieke,jdbcType=VARCHAR}, #{cprice,jdbcType=DOUBLE}, #{cnickname,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rabbit.fitness.pojo.Coach">
+    insert into coach
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cid != null">
+        cid,
+      </if>
+      <if test="cname != null">
+        cname,
+      </if>
+      <if test="cgender != null">
+        cgender,
+      </if>
+      <if test="cpic != null">
+        cpic,
+      </if>
+      <if test="signid != null">
+        signid,
+      </if>
+      <if test="cmoney != null">
+        cmoney,
+      </if>
+      <if test="gid != null">
+        gid,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="contact != null">
+        contact,
+      </if>
+      <if test="isauth != null">
+        isauth,
+      </if>
+      <if test="freetime != null">
+        freetime,
+      </if>
+      <if test="freeday != null">
+        freeday,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="friendids != null">
+        friendids,
+      </if>
+      <if test="secret != null">
+        secret,
+      </if>
+      <if test="logaddress != null">
+        logaddress,
+      </if>
+      <if test="cage != null">
+        cage,
+      </if>
+      <if test="liupai != null">
+        liupai,
+      </if>
+      <if test="jieke != null">
+        jieke,
+      </if>
+      <if test="cprice != null">
+        cprice,
+      </if>
+      <if test="cnickname != null">
+        cnickname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cid != null">
+        #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="cname != null">
+        #{cname,jdbcType=VARCHAR},
+      </if>
+      <if test="cgender != null">
+        #{cgender,jdbcType=VARCHAR},
+      </if>
+      <if test="cpic != null">
+        #{cpic,jdbcType=VARCHAR},
+      </if>
+      <if test="signid != null">
+        #{signid,jdbcType=INTEGER},
+      </if>
+      <if test="cmoney != null">
+        #{cmoney,jdbcType=DOUBLE},
+      </if>
+      <if test="gid != null">
+        #{gid,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null">
+        #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="isauth != null">
+        #{isauth,jdbcType=VARCHAR},
+      </if>
+      <if test="freetime != null">
+        #{freetime,jdbcType=VARCHAR},
+      </if>
+      <if test="freeday != null">
+        #{freeday,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="friendids != null">
+        #{friendids,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null">
+        #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="logaddress != null">
+        #{logaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="cage != null">
+        #{cage,jdbcType=INTEGER},
+      </if>
+      <if test="liupai != null">
+        #{liupai,jdbcType=VARCHAR},
+      </if>
+      <if test="jieke != null">
+        #{jieke,jdbcType=VARCHAR},
+      </if>
+      <if test="cprice != null">
+        #{cprice,jdbcType=DOUBLE},
+      </if>
+      <if test="cnickname != null">
+        #{cnickname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByUidKeySelective" parameterType="com.rabbit.fitness.pojo.Coach">
+    update coach
+    <set>
+      <if test="cname != null">
+        cname = #{cname,jdbcType=VARCHAR},
+      </if>
+      <if test="cgender != null">
+        cgender = #{cgender,jdbcType=VARCHAR},
+      </if>
+      <if test="cpic != null">
+        cpic = #{cpic,jdbcType=VARCHAR},
+      </if>
+      <if test="signid != null">
+        signid = #{signid,jdbcType=INTEGER},
+      </if>
+      <if test="cmoney != null">
+        cmoney = #{cmoney,jdbcType=DOUBLE},
+      </if>
+      <if test="gid != null">
+        gid = #{gid,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null">
+        contact = #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="isauth != null">
+        isauth = #{isauth,jdbcType=VARCHAR},
+      </if>
+      <if test="freetime != null">
+        freetime = #{freetime,jdbcType=VARCHAR},
+      </if>
+      <if test="freeday != null">
+        freeday = #{freeday,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="friendids != null">
+        friendids = #{friendids,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null">
+        secret = #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="logaddress != null">
+        logaddress = #{logaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="cage != null">
+        cage = #{cage,jdbcType=INTEGER},
+      </if>
+      <if test="liupai != null">
+        liupai = #{liupai,jdbcType=VARCHAR},
+      </if>
+      <if test="jieke != null">
+        jieke = #{jieke,jdbcType=VARCHAR},
+      </if>
+      <if test="cprice != null">
+        cprice = #{cprice,jdbcType=DOUBLE},
+      </if>
+      <if test="cnickname != null">
+        cnickname = #{cnickname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.fitness.pojo.Coach">
+    update coach
+    <set>
+      <if test="cname != null">
+        cname = #{cname,jdbcType=VARCHAR},
+      </if>
+      <if test="cgender != null">
+        cgender = #{cgender,jdbcType=VARCHAR},
+      </if>
+      <if test="cpic != null">
+        cpic = #{cpic,jdbcType=VARCHAR},
+      </if>
+      <if test="signid != null">
+        signid = #{signid,jdbcType=INTEGER},
+      </if>
+      <if test="cmoney != null">
+        cmoney = #{cmoney,jdbcType=DOUBLE},
+      </if>
+      <if test="gid != null">
+        gid = #{gid,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null">
+        contact = #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="isauth != null">
+        isauth = #{isauth,jdbcType=VARCHAR},
+      </if>
+      <if test="freetime != null">
+        freetime = #{freetime,jdbcType=VARCHAR},
+      </if>
+      <if test="freeday != null">
+        freeday = #{freeday,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="friendids != null">
+        friendids = #{friendids,jdbcType=VARCHAR},
+      </if>
+      <if test="secret != null">
+        secret = #{secret,jdbcType=VARCHAR},
+      </if>
+      <if test="logaddress != null">
+        logaddress = #{logaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="cage != null">
+        cage = #{cage,jdbcType=INTEGER},
+      </if>
+      <if test="liupai != null">
+        liupai = #{liupai,jdbcType=VARCHAR},
+      </if>
+      <if test="jieke != null">
+        jieke = #{jieke,jdbcType=VARCHAR},
+      </if>
+      <if test="cprice != null">
+        cprice = #{cprice,jdbcType=DOUBLE},
+      </if>
+      <if test="cnickname != null">
+        cnickname = #{cnickname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cid = #{cid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rabbit.fitness.pojo.Coach">
+    update coach
+    set cname = #{cname,jdbcType=VARCHAR},
+      cgender = #{cgender,jdbcType=VARCHAR},
+      cpic = #{cpic,jdbcType=VARCHAR},
+      signid = #{signid,jdbcType=INTEGER},
+      cmoney = #{cmoney,jdbcType=DOUBLE},
+      gid = #{gid,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      isauth = #{isauth,jdbcType=VARCHAR},
+      freetime = #{freetime,jdbcType=VARCHAR},
+      freeday = #{freeday,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=INTEGER},
+      friendids = #{friendids,jdbcType=VARCHAR},
+      secret = #{secret,jdbcType=VARCHAR},
+      logaddress = #{logaddress,jdbcType=VARCHAR},
+      cage = #{cage,jdbcType=INTEGER},
+      liupai = #{liupai,jdbcType=VARCHAR},
+      jieke = #{jieke,jdbcType=VARCHAR},
+      cprice = #{cprice,jdbcType=DOUBLE},
+      cnickname = #{cnickname,jdbcType=VARCHAR}
+    where cid = #{cid,jdbcType=INTEGER}
+  </update>
+</mapper>

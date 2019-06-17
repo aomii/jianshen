@@ -1,0 +1,27 @@
+package com.rabbit.fitness.dao;
+
+import com.rabbit.fitness.gym.vo.RecruitVo;
+import com.rabbit.fitness.pojo.Grecruit;
+
+import java.util.List;
+import java.util.Map;
+
+public interface GrecruitMapper {
+    int deleteByPrimaryKey(Integer grid);
+
+    int insert(Grecruit record);
+
+    int insertSelective(Grecruit record);
+
+    Grecruit selectByPrimaryKey(Integer grid);
+
+    int updateByPrimaryKeySelective(Grecruit record);
+
+    int updateByPrimaryKey(Grecruit record);
+
+    List<Grecruit> findGrecruitByPage(Integer currentPage, Integer pageSize, RecruitVo vo);
+
+    int deleteRecruit(Integer[] grIds);
+
+    List<Grecruit> findAllGrecruit(Map map);
+}

@@ -1,0 +1,129 @@
+function randomSelCoach() {
+    $.ajax({
+        url:"coach/randomSelCoach",
+        type:"get",
+        success:function(data){
+            var content ="";
+            content+=
+        "<div class='col-md-4 menuItem'>"+
+                "<ul class='menu'> <li>"+
+
+                "<div><img src='" + data[0].cpic+ " ' width='100%'/></div>"+
+                "<div class='detail'><b>"+data[0].cname+"</b><span class='price'>"+data[0].type+"</span></div>"+
+            "</li>"+
+            "<li>"+
+            "<div><img src='" + data[1].cpic+ "' width='100%'/></div>"+
+                "<div class='detail'><b>"+data[1].cname+"</b><span class='price'>"+data[1].type+"</span></div>"+
+            "</li>  </ul> </div>"+
+
+
+            "<div class='col-md-4 menuItem'>"+
+                "<ul class='menu'>"+
+                "<li>"+
+                "<div><img src='" + data[2].cpic+ "' width='100%'/></div>"+
+                "<div class='detail'><b>"+data[2].cname+"</b><span class='price'>"+data[2].type+"</span></div>"+
+            "</li> <li>"+
+
+            "<div><img src='" + data[3].cpic+ "' width='100%'/></div>"+
+                "<div class='detail'><b>"+data[3].cname+"</b><span class='price'>"+data[3].type+"</span></div>"+
+            "</li> </ul>  </div>"+
+
+
+            "<div class='col-md-4 menuItem'>"+
+                "<ul class='menu'>"+
+                "<li>"+
+                "<div><img src='" + data[4].cpic+ "' width='100%'/></div>"+
+                "<div class='detail'><b>"+data[4].cname+"</b><span class='price'>"+data[4].type+"</span></div>"+
+            "</li>"+
+            "<li>"+
+            "<div><img src='" + data[5].cpic+ "' width='100%'/></div>"+
+                "<div class='detail'><b>"+data[5].cname+"</b><span class='price'>"+data[5].type+"</span></div>"+
+            "</li> </ul>  </div>"
+
+            $("#randomSelCoachList").html(content);
+        }
+    });
+}
+
+
+
+function mystulist() {
+    var myname=$("#myuname").val();
+    myname="17";
+    $.ajax({
+        url:"coach/myStuList",
+        type:"post",
+        data:{
+            "cid":2006,
+            "page":$("#nowPage").val(),
+        },
+        success:function(data){
+            var stu = data;
+            var content="";
+            for(var i=0;i<stu.length;i++){
+                content+=
+                    "<form action='web/websocket/"+myname+"'>"+
+                    "<div class='col-md-4 menuItem' >"+
+                    "<input type='hidden' name='uid' value="+data[i].uid+" >"+
+                    "<ul class='menu'> <li>"+
+                    "<button type='submit'>"+
+                    "<div><img src='../img/coach/1.png'  width='100%'/></div>"+
+                    "<div class='detail'><b>"+data[i].stuname+"</b><span class='price'>"+data[i].stugender+"</span></div>"+
+                    "</li>"+
+                     "</ul> </div> </button> </form>"
+
+
+            }
+            $("#mystulist").html(content);
+        },
+
+    });
+}
+
+
+
+function  insertComm() {
+    $.ajax({
+        url:"/coach/insertComm",
+        data:{
+            "message":$("#sayText").val(),
+            "sendName":$("#myname").val(),
+            "receiveName":$("#oname").val(),
+
+        }
+    })
+}
+
+function showChatRecord() {
+    var sendName = $("#myname").val();
+    var receiveName = $("#oname").val();
+    $.ajax({
+        url:"/coach/showChatRecord",
+        type:"post",
+        data:{
+            "sendName":sendName,
+            "receiveName":receiveName
+        },
+        success:function (data) {
+            var arr =data;
+            var content="";
+            for(var i=arr.length-1;i>=0;i--){
+                if(arr[i].sendName==sendName){
+                    content+=
+                     "<div class='question'>"+
+                    "<div class='heard_img right'><img src='/img/coach/coach_chart_images/dglvyou.jpg'></div>"+
+                    "<div class='question_text clear'><p>"+arr[i].message+"</p><i></i>"+
+                    "</div></div>"
+                }
+                if(arr[i].sendName==receiveName){
+                    content+=
+                    "<div class='answer'>"+
+                    "<div class='heard_img left'><img src='/img/coach/coach_chart_images/dglvyou.jpg'></div>"+
+                    "<div class='answer_text'><p>"+arr[i].message+"</p><i></i>"+
+                    "</div></div>"
+                }
+            }
+            $('.speak_box').append(content);
+        }
+    })
+}

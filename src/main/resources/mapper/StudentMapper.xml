@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.fitness.dao.StudentMapper">
+
+  <update id="setCoachNull" parameterType="java.lang.Integer">
+    update student set cid = null where stuid = #{stuid}
+  </update>
+
+  <update id="setGymNull" parameterType="java.lang.Integer">
+    update student set gid = null where stuid = #{stuid}
+  </update>
+
+
+  <delete id="deleteBack">
+    delete  from  student where stuid in
+    <foreach collection="array" open="(" close=")" separator="," item="id">
+      #{id}
+    </foreach>
+  </delete>
+
+
+
+  <select id="findStudentByPage" resultType="com.rabbit.fitness.pojo.Student">
+    select *
+    from student
+  <where>
+    <if test="vo.stuname!=null and ''!=vo.stuname">
+      and stuname like concat("%",#{vo.stuname},"%")
+    </if>
+    <if test="vo.stuminage!=null and ''!=vo.stuminage ">
+      and stuage >= #{vo.stuminage}
+    </if>
+    <if test="vo.stumaxage!=null and ''!=vo.stumaxage ">
+      and #{vo.stumaxage} >= stuage
+    </if>
+    <if test="vo.stugender!=null and ''!=vo.stugender ">
+      and stugender=#{vo.stugender}
+    </if>
+    <if test="vo.lastlogin!=null and ''!=vo.lastlogin">
+      and lastlogin like concat("%",#{vo.lastlogin},"%")
+    </if>
+
+    <if test="gid!=null">
+      and gid= #{gid}
+    </if>
+
+  </where>
+  </select>
+
+
+
+
+  <resultMap id="BaseResultMap" type="com.rabbit.fitness.pojo.Student">
+    <id column="stuid" jdbcType="INTEGER" property="stuid" />
+    <result column="stuname" jdbcType="VARCHAR" property="stuname" />
+    <result column="stumoney" jdbcType="DECIMAL" property="stumoney" />
+    <result column="stuage" jdbcType="VARCHAR" property="stuage" />
+    <result column="stugender" jdbcType="VARCHAR" property="stugender" />
+    <result column="stuids" jdbcType="VARCHAR" property="stuids" />
+    <result column="stupic" jdbcType="VARCHAR" property="stupic" />
+    <result column="oids" jdbcType="VARCHAR" property="oids" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    stuid, stuname, stumoney, stuage, stugender, stuids, stupic, oids
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="com.rabbit.fitness.pojo.Student">
+    select 
+    <include refid="Base_Column_List" />
+    from student
+    where stuid = #{stuid,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from student
+    where stuid = #{stuid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rabbit.fitness.pojo.Student">
+    insert into student (stuid, stuname, stumoney, 
+      stuage, stugender, stuids, 
+      stupic, oids)
+    values (#{stuid,jdbcType=INTEGER}, #{stuname,jdbcType=VARCHAR}, #{stumoney,jdbcType=DECIMAL}, 
+      #{stuage,jdbcType=VARCHAR}, #{stugender,jdbcType=VARCHAR}, #{stuids,jdbcType=VARCHAR}, 
+      #{stupic,jdbcType=VARCHAR}, #{oids,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rabbit.fitness.pojo.Student">
+    insert into student
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stuid != null">
+        stuid,
+      </if>
+      <if test="stuname != null">
+        stuname,
+      </if>
+      <if test="stumoney != null">
+        stumoney,
+      </if>
+      <if test="stuage != null">
+        stuage,
+      </if>
+      <if test="stugender != null">
+        stugender,
+      </if>
+      <if test="stupic != null">
+        stupic,
+      </if>
+      <if test="oids != null">
+        oids,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="stuphone != null">
+        stuphone,
+      </if>
+      <if test="stubirth != null">
+        stubirth,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stuid != null">
+        #{stuid,jdbcType=INTEGER},
+      </if>
+      <if test="stuname != null">
+        #{stuname,jdbcType=VARCHAR},
+      </if>
+      <if test="stumoney != null">
+        #{stumoney,jdbcType=DECIMAL},
+      </if>
+      <if test="stuage != null">
+        #{stuage,jdbcType=VARCHAR},
+      </if>
+      <if test="stugender != null">
+        #{stugender,jdbcType=VARCHAR},
+      </if>
+
+      <if test="stupic != null">
+        #{stupic,jdbcType=VARCHAR},
+      </if>
+      <if test="oids != null">
+        #{oids,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="stuphone != null">
+        #{stuphone,jdbcType=VARCHAR},
+      </if>
+      <if test="stubirth != null">
+        #{stubirth,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.fitness.pojo.Student">
+    update student
+    <set>
+      <if test="stuname != null and '' != null">
+        stuname = #{stuname,jdbcType=VARCHAR},
+      </if>
+      <if test="stumoney != 0" >
+        stumoney = #{stumoney,jdbcType=DECIMAL},
+      </if>
+      <if test="stuage != null and '' != null">
+        stuage = #{stuage,jdbcType=VARCHAR},
+      </if>
+      <if test="stugender != null">
+        stugender = #{stugender,jdbcType=VARCHAR},
+      </if>
+
+      <if test="stupic != null">
+        stupic = #{stupic,jdbcType=VARCHAR},
+      </if>
+      <if test="oids != null">
+        oids = #{oids,jdbcType=VARCHAR},
+      </if>
+      <if test="stuphone != null">
+        stuphone= #{stuphone,jdbcType=VARCHAR},
+      </if>
+      <if test="stubirth != null">
+        stubirth= #{stubirth,jdbcType=DATE},
+      </if>
+      <if test="gid != null">
+        gid= #{gid},
+      </if>
+      <if test="cid != null">
+        cid= #{cid},
+      </if>
+    </set>
+    where stuid = #{stuid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rabbit.fitness.pojo.Student">
+    update student
+    set stuname = #{stuname,jdbcType=VARCHAR},
+      stumoney = #{stumoney,jdbcType=DECIMAL},
+      stuage = #{stuage,jdbcType=VARCHAR},
+      stugender = #{stugender,jdbcType=VARCHAR},
+      stuids = #{stuids,jdbcType=VARCHAR},
+      stupic = #{stupic,jdbcType=VARCHAR},
+      oids = #{oids,jdbcType=VARCHAR},
+      gid = #{uid},
+      cid = #{cid}
+    where stuid = #{stuid,jdbcType=INTEGER}
+  </update>
+</mapper>

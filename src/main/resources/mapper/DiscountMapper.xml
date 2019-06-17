@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.fitness.dao.DiscountMapper">
+  <resultMap id="BaseResultMap" type="com.rabbit.fitness.pojo.Discount">
+    <id column="discount_id" jdbcType="INTEGER" property="discountId" />
+    <result column="discount_details" jdbcType="VARCHAR" property="discountDetails" />
+    <result column="discount_desc" jdbcType="VARCHAR" property="discountDesc" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    discount_id, discount_details, discount_desc
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from discount
+    where discount_id = #{discountId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from discount
+    where discount_id = #{discountId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rabbit.fitness.pojo.Discount">
+    insert into discount (discount_id, discount_details, discount_desc
+      )
+    values (#{discountId,jdbcType=INTEGER}, #{discountDetails,jdbcType=VARCHAR}, #{discountDesc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rabbit.fitness.pojo.Discount">
+    insert into discount
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="discountId != null">
+        discount_id,
+      </if>
+      <if test="discountDetails != null">
+        discount_details,
+      </if>
+      <if test="discountDesc != null">
+        discount_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="discountId != null">
+        #{discountId,jdbcType=INTEGER},
+      </if>
+      <if test="discountDetails != null">
+        #{discountDetails,jdbcType=VARCHAR},
+      </if>
+      <if test="discountDesc != null">
+        #{discountDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.fitness.pojo.Discount">
+    update discount
+    <set>
+      <if test="discountDetails != null">
+        discount_details = #{discountDetails,jdbcType=VARCHAR},
+      </if>
+      <if test="discountDesc != null">
+        discount_desc = #{discountDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where discount_id = #{discountId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rabbit.fitness.pojo.Discount">
+    update discount
+    set discount_details = #{discountDetails,jdbcType=VARCHAR},
+      discount_desc = #{discountDesc,jdbcType=VARCHAR}
+    where discount_id = #{discountId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SUI Mobile 使用</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+
+
+</head>
+<body>
+<!-- page集合的容器，里面放多个平行的.page，其他.page作为内联页面由路由控制展示 -->
+<div class="page-group">
+    <!-- 单个page ,第一个.page默认被展示-->
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <a class="icon icon-me pull-left open-panel"></a>
+            <h1 class="title">tutu健身</h1>
+        </header>
+
+        <!-- 工具栏 -->
+        <nav class="bar bar-tab">
+            <a class="tab-item external active" href="#">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">首页</span>
+            </a>
+            <a class="tab-item external" href="#">
+                <span class="icon icon-star"></span>
+                <span class="tab-label">收藏</span>
+            </a>
+            <a class="tab-item external" href="#">
+                <span class="icon icon-settings"></span>
+                <span class="tab-label">设置</span>
+            </a>
+        </nav>
+
+        <!-- 这里是页面内容区 -->
+        <div class="content">
+            <div class="content-block">
+                <div class="content">
+                    <div class="card">
+
+                            <div class="card-header">最优质的服务</div>
+                        <div class="card-content">
+
+                            <div class="card-content-inner">
+                                <ul>
+                                    <li>我们仍然秉承了矩阵式，功能性训练计划体系！我们的训练计划仍然是保持了每一周都会更新，每周都会不同！每三个月会有周期性的调整。当然很重要的一点我们不会提前让你知道训练内容！你只有来到课堂上才会知道当天的训练计划！她就像你的生活一样，你永远无法预知将来会发生什么，但我们可以通过周期性的训练来应对任何未知的挑战！我们的每一堂课中都包含了身体控制，力量训练，心肺训练并且更令人兴奋的是我们还为新学员加入了更多的基础动作教学！可以让想练但不知道怎么练的你有一个更好的选择！同时在我们专业的训练计划和教练的指导下，可以让你练得更科学，更系统，更安全，更好的获得身体全面发展，更好的展示生活中自信的你！当然还有更好的体型！哦对了最后还要补充一点那就是当你已经参加满20节左右的HyperShock基础课程后，你将可以更好的在我们的Hyper Shock Basic课程中来挑战和展示自己！来吧动起来，做自己生活中的强者！</li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-header">LESMILLS GRITCardio</div>
+                        <div class="card-content">
+
+                            <div class="card-content-inner">
+                                <ul>
+                                    <li>LESMILLS GRITCardio 是一项时长为30分钟的高强度间歇训练（HIIT）课程，可以改善心血管健康、提升身体速度并最大程度燃烧卡路里。这项课程需要进行各种各样的自重训练，其难度和强度正是希望快速产生健身效果的你所需要的。
+                                        LESMILLS GRITCardio 课程采用最先进的HIIT，配合强劲的音乐。不断给你鼓舞的教练将会与你一块儿锻炼，鼓励你再加把劲儿、让身体更好、动作更敏捷</li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-header">RPM课程</div>
+                        <div class="card-content">
+
+                            <div class="card-content-inner">
+                                <ul>
+                                    <li>RPM课程是我们开设的室内脚踏车课程，配有动感十足的音乐节奏，达到快速健身的效果。
+
+                                        学习骑脚踏车的所有基本动作，如站起、坐下、改变手扶位置、加速和减速。自行掌控自己的阻力水平和冲刺速度，逐渐加大自己的训练强度。</li>
+
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-header">BODYVIVE</div>
+                        <div class="card-content">
+
+                            <div class="card-content-inner">
+                                <ul>
+<li>BODYVIVE如果你想获得力量、有氧和核心肌肉训练的最佳组合，本项课程正是你想要的。走进BODYVIVE课堂，开始全方位锻炼。具有挑战性的训练将跳跃冲击、深蹲、跑步和弹力带训练结合起来，将帮助你燃烧卡路里，让健身效果更上一层楼。走出课堂时，你将感到精力充沛，感觉全面开启了健康生活模式。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                            <div class="card-header">肌肉拉伸</div>
+                            <div class="card-content">
+                                <div class="card-content-inner">
+                                    <img class="" src="../img/service1.jpg" alt="" width="100%">
+                                </div>
+                                <div class="card-content-inner">
+                                    <ul>
+                                        <li>拉伸运动是一种健身方法，拉伸运动可以使韧带肌肉和关节与关节之间的配合更加柔和，减少受伤可能性。包括主动拉伸和被动拉伸。</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                    </div>
+                    <div class="card">
+                        <div class="card-header">杠铃健身</div>
+                        <div class="card-content">
+                            <div class="card-content-inner">
+                                <img class="" src="../img/service2.jpg" alt="" width="100%">
+                            </div>
+                            <div class="card-content-inner">
+                                <ul>
+<li>举杠铃是项普遍的健身项目。是人类通过臂力将杠铃由下而上举起的运动。标准方式是：站立，将杠铃放在胸部利用臂力及胸部背部肌肉，由双臂举起至双臂伸直，与地面垂直。</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card">
+                        <div class="card-header">养生瑜伽</div>
+                        <div class="card-content">
+                            <div class="card-content-inner">
+                                <img class="" src="../img/service3.jpg" alt="" width="100%">
+                            </div>
+                            <div class="card-content-inner">
+                                <ul>
+<li>养生瑜伽通过特定的瑜伽体式，被动有效地调节身体的神经系统和肾上腺素之间的平衡，使身体整体走向平衡，以便平衡我们的繁忙生活。</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card">
+                        <div class="card-header">联系方式</div>
+                        <div class="card-content">
+
+                            <div class="card-content-inner">
+                                <ul>
+                                    <li>Bootstrap company Inc</li>
+                                    <li>JC Main Road, Near Silnile tower</li>
+                                    <li>Pin-21542 NewYork US.</li>
+                                    <li>(123) 456-789 - 1255-12584 </li>
+                                    <li>email@domainname.com</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-header">友情链接</div>
+                        <div class="card-content">
+
+                            <div class="card-content-inner">
+                                <ul>
+                                    <li><a  href="#">Latest Events</a></li>
+                                    <li><a  href="#">Terms and conditions</a></li>
+                                    <li><a  href="#">Privacy policy</a></li>
+                                    <li><a  href="#">Career</a></li>
+                                    <li><a  href="#">Contact us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-header">最新动态</div>
+                        <div class="card-content">
+
+                            <div class="card-content-inner">
+                                <ul>
+                                    <li><a  href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
+                                    <li><a  href="#">Pellentesque et pulvinar enim. Quisque at tempor ligula</a></li>
+                                    <li><a  href="#">Natus error sit voluptatem accusantium doloremque</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-header">相关新闻</div>
+                        <div class="card-content">
+
+                            <div class="card-content-inner">
+                                <ul>
+                                    <li><a  href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
+                                    <li><a  href="#">Pellentesque et pulvinar enim. Quisque at tempor ligula</a></li>
+                                    <li><a  href="#">Natus error sit voluptatem accusantium doloremque</a></li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 其他的单个page内联页（如果有） -->
+    <div class="page">...</div>
+</div>
+
+<!-- popup, panel 等放在这里 -->
+<div class="panel-overlay"></div>
+<!-- Left Panel with Reveal effect -->
+<div class="panel panel-left panel-reveal">
+    <div class="content-block">
+        <p><a href="#" class="close-panel">首页</a></p>
+        <p><a href="#" class="close-panel">关于我们</a></p>
+        <p><a href="#" class="close-panel">服务</a></p>
+        <p><a href="#" class="close-panel">场馆</a></p>
+        <p><a href="#" class="close-panel">教练团队</a></p>
+        <p><a href="#" class="close-panel">联系我们</a></p>
+        <p><a href="#" class="close-panel">登录</a></p>
+        <p><a href="#" class="close-panel">注册</a></p>
+        <!-- Click on link with "close-panel" class will close panel -->
+        <p><a href="#" class="close-panel">关闭</a></p>
+    </div>
+</div>
+
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
+<!-- 默认必须要执行$.init(),实际业务里一般不会在HTML文档里执行，通常是在业务页面代码的最后执行 -->
+<!-- <script>$.init()</script> -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.init();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.fitness.dao.AdMapper">
+  <!--批量删除-->
+  <delete id="deleteAds">
+    delete from ad where ad_id in
+    <foreach collection="array" open="(" close=")" separator="," item="id">
+      #{id}
+    </foreach>
+  </delete>
+  <!--分页显示-->
+  <select id="selAdByPage" resultMap="BaseResultMap">
+    select *from ad
+    <where>
+      <if test="adName!=null and ''!=adName">
+        and ad_name like concat('%',#{adName},'%')
+      </if>
+    </where>
+  </select>
+  <resultMap id="BaseResultMap" type="com.rabbit.fitness.pojo.Ad">
+    <id column="ad_id" jdbcType="INTEGER" property="adId" />
+    <result column="ad_name" jdbcType="VARCHAR" property="adName" />
+    <result column="ad_address" jdbcType="VARCHAR" property="adAddress" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ad_id, ad_name, ad_address
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ad
+    where ad_id = #{adId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ad
+    where ad_id = #{adId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rabbit.fitness.pojo.Ad">
+    insert into ad (ad_id, ad_name, ad_address
+      )
+    values (#{adId,jdbcType=INTEGER}, #{adName,jdbcType=VARCHAR}, #{adAddress,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rabbit.fitness.pojo.Ad">
+    insert into ad
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="adId != null">
+        ad_id,
+      </if>
+      <if test="adName != null">
+        ad_name,
+      </if>
+      <if test="adAddress != null">
+        ad_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="adId != null">
+        #{adId,jdbcType=INTEGER},
+      </if>
+      <if test="adName != null">
+        #{adName,jdbcType=VARCHAR},
+      </if>
+      <if test="adAddress != null">
+        #{adAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.fitness.pojo.Ad">
+    update ad
+    <set>
+      <if test="adName != null and ''!=adName">
+        ad_name = #{adName,jdbcType=VARCHAR},
+      </if>
+      <if test="adAddress != null and ''!=adAddress">
+        ad_address = #{adAddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ad_id = #{adId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rabbit.fitness.pojo.Ad">
+    update ad
+    set ad_name = #{adName,jdbcType=VARCHAR},
+      ad_address = #{adAddress,jdbcType=VARCHAR}
+    where ad_id = #{adId,jdbcType=INTEGER}
+  </update>
+</mapper>

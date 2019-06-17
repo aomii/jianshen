@@ -1,0 +1,157 @@
+package com.rabbit.fitness.admin.controller;
+
+
+import com.rabbit.fitness.admin.service.AuthService;
+import com.rabbit.fitness.admin.service.RoleService;
+import com.rabbit.fitness.gym.common.TreeNode;
+import com.rabbit.fitness.pojo.Auth;
+import com.rabbit.fitness.pojo.User;
+import com.rabbit.fitness.utils.Result;
+import com.rabbit.fitness.utils.TreeUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Controller
+@RequestMapping("/auth")
+
+public class AuthController {
+    @Autowired
+    private AuthService authService;
+    @Autowired
+    private RoleService roleService;
+
+    /*根据用户id和父节点查询权限*/
+    @RequestMapping("/tree")
+    @ResponseBody
+    public List loadTree(HttpSession session, @RequestParam(value = "id",required = false,defaultValue = "-1") Integer parentId){
+        System.out.println("节点id是："+parentId);
+        User user= (User) session.getAttribute("currentUser");
+        List<Auth> auths=authService.selAuthByParentId(parentId,user);
+        List<TreeNode> nodeList=new ArrayList<>();
+        for (Auth auth : auths) {
+            TreeNode node=new TreeNode();
+            node.setId(auth.getAuthId());
+            node.setText(auth.getAuthName());
+            node.setState(auth.getState());
+            node.setIconCls(auth.getIconCls());
+            if(auth.getAuthPath()!=null&&!"".equals(auth.getAuthPath())){
+                Map attr=new HashMap();
+                attr.put("authPath",auth.getAuthPath());
+                node.setAttributes(attr);
+            }
+            nodeList.add(node);
+        }
+        return  nodeList;
+    }
+
+    /*查询所有权限*/
+    @RequestMapping("/treeRole/{roleId}")
+    @ResponseBody
+    @RequiresRoles(value = "superadmin")
+    public List treeRole(@RequestParam(value = "id",required = false,defaultValue = "-1") Integer parentId,@PathVariable("roleId")Integer roleId){
+        List<Auth> auths=authService.selAllAuth(parentId);
+        String authIds = roleService.selRoleByRid(roleId).getAuthIds();
+        List<TreeNode> nodeList=new ArrayList<>();
+        for (Auth auth : auths) {
+            TreeNode node=new TreeNode();
+            node.setId(auth.getAuthId());
+            node.setText(auth.getAuthName());
+            node.setState(auth.getState());
+            node.setIconCls(auth.getIconCls());
+            if(auth.getAuthPath()!=null&&!"".equals(auth.getAuthPath())){
+                Map attr=new HashMap();
+                attr.put("authPath",auth.getAuthPath());
+                node.setAttributes(attr);
+            }
+            String[] arr = authIds.split(",");
+            for(String s: arr){
+                if(auth.getAuthId().equals(Integer.parseInt(s))){
+                    node.setChecked(true);
+                }
+            }
+            nodeList.add(node);
+        }
+        return  nodeList;
+    }
+
+    /*权限树形表格*/
+    @RequestMapping("treeTable")
+    @ResponseBody
+    @RequiresRoles(value = "superadmin")
+    public List treeTable(){
+        List<Auth> list = authService.findAll();
+        //递归
+        return TreeUtils.buildGridTree(list,-1);
+    }
+
+    /*添加权限*/
+    @RequestMapping("/add")
+    @ResponseBody
+    @RequiresRoles(value = "superadmin")
+    public Result addAuth(Auth auth){
+        /*判断是否重复*/
+        Auth auth1 = authService.checkAuth(auth);
+        if(auth1 != null){
+            return Result.error(500,"该菜单名字已经存在，不能重复添加");
+        }
+        /*添加权限*/
+        try {
+            authService.addAuth(auth);
+        } catch (Exception e) {
+            return Result.error(500,"菜单添加失败");
+        }
+        return Result.success(0,"添加成功");
+    }
+
+    /*修改权限*/
+    @RequestMapping("/update")
+    @ResponseBody
+    @RequiresRoles(value = "superadmin")
+    public Result alterAuth(Auth auth){
+        Auth auth1 = authService.checkAuth(auth);
+        if(auth1!=null){
+            if(!auth.getAuthId().equals(auth1.getAuthId())){
+                return Result.error(500,"该菜单名字已经存在不能修改");
+            }
+        }
+        int result = authService.updateAuth(auth);
+        if(result>0){
+            return Result.success();
+        }else{
+            return Result.error(500,"更新失败");
+        }
+    }
+
+    /*删除权限*/
+    @RequestMapping("/delete")
+    @ResponseBody
+    @RequiresRoles(value = "superadmin")
+    public  Result deleteAuth(Integer authId){
+        /*查找此节点下是否有子节点*/
+        List<Auth> auths=authService.selChildByParent(authId);
+        if(auths.size()>0){
+            return Result.error(500,"该节点下还有子节点，不能删除");
+        }
+        else{
+            /*删除该节点*/
+            try {
+                authService.deleteAuth(authId);
+            } catch (Exception e) {
+                return  Result.error(500,"删除节点失败");
+            }
+            return  Result.success(0,"删除节点成功");
+        }
+
+    }
+}

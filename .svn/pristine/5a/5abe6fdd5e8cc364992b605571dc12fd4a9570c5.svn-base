@@ -1,0 +1,105 @@
+package com.rabbit.fitness.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.sql.DataSource;
+
+@Configuration
+public class MvcConfig implements WebMvcConfigurer {
+
+    //添加静态资源路径
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/upload/**").addResourceLocations("file:D:/upload/");
+    }
+    //视图控制器
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+
+            registry.addViewController("/personal.html").setViewName("personal");
+            registry.addViewController("/403.html").setViewName("403");
+
+            //添加主页面
+            registry.addViewController("/index.html").setViewName("index");
+            registry.addViewController("/about.html").setViewName("about");
+            registry.addViewController("/contact.html").setViewName("contact");
+            registry.addViewController("/portfolio.html").setViewName("portfolio");
+            registry.addViewController("/coaches.html").setViewName("coaches");
+            registry.addViewController("/services.html").setViewName("services");
+            registry.addViewController("/static-login.html").setViewName("static-login");
+            registry.addViewController("/static-register.html").setViewName("static-register");
+            registry.addViewController("/shopCar.html").setViewName("shopCar");
+            registry.addViewController("/websocket.html").setViewName("websocket.html");
+
+            registry.addViewController("/fitness-gyms.html").setViewName("fitness-gyms");
+            registry.addViewController("/fitness-knowledge.html").setViewName("fitness-knowledge");
+            registry.addViewController("/fitness-qicai.html").setViewName("fitness-qicai");
+
+            registry.addViewController("add").setViewName("coach_addd");
+            registry.addViewController("payy").setViewName("coach_alipay");
+            registry.addViewController("detail").setViewName("coach_detail");
+            registry.addViewController("change").setViewName("coach_change");
+            registry.addViewController("wallet").setViewName("coach_wallet");
+            registry.addViewController("pay").setViewName("coach_pay");
+            registry.addViewController("tixian").setViewName("coach_tixian");
+
+
+
+
+
+            /*后台页面html映射*/
+            registry.addViewController("/backmain.html").setViewName("backmain");
+            registry.addViewController("/recruit/manager").setViewName("recruit_manager");
+            registry.addViewController("/equip/manager").setViewName("equip_manager");
+            registry.addViewController("/user/manager").setViewName("user_manager");
+            registry.addViewController("/role/manager").setViewName("role_manager");
+            registry.addViewController("/auth/manager").setViewName("auth_manager");
+            registry.addViewController("/knowledge/manager").setViewName("knowledge_manager");
+            registry.addViewController("/course/manager").setViewName("course_manager");
+            registry.addViewController("/product/manager").setViewName("product_manager");
+            registry.addViewController("/ad/manager").setViewName("ad_manager");
+            registry.addViewController("/student/manager").setViewName("student_manager");
+            registry.addViewController("/gym/manager").setViewName("gym_manager");
+            registry.addViewController("/gym/info").setViewName("gym_info");
+            registry.addViewController("/websocket.html").setViewName("websocket.html");
+            registry.addViewController("/personal.html").setViewName("personal.html");
+            registry.addViewController("/baidumap.html").setViewName("baidumap.html");
+            registry.addViewController("/coach/manager").setViewName("coach_manager");
+            registry.addViewController("/trade/manager").setViewName("trade_manager");
+            registry.addViewController("/request/record").setViewName("request_record");
+            registry.addViewController("/retrieve.html").setViewName("retrieve");
+
+            //移动端地址
+            registry.addViewController("/UI/UI-main.html").setViewName("UI/UI-main");
+        registry.addViewController("/UI/mobile_main.html").setViewName("UI/mobile_main");
+        registry.addViewController("/UI/mobile_login.html").setViewName("UI/mobile_login");
+        registry.addViewController("/UI/mobile_register.html").setViewName("UI/mobile_register");
+        registry.addViewController("/UI/mobile_retrieve.html").setViewName("UI/mobile_retrieve");
+        registry.addViewController("/UI/mobile_services.html").setViewName("UI/mobile_services");
+        registry.addViewController("/UI/a.html").setViewName("UI/a");
+
+        registry.addViewController("/UI/mobile_portfolio.html").setViewName("UI/mobile_portfolio");
+        registry.addViewController("/UI/mobile_coaches.html").setViewName("UI/mobile_coaches");
+        registry.addViewController("/UI/mobile_contact.html").setViewName("UI/mobile_contact");
+
+
+
+            registry.addViewController("/pwd/change").setViewName("pwd_change");
+    }
+
+
+    /*配置事务管理器*/
+    @Bean
+    public DataSourceTransactionManager manager(DataSource dataSource){
+        DataSourceTransactionManager manager= new DataSourceTransactionManager();
+        manager.setDataSource(dataSource);
+        return manager;
+    }
+
+}

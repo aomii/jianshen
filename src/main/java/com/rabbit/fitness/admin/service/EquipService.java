@@ -1,0 +1,31 @@
+package com.rabbit.fitness.admin.service;
+
+import com.rabbit.fitness.pojo.Equipment;
+
+import java.util.List;
+
+public interface EquipService {
+    /*分页显示*/
+    List<Equipment> getAll(Integer currentPage, Integer pageSize, String equipName);
+
+    /*检查重复*/
+    Equipment findEquip(String equipName);
+
+    /*添加*/
+    Integer addEquip(Equipment equipment);
+
+    /*修改*/
+    int updateEquip(Equipment equipment);
+
+    /*批量删除*/
+    int deleteEquip(Integer[] equipsId);
+
+    //=================am=========================
+    //详情
+    Equipment findEquipByEquipId(Integer equipId);
+
+    /*更新器材点击数*/
+    Integer updateEquipCount(Equipment equip);
+
+    //==========================================
+}

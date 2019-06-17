@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.fitness.dao.TradeMapper">
+
+  <!--通过学生id查找trade记录  （DYR编辑）-->
+    <select id="queryTradeByStudentId" resultMap="BaseResultMap">
+      select t.*,s.stuname stuname,g.gname gname,c.cname cname from trade t left join student s on t.trade_student=s.stuid
+                         left join gym g on t.trade_gym=g.gid
+                         left join coach c on t.trade_coach=c.cid
+                         where s.stuid = #{stuid}
+    </select>
+
+
+  <select id="selAll" resultMap="BaseResultMap">
+    select t.*,s.stuid stuid,s.stuname stuname,g.gname gname,c.cname cname from trade t left join student s on t.trade_student=s.stuid
+                         left join gym g on t.trade_gym=g.gid
+                         left join coach c on t.trade_coach=c.cid
+    <where>
+      <if test="vo.stuname!=null and ''!=vo.stuname">
+        and s.stuname=#{vo.stuname}
+      </if>
+      <if test="vo.gid!=null">
+        and g.gid=#{vo.gid}
+      </if>
+      <if test="vo.tradeType!=null and ''!=vo.tradeType">
+        and t.trade_type=#{vo.tradeType}
+      </if>
+    </where>
+  </select>
+  <resultMap id="BaseResultMap" type="com.rabbit.fitness.pojo.Trade">
+    <id column="trade_id" jdbcType="INTEGER" property="tradeId" />
+    <result column="trade_money" jdbcType="DOUBLE" property="tradeMoney" />
+    <result column="trade_type" jdbcType="VARCHAR" property="tradeType" />
+    <result column="trade_products" jdbcType="VARCHAR" property="tradeProducts" />
+    <result column="trade_starttime" jdbcType="DATE" property="tradeStarttime" />
+    <result column="trade_overtime" jdbcType="DATE" property="tradeOvertime" />
+    <result column="trade_desc" jdbcType="VARCHAR" property="tradeDesc" />
+    <association property="student" javaType="Student" resultMap="studentMap"></association>
+    <association property="gym" javaType="Gym" resultMap="gymMap"></association>
+    <association property="coach" javaType="Coach" resultMap="coachMap"></association>
+    <collection property="products" column="trade_products" select="selProducts"></collection>
+  </resultMap>
+  <resultMap id="studentMap" type="Student" autoMapping="true">
+    <id property="stuid" column="stuid"></id>
+  </resultMap>
+  <resultMap id="gymMap" type="Gym" autoMapping="true">
+    <id property="gid" column="gid"></id>
+  </resultMap>
+  <resultMap id="coachMap" type="Coach" autoMapping="true">
+    <id property="cid" column="cid"></id>
+  </resultMap>
+  <select id="selProducts" resultType="Product">
+    select * from product where find_in_set (product_id,#{value})
+  </select>
+
+  <sql id="Base_Column_List">
+    trade_id, trade_student, trade_products, trade_gym, trade_coach, trade_money, trade_type, 
+    trade_starttime, trade_overtime, trade_desc
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from trade
+    where trade_id = #{tradeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from trade
+    where trade_id = #{tradeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rabbit.fitness.pojo.Trade">
+    insert into trade (trade_id, trade_student, trade_products, 
+      trade_gym, trade_coach, trade_money, 
+      trade_type, trade_starttime, trade_overtime, 
+      trade_desc)
+    values (#{tradeId,jdbcType=INTEGER}, #{tradeStudent,jdbcType=INTEGER}, #{tradeProducts,jdbcType=VARCHAR}, 
+      #{tradeGym,jdbcType=INTEGER}, #{tradeCoach,jdbcType=INTEGER}, #{tradeMoney,jdbcType=DOUBLE}, 
+      #{tradeType,jdbcType=VARCHAR}, #{tradeStarttime,jdbcType=DATE}, #{tradeOvertime,jdbcType=DATE}, 
+      #{tradeDesc,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rabbit.fitness.pojo.Trade">
+    insert into trade
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tradeId != null">
+        trade_id,
+      </if>
+      <if test="student.stuid != null">
+        trade_student,
+      </if>
+      <if test="tradeProducts != null">
+        trade_products,
+      </if>
+      <if test="gym.gid != null">
+        trade_gym,
+      </if>
+      <if test="coach.cid != null">
+        trade_coach,
+      </if>
+      <if test="tradeMoney != null">
+        trade_money,
+      </if>
+      <if test="tradeType != null">
+        trade_type,
+      </if>
+      <if test="tradeStarttime != null">
+        trade_starttime,
+      </if>
+      <if test="tradeOvertime != null">
+        trade_overtime,
+      </if>
+      <if test="tradeDesc != null">
+        trade_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tradeId != null">
+        #{tradeId,jdbcType=INTEGER},
+      </if>
+      <if test="student.stuid != null">
+        #{tradeStudent,jdbcType=INTEGER},
+      </if>
+      <if test="tradeProducts != null">
+        #{tradeProducts,jdbcType=VARCHAR},
+      </if>
+      <if test="gym.gid != null">
+        #{tradeGym,jdbcType=INTEGER},
+      </if>
+      <if test="coach.cid != null">
+        #{tradeCoach,jdbcType=INTEGER},
+      </if>
+      <if test="tradeMoney != null">
+        #{tradeMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="tradeType != null">
+        #{tradeType,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeStarttime != null">
+        #{tradeStarttime,jdbcType=DATE},
+      </if>
+      <if test="tradeOvertime != null">
+        #{tradeOvertime,jdbcType=DATE},
+      </if>
+      <if test="tradeDesc != null">
+        #{tradeDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.fitness.pojo.Trade">
+    update trade
+    <set>
+      <if test="student.stuid != null">
+        trade_student = #{student.stuid,jdbcType=INTEGER},
+      </if>
+      <if test="tradeProducts != null">
+        trade_products = #{tradeProducts,jdbcType=VARCHAR},
+      </if>
+      <if test="gym.gid != null">
+        trade_gym = #{gym.gid,jdbcType=INTEGER},
+      </if>
+      <if test="coach.cid != null">
+        trade_coach = #{coach.cid,jdbcType=INTEGER},
+      </if>
+      <if test="tradeMoney != null">
+        trade_money = #{tradeMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="tradeType != null">
+        trade_type = #{tradeType,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeStarttime != null">
+        trade_starttime = #{tradeStarttime,jdbcType=DATE},
+      </if>
+      <if test="tradeOvertime != null">
+        trade_overtime = #{tradeOvertime,jdbcType=DATE},
+      </if>
+      <if test="tradeDesc != null">
+        trade_desc = #{tradeDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where trade_id = #{tradeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rabbit.fitness.pojo.Trade">
+    update trade
+    set trade_student = #{tradeStudent,jdbcType=INTEGER},
+      trade_products = #{tradeProducts,jdbcType=VARCHAR},
+      trade_gym = #{tradeGym,jdbcType=INTEGER},
+      trade_coach = #{tradeCoach,jdbcType=INTEGER},
+      trade_money = #{tradeMoney,jdbcType=DOUBLE},
+      trade_type = #{tradeType,jdbcType=VARCHAR},
+      trade_starttime = #{tradeStarttime,jdbcType=DATE},
+      trade_overtime = #{tradeOvertime,jdbcType=DATE},
+      trade_desc = #{tradeDesc,jdbcType=VARCHAR}
+    where trade_id = #{tradeId,jdbcType=INTEGER}
+  </update>
+</mapper>

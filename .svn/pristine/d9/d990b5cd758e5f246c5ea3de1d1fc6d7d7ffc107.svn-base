@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SUI Mobile 使用</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+
+
+    <style>
+        .sub-btn {
+            background: #ff3366;
+            color: #FFF;
+            font-size: 26px;
+            padding: 0.3em 1.2em;
+            width: 100%;
+            font-weight: 500;
+            transition: 0.5s all;
+            -webkit-transition: 0.5s all;
+            -moz-transition: 0.5s all;
+            -o-transition: 0.5s all;
+            display: inline-block;
+            cursor: pointer;
+            outline: none;
+            border: none;
+            border-radius: 3px;
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+    </style>
+
+</head>
+<body>
+<!-- page集合的容器，里面放多个平行的.page，其他.page作为内联页面由路由控制展示 -->
+<div class="page-group">
+    <!-- 单个page ,第一个.page默认被展示-->
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <a class="icon icon-me pull-left open-panel"></a>
+            <h1 class="title">tutu健身</h1>
+        </header>
+
+        <!-- 工具栏 -->
+        <nav class="bar bar-tab">
+            <a class="tab-item external active" href="#">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">首页</span>
+            </a>
+            <a class="tab-item external" href="#">
+                <span class="icon icon-star"></span>
+                <span class="tab-label">收藏</span>
+            </a>
+            <a class="tab-item external" href="#">
+                <span class="icon icon-settings"></span>
+                <span class="tab-label">设置</span>
+            </a>
+        </nav>
+
+        <!-- 这里是页面内容区 -->
+        <div class="content">
+
+            <div class="header">
+                <div class="header-main">
+                    <h1>注册</h1>
+                    <div class="header-bottom">
+                        <div class="header-right w3agile">
+
+                            <div class="header-left-bottom agileinfo">
+
+                                <div>
+                                    <input type="text"  value="手机号" id="userName" name="userName" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '用户名';}"/>
+                                    <input type="text"  value="验证码" name="verifyCode" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '验证码';}"/>
+                                    <button type="button" id="numbtn" class="sendVerifyCode">获取短信验证码</button>
+                                    <input type="password"  value="密码" name="password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '密码';}"/>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="3" checked>教练
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="4">学员
+                                        </label>
+                                    </div>
+                                </div>
+                                <input type="button" value="注册" class="sub-btn"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 其他的单个page内联页（如果有） -->
+    <div class="page">...</div>
+</div>
+
+<!-- popup, panel 等放在这里 -->
+<div class="panel-overlay"></div>
+<!-- Left Panel with Reveal effect -->
+<div class="panel panel-left panel-reveal">
+    <div class="content-block">
+        <p><a href="#" class="close-panel">首页</a></p>
+        <p><a href="#" class="close-panel">关于我们</a></p>
+        <p><a href="#" class="close-panel">服务</a></p>
+        <p><a href="#" class="close-panel">场馆</a></p>
+        <p><a href="#" class="close-panel">教练团队</a></p>
+        <p><a href="#" class="close-panel">联系我们</a></p>
+        <p><a href="#" class="close-panel">登录</a></p>
+        <p><a href="#" class="close-panel">注册</a></p>
+        <!-- Click on link with "close-panel" class will close panel -->
+        <p><a href="#" class="close-panel">关闭</a></p>
+    </div>
+</div>
+
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
+<!-- 默认必须要执行$.init(),实际业务里一般不会在HTML文档里执行，通常是在业务页面代码的最后执行 -->
+<!-- <script>$.init()</script> -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.init();
+    });
+</script>
+<script>
+    // 获取验证码倒计时
+    var countdown = 60;
+    $('#numbtn').on('click',function(){
+        var len=document.getElementById("userName").value.length;
+        // var txttile = $('#userName').val();
+        if (len!=11){
+            alert('手机号码格式不对');
+            return;
+        }
+        var obj = $("#numbtn");
+        settime(obj);
+    })
+    function settime(obj) { //发送验证码倒计时
+        if (countdown == 0) {
+            obj.attr('disabled', false);
+//obj.removeattr("disabled");
+            obj.html("免费获取验证码");
+            countdown = 60;
+            return;
+        } else {
+            obj.attr('disabled', true);
+            obj.html("重新发送(" + countdown + ")");
+            countdown--;
+        }
+        setTimeout(function () {
+                settime(obj)
+            }
+            , 1000)
+    }
+</script>
+<script>
+    $(function () {
+//发送验证码
+        $(".sendVerifyCode").on("click", function () {
+            var userName = $("input[name=userName]").val();
+            $.ajax({
+                url: "../users/sendSms",
+                async: true,
+                type: "post",
+                dataType: "json",
+                data: {"userName": userName},
+                success: function (data) {
+                    if (data == 'fail') {
+                        alert("发送验证码失败");
+                        return;
+                    }
+                }
+            });
+        })
+//提交
+        $(".sub-btn").on("click", function () {
+            var data = {};
+            data.userName = $.trim($("input[name=userName]").val());
+            data.password = $.trim($("input[name=password]").val());
+            data.verifyCode = $.trim($("input[name=verifyCode]").val());
+            data.roleId = $('input:radio:checked').val();
+            $.ajax({
+                url:  "../users/register",
+                async: true,
+                type: "post",
+                // dataType: "json",
+                data: data,
+                success: function (data) {
+                    // alert(data);
+                    if (data == 'fail') {
+                        alert("注册失败");
+                        return;
+                    }else if (data=="success") {
+                        alert("注册成功");
+                        location.href="mobile_login.html";
+                    }else {
+                        alert(data)
+                    }
+
+                }
+            });
+        })
+    });
+</script>
+</body>
+</html>

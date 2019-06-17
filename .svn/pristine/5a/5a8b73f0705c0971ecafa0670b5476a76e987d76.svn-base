@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<!-- css -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="materialize/css/materialize.min.css" media="screen,projection" />
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<link href="css/fancybox/jquery.fancybox.css" rel="stylesheet">
+<link href="css/flexslider.css" rel="stylesheet" />
+<link href="css/style.css" rel="stylesheet" />
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+</head>
+<body>
+<div id="wrapper" class="home-page">
+	<!-- 头部导航栏区域 -->
+	<header>
+		<div class="navbar navbar-default navbar-static-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="index.html"><i class="icon-info-blocks material-icons">location_on</i>tutu健身</a>
+				</div>
+				<div class="navbar-collapse collapse ">
+					<ul class="nav navbar-nav">
+						<li class="active"><a class="waves-effect waves-dark" th:href="@{/index.html}">主页面</a></li>
+						<li class="dropdown">
+							<a href="#" data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark">关于我们<b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a class="waves-effect waves-dark" th:href="@{/about.html}">公司详情</a></li>
+								<li><a class="waves-effect waves-dark" href="#">我们团队</a></li>
+								<li><a class="waves-effect waves-dark" href="#">相关新闻</a></li>
+								<li><a class="waves-effect waves-dark" href="#">投资我们</a></li>
+							</ul>
+						</li>
+						<li><a class="waves-effect waves-dark" href="services.html">服务</a></li>
+						<li><a class="waves-effect waves-dark" href="portfolio.html">场馆</a></li>
+						<li><a class="waves-effect waves-dark" href="coaches.html">教练团队</a></li>
+						<li><a class="waves-effect waves-dark" href="contact.html">联系我们</a></li>
+						<li class="waves-login"><a class="waves-effect waves-dark unLogin" href="static-login.html">登录</a></li>
+						<li class="waves-register"><a class="waves-effect waves-dark unLogin" href="static-register.html">注册</a></li>
+
+						<li class="dropdown waves-person loginSuccess" style="display: none">
+							<a data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark" href="#" >欢迎您，<p id="loginSuccessP" th:text="${session.currentUser} != null ? ${session.currentUser.userName} : null"></p>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class="waves-effect waves-dark" th:href="@{/personal.html}">个人信息</a></li>
+								<li><a class="waves-effect waves-dark" href="#">设置</a></li>
+								<li><a class="waves-effect waves-dark" href="/logout">退出</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</header><!-- end header -->
+	<section id="inner-headline">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<h2 class="pageTitle">关于我们</h2>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section id="content">
+		<section class="section-padding">
+			<div class="container">
+				<div class="row showcase-section">
+					<div class="col-md-6">
+						<img src="img/dev1.png" alt="showcase image">
+					</div>
+					<div class="col-md-6">
+						<div class="about-text">
+							<h3>我们的 <span class="color">公司</span></h3>
+							<p>tutu健身，创建于2005年，立足长三角，辐射全中国！专注健身14年，已发展成为中国大型直营健身连锁领跑者。截至2018年7月，tutu健身已拥有400+家签约及开业的直营门店。
+
+								累计发展会员人数200万，每年新增约80万会员，每天约30万会员在全国各分店享受专业健身服务。
+
+								tutu健身致力于成为客户最好的健身伙伴，携手国内外顶尖合作伙伴，开始新的品牌战略历程。目前已与万达、苏宁、融创、金鹰、雨润、万科、新世界、五星、绿地、银泰、恒大等众多上市公司结成战略联盟。
+
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<div class="container">
+
+			<div class="about">
+
+
+				<div class="row">
+					<div class="col-md-4">
+						<!-- Heading and para -->
+						<div class="block-heading-two">
+							<h3><span>为什么选择我们?</span></h3>
+						</div>
+						<p>>2015年，已经完成原始资本、人才和经验积累的tutu健身开始快速布局全国，如今已初步完成了对中国一、二线45个重点城市布局，成为中国健身行业大型直营连锁的领跑者。</p>
+					</div>
+					<div class="col-md-4">
+						<div class="block-heading-two">
+							<h3><span>我们需要什么</span></h3>
+						</div>
+						<!-- Accordion starts -->
+						<div class="panel-group" id="accordion-alt3">
+							<!-- Panel. Use "panel-XXX" class for different colors. Replace "XXX" with color. -->
+							<div class="panel">
+								<!-- Panel heading -->
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a data-toggle="collapse" data-parent="#accordion-alt3" href="#collapseOne-alt3">
+											<i class="fa fa-angle-right"></i> 会籍顾问（全国招聘）
+										</a>
+									</h4>
+								</div>
+								<div id="collapseOne-alt3" class="panel-collapse collapse">
+									<!-- Panel body -->
+									<div class="panel-body">
+										<p>推广公司健身产品，传播健身理念，树立客户的健身意识，宣传公司品牌；</p><br/>
+										<p>收集客户资源信息，通过邀约、跟进的方式，对潜在客户进行开发；</p><br/>
+										<p>对公司会员进行维护，协助会员解决在健身体验遇到的问题，挖掘会员潜在需求；</p><br/>
+										<p>完成业绩指标和上级领导交代的其它工作。</p>
+									</div>
+								</div>
+							</div>
+							<div class="panel">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a data-toggle="collapse" data-parent="#accordion-alt3" href="#collapseTwo-alt3">
+											<i class="fa fa-angle-right"></i> 营运前台（全国招聘）
+										</a>
+									</h4>
+								</div>
+								<div id="collapseTwo-alt3" class="panel-collapse collapse">
+									<div class="panel-body">
+										<p>推广公司健身产品，传播健身理念，树立客户的健身意识，宣传公司品牌；</p><br/>
+										<p>收集客户资源信息，通过邀约、跟进的方式，对潜在客户进行开发；</p><br/>
+										<p>对公司会员进行维护，协助会员解决在健身体验遇到的问题，挖掘会员潜在需求；</p><br/>
+										<p>完成业绩指标和上级领导交代的其它工作。</p>
+									</div>
+								</div>
+							</div>
+							<div class="panel">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a data-toggle="collapse" data-parent="#accordion-alt3" href="#collapseThree-alt3">
+											<i class="fa fa-angle-right"></i> 私人教练（全国招聘）
+										</a>
+									</h4>
+								</div>
+								<div id="collapseThree-alt3" class="panel-collapse collapse">
+									<div class="panel-body">
+										<p>推广公司健身产品，传播健身理念，树立客户的健身意识，宣传公司品牌；</p><br/>
+										<p>收集客户资源信息，通过邀约、跟进的方式，对潜在客户进行开发；</p><br/>
+										<p>对公司会员进行维护，协助会员解决在健身体验遇到的问题，挖掘会员潜在需求；</p><br/>
+										<p>完成业绩指标和上级领导交代的其它工作。</p>
+									</div>
+								</div>
+							</div>
+							<div class="panel">
+								<div class="panel-heading">
+									<h4 class="panel-title">
+										<a data-toggle="collapse" data-parent="#accordion-alt3" href="#collapseFour-alt3">
+											<i class="fa fa-angle-right"></i> 团操教练（全国招聘）
+										</a>
+									</h4>
+								</div>
+								<div id="collapseFour-alt3" class="panel-collapse collapse">
+									<div class="panel-body">
+										<p>推广公司健身产品，传播健身理念，树立客户的健身意识，宣传公司品牌；</p><br/>
+										<p>收集客户资源信息，通过邀约、跟进的方式，对潜在客户进行开发；</p><br/>
+										<p>对公司会员进行维护，协助会员解决在健身体验遇到的问题，挖掘会员潜在需求；</p><br/>
+										<p>完成业绩指标和上级领导交代的其它工作。</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Accordion ends -->
+
+					</div>
+
+					<div class="col-md-4">
+						<div class="block-heading-two">
+							<h3><span>我们的专业知识</span></h3>
+						</div>
+						<h6>Web Development</h6>
+						<div class="progress pb-sm">
+							<!-- White color (progress-bar-white) -->
+							<div class="progress-bar progress-bar-red" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+								<span class="sr-only">40% Complete (success)</span>
+							</div>
+						</div>
+						<h6>Designing</h6>
+						<div class="progress pb-sm">
+							<div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+								<span class="sr-only">40% Complete (success)</span>
+							</div>
+						</div>
+						<h6>User Experience</h6>
+						<div class="progress pb-sm">
+							<div class="progress-bar progress-bar-lblue" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+								<span class="sr-only">40% Complete (success)</span>
+							</div>
+						</div>
+						<h6>Development</h6>
+						<div class="progress pb-sm">
+							<div class="progress-bar progress-bar-yellow" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
+								<span class="sr-only">40% Complete (success)</span>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+
+				<div class="about home-about">
+					<div class="container">
+
+						<div class="row">
+							<div class="col-md-4">
+								<div class="block-heading-two">
+									<h3><span>特色</span></h3>
+								</div>
+								<div class="tab-section">
+									<div class="s12">
+										<ul class="tabs">
+											<li class="tab col s4"><a href="#test1" class="waves-effect waves-dark">愿景</a></li>
+											<li class="tab col s4"><a class="waves-effect waves-dark active" href="#test2">理念</a></li>
+											<li class="tab col s4"><a href="#test3" class="waves-effect waves-dark">精神</a></li>
+										</ul>
+									</div>
+									<div id="test1" class="col s12 container"><p>身边的健身专家</p></div>
+									<div id="test2" class="col s12 container"><p>德才兼备，以德为先</p></div>
+									<div id="test3" class="col s12 container"><p>务实、进取、永不放弃</p></div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="block-heading-two">
+									<h3><span>最近新闻</span></h3>
+								</div>
+								<!-- Accordion starts -->
+								<ul class="collapsible" id="accordionSection" data-collapsible="accordion">
+									<li>
+										<div class="collapsible-header active"><i class="material-icons">filter_drama</i>如何判断自己身体是否健康，这几个小技巧让你快速了解自己的身体状况！</div>
+										<div class="collapsible-body"><p> 许多研究都指出，每天运动30分钟就可以得到运动的好处，包括：预防心脏病、糖尿病、骨质疏松、肥胖、忧郁症等，甚至有研究指出，运动可以让人感到快乐，增强自信心。</p></div>
+									</li>
+									<li>
+										<div class="collapsible-header"><i class="material-icons">place</i>在面对众多健身房，应该如何挑选一家口碑靠谱的健身房？</div>
+										<div class="collapsible-body"><p> 许多研究都指出，每天运动30分钟就可以得到运动的好处，包括：预防心脏病、糖尿病、骨质疏松、肥胖、忧郁症等，甚至有研究指出，运动可以让人感到快乐，增强自信心。</p></div>
+									</li>
+									<li>
+										<div class="collapsible-header"><i class="material-icons">whatshot</i>改善驼背，让你长高5cm，背部训练动作大全！</div>
+										<div class="collapsible-body"><p> 许多研究都指出，每天运动30分钟就可以得到运动的好处，包括：预防心脏病、糖尿病、骨质疏松、肥胖、忧郁症等，甚至有研究指出，运动可以让人感到快乐，增强自信心。</p></div>
+									</li>
+								</ul>
+								<!-- Accordion ends -->
+
+							</div>
+
+							<div class="col-md-4">
+								<div class="block-heading-two">
+									<h3><span>建议</span></h3>
+								</div>
+								<div class="testimonials">
+									<div class="active item">
+										<blockquote><p>练与不练 身材都是只属于你自己 别人给不了 也抢不走 想拥有穿衣显瘦 脱衣有肉得好身材可千万别指望着基因 毕竟没有多少人的基因是那么完美的 更多的是需要我们后天得努力去雕琢 把兴趣变成了工作 就想一直在健身的路上走下去 Fighting</p></blockquote>
+										<div class="carousel-info">
+											<img alt="" src="img/team4.jpg" class="pull-left">
+											<div class="pull-left">
+												<span class="testimonials-name">Marc Cooper</span>
+												<span class="testimonials-post">Technical Director</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+						<br>
+					</div>
+				</div>
+
+
+				<br>
+				<!-- Our Team starts -->
+
+				<!-- Heading -->
+				<div class="block-heading-six">
+					<h4 class="bg-color">我们的团队</h4>
+				</div>
+				<br>
+
+				<!-- Our team starts -->
+
+				<div class="team-six">
+					<div class="row">
+						<div class="col-md-3 col-sm-6">
+							<!-- Team Member -->
+							<div class="team-member">
+								<!-- Image -->
+								<img class="img-responsive" src="img/team1.jpg" alt="">
+								<!-- Name -->
+								<h4>Johne Doe</h4>
+								<span class="deg">Master</span>
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6">
+							<!-- Team Member -->
+							<div class="team-member">
+								<!-- Image -->
+								<img class="img-responsive" src="img/team2.jpg" alt="">
+								<!-- Name -->
+								<h4>Jennifer</h4>
+								<span class="deg">Master</span>
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6">
+							<!-- Team Member -->
+							<div class="team-member">
+								<!-- Image -->
+								<img class="img-responsive" src="img/team3.jpg" alt="">
+								<!-- Name -->
+								<h4>Christean</h4>
+								<span class="deg">Master</span>
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6">
+							<!-- Team Member -->
+							<div class="team-member">
+								<!-- Image -->
+								<img class="img-responsive" src="img/team4.jpg" alt="">
+								<!-- Name -->
+								<h4>Kerinele rase</h4>
+								<span class="deg">Master</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Our team ends -->
+
+
+			</div>
+
+		</div>
+	</section>
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3">
+					<div class="widget">
+						<h5 class="widgetheading">联系方式</h5>
+						<address>
+							<strong>Bootstrap company Inc</strong><br>
+							JC Main Road, Near Silnile tower<br>
+							Pin-21542 NewYork US.</address>
+						<p>
+							<i class="icon-phone"></i> (123) 456-789 - 1255-12584 <br>
+							<i class="icon-envelope-alt"></i> email@domainname.com
+						</p>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="widget">
+						<h5 class="widgetheading">友情链接</h5>
+						<ul class="link-list">
+							<li><a class="waves-effect waves-dark" href="#">Latest Events</a></li>
+							<li><a class="waves-effect waves-dark" href="#">Terms and conditions</a></li>
+							<li><a class="waves-effect waves-dark" href="#">Privacy policy</a></li>
+							<li><a class="waves-effect waves-dark" href="#">Career</a></li>
+							<li><a class="waves-effect waves-dark" href="#">Contact us</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="widget">
+						<h5 class="widgetheading">最新动态</h5>
+						<ul class="link-list">
+							<li><a class="waves-effect waves-dark" href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
+							<li><a class="waves-effect waves-dark" href="#">Pellentesque et pulvinar enim. Quisque at tempor ligula</a></li>
+							<li><a class="waves-effect waves-dark" href="#">Natus error sit voluptatem accusantium doloremque</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="widget">
+						<h5 class="widgetheading">相关新闻</h5>
+						<ul class="link-list">
+							<li><a class="waves-effect waves-dark" href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
+							<li><a class="waves-effect waves-dark" href="#">Pellentesque et pulvinar enim. Quisque at tempor ligula</a></li>
+							<li><a class="waves-effect waves-dark" href="#">Natus error sit voluptatem accusantium doloremque</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+</div>
+<a href="#" class="scrollup waves-effect waves-dark"><i class="fa fa-angle-up active"></i></a>
+<!-- javascript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script src="js/jquery.easing.1.3.js"></script>
+<script src="materialize/js/materialize.min.js"></script>
+
+<script src="js/jquery.fancybox.pack.js"></script>
+<script src="js/jquery.fancybox-media.js"></script>
+<script src="js/jquery.flexslider.js"></script>
+<script src="js/animate.js"></script>
+<!-- Vendor Scripts -->
+<script src="js/modernizr.custom.js"></script>
+<script src="js/jquery.isotope.min.js"></script>
+<script src="js/jquery.magnific-popup.min.js"></script>
+<script src="js/animate.js"></script>
+<script src="js/custom.js"></script>
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script th:inline="javascript">
+	var text =$("#loginSuccessP").text();
+	if(text != '' ){
+		$(".unLogin").css("display", "none");
+		$(".loginSuccess").css("display","block");
+	}
+</script>
+</body>
+
+</html>

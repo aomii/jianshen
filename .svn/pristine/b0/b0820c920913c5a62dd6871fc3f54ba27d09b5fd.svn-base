@@ -1,0 +1,79 @@
+package com.rabbit.fitness.gym.controller;
+
+
+import com.rabbit.fitness.admin.service.ProductService;
+import com.rabbit.fitness.admin.service.TradeService;
+import com.rabbit.fitness.pojo.Product;
+import com.rabbit.fitness.pojo.Student;
+import com.rabbit.fitness.pojo.Trade;
+import com.rabbit.fitness.student.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.annotation.Resource;
+import java.util.Calendar;
+import java.util.Date;
+
+@Controller
+@RequestMapping("/contract")
+public class ContractController {
+
+    @Resource(name = "studentService")
+    private StudentService studentService;
+
+    @Autowired
+    private TradeService tradeService;
+
+    @Autowired
+    private ProductService productService;
+
+    //学员购买会员卡(非签约教练)
+    public void buyCard(){
+        /*
+        * 参数：
+        *       1. product_id   商品id，来自Product表
+        *       2. uid    用户id，来自t_user表
+        *       3. gymId,       场馆id，来自gym表
+        * */
+
+        //测试数据
+        int productId = 1;
+        int uid = 1;
+        int gymId = 1;
+
+        //总的实现方式为：向trade表插入一条数据，需要参数：Trade trade
+        Trade trade = new Trade();
+        //为trade  赋值
+
+            //1.通过uid获取student对象。
+        Student student = studentService.getStudentInfoById(uid);
+        trade.setStudent(student);
+
+            //2.通过产品id查询产品
+        Product selProduct = productService.findProductByPid(productId);
+
+            //3.通过查到的studentId去trade表查询是否已经购买了产品，判断动作是否是续约
+        Trade selTrade = tradeService.selTradByStudentId(student.getStuid());
+
+        if(selTrade != null){//已有记录，为续约，则更改productlist,以及时间，金额
+           //设置购买产品..
+            String newPT = trade.getTradeProducts()+productId;
+            trade.setTradeProducts(newPT);
+            //设置时间
+            Date date = trade.getTradeOvertime();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.DATE,selProduct.getProductPrescription());
+            Date overDate = calendar.getTime();
+            trade.setTradeOvertime(overDate);
+            //设置金额
+            trade.setTradeMoney(trade.getTradeMoney()+selProduct.getProductPrice());
+
+
+
+        }
+    }
+
+
+}

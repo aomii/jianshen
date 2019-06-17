@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.fitness.dao.GrecruitCoachMapper">
+
+  <select id="findRecuitCoachByGcid" parameterType="int" resultMap="BaseResultMap">
+    select * from grecruit_coach gc left  join  coach c on gc.cid=c.cid
+    left  join grecruit g on gc.grid=g.grid
+    where gc.gc_id=#{value}
+
+  </select>
+
+  <select id="findRecordByPage"  resultMap="BaseResultMap">
+    select * from grecruit_coach gc left  join  coach c on gc.cid=c.cid
+                                      left  join grecruit g on gc.grid=g.grid
+    <where>
+      <if test="vo.gid!=null">
+        and g.gid=#{vo.gid}
+      </if>
+      <if test="vo.grid!=null">
+        and gc.grid= #{vo.grid}
+      </if>
+    </where>
+  </select>
+
+
+  <select id="findAllCoach" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select gc.*,c.cname cname from grecruit_coach gc left  join  coach c on gc.cid=c.cid where gc.grid= #{grid}
+  </select>
+
+  <select id="selectCoach" parameterType="int" resultType="com.rabbit.fitness.pojo.Coach">
+    select * from  coach where cid = 2006
+  </select>
+
+  <resultMap id="BaseResultMap" type="com.rabbit.fitness.pojo.GrecruitCoach">
+    <id column="gc_id" jdbcType="INTEGER" property="gcId" />
+    <result column="grid" jdbcType="INTEGER" property="grid" />
+    <result column="is_dispose" jdbcType="CHAR" property="isDispose" />
+    <result column="send_time" jdbcType="DATE" property="sendTime" />
+    <association property="coach" javaType="com.rabbit.fitness.pojo.Coach" autoMapping="true">
+        <id column="cid" property="cid"></id>
+    </association>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    gc_id, grid, cid, is_dispose, send_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from grecruit_coach
+    where gc_id = #{gcId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from grecruit_coach
+    where gc_id = #{gcId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rabbit.fitness.pojo.GrecruitCoach">
+    insert into grecruit_coach (gc_id, grid, cid, 
+      is_dispose, send_time)
+    values (#{gcId,jdbcType=INTEGER}, #{grid,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, 
+      #{isDispose,jdbcType=CHAR}, #{sendTime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rabbit.fitness.pojo.GrecruitCoach">
+    insert into grecruit_coach
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="gcId != null">
+        gc_id,
+      </if>
+      <if test="grid != null">
+        grid,
+      </if>
+      <if test="cid != null">
+        cid,
+      </if>
+      <if test="isDispose != null">
+        is_dispose,
+      </if>
+      <if test="sendTime != null">
+        send_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="gcId != null">
+        #{gcId,jdbcType=INTEGER},
+      </if>
+      <if test="grid != null">
+        #{grid,jdbcType=INTEGER},
+      </if>
+      <if test="cid != null">
+        #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="isDispose != null">
+        #{isDispose,jdbcType=CHAR},
+      </if>
+      <if test="sendTime != null">
+        #{sendTime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.fitness.pojo.GrecruitCoach">
+    update grecruit_coach
+    <set>
+      <if test="grid != null">
+        grid = #{grid,jdbcType=INTEGER},
+      </if>
+      <if test="coach.cid != null">
+        cid = #{coach.cid,jdbcType=INTEGER},
+      </if>
+      <if test="isDispose != null">
+        is_dispose = #{isDispose,jdbcType=CHAR},
+      </if>
+      <if test="sendTime != null">
+        send_time = #{sendTime,jdbcType=DATE},
+      </if>
+    </set>
+    where gc_id = #{gcId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rabbit.fitness.pojo.GrecruitCoach">
+    update grecruit_coach
+    set grid = #{grid,jdbcType=INTEGER},
+      cid = #{cid,jdbcType=INTEGER},
+      is_dispose = #{isDispose,jdbcType=CHAR},
+      send_time = #{sendTime,jdbcType=DATE}
+    where gc_id = #{gcId,jdbcType=INTEGER}
+  </update>
+</mapper>

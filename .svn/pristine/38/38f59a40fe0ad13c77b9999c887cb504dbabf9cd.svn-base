@@ -1,0 +1,97 @@
+package com.rabbit.fitness.user.realm;
+
+import com.rabbit.fitness.admin.service.AuthService;
+import com.rabbit.fitness.admin.service.RoleService;
+import com.rabbit.fitness.constant.SysConstant;
+import com.rabbit.fitness.pojo.Role;
+import com.rabbit.fitness.pojo.Student;
+import com.rabbit.fitness.pojo.User;
+import com.rabbit.fitness.student.service.StudentService;
+import com.rabbit.fitness.user.service.UserUserService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Resource;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class CustomRealm extends AuthorizingRealm {
+
+    @Autowired
+    private UserUserService userService;
+    @Autowired
+    private AuthService authService;
+
+    @Resource(name = "studentService")
+    private StudentService studentService;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        User user = (User)principalCollection.getPrimaryPrincipal();
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        Session session = SecurityUtils.getSubject().getSession();
+       User user1= (User)(session.getAttribute(SysConstant.CURRENT_USER));
+        System.out.println(user1);
+        Integer roleId=user1.getRoleId();
+        System.out.println("roleId:" + roleId);
+        Role selRole = roleService.selRoleByRid(roleId);
+        String roleName = selRole.getRoleName();
+        List<String> perms = authService.findPermByUserName(user.getUserName());
+        Set set= new HashSet(perms);
+        System.out.println(perms);
+        System.out.println(set);
+        //添加权限
+        System.out.println(roleName);
+        info.setStringPermissions(set);
+        //添加角色
+        if (roleName.equals("超级管理员")){
+            roleName="superadmin";
+        }
+        if (roleName.equals("场馆管理员")){
+            roleName="gymadmin";
+        }
+        if (roleName.equals("教练")){
+            roleName="coach";
+        }
+        if (roleName.equals("学员")){
+            roleName="student";
+        }
+        System.out.println(roleName);
+        info.addRole(roleName);
+
+        return info;
+    }
+
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo
+            (AuthenticationToken authenticationToken) throws AuthenticationException {
+        String userName = (String)authenticationToken.getPrincipal();
+        User user = userService.checkUser(userName);
+        if(user == null){
+            throw new UnknownAccountException("账户不存在");
+        }
+        //把用户存入session中
+        Session session = SecurityUtils.getSubject().getSession();
+        session.setAttribute(SysConstant.CURRENT_USER,user);
+        //通过用户id获取学员并存入session中
+
+            Student student=studentService.getStudentInfoById(user.getUserId());
+            session.setAttribute("selStu", student);
+
+
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user,user.getPassword(),this.getName());
+        info.setCredentialsSalt(ByteSource.Util.bytes(user.getUserName()));
+        return info;
+    }
+}

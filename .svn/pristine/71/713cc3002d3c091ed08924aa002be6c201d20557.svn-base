@@ -1,0 +1,59 @@
+package com.rabbit.fitness.coach.controller;
+
+import com.alipay.api.AlipayApiException;
+import com.rabbit.fitness.alipay.AlipayBean;
+import com.rabbit.fitness.coach.coachService.CoachService;
+import com.rabbit.fitness.coach.coachService.PayService;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+
+@RestController
+@RequestMapping("order")
+@RequiresRoles(value = "coach")
+public class OrderController {
+    @Autowired
+    private PayService payService;
+
+    @Autowired
+    private CoachService coachService;
+
+    /**
+     * 阿里支付
+     * @param tradeNo
+     * @param subject 多少钱
+     * @param amount
+     * @param body
+     * @return
+     * @throws AlipayApiException
+     */
+    @PostMapping(value = "alipay")
+    public String alipay(String outTradeNo, String subject, String totalAmount, String body , HttpServletRequest request) throws AlipayApiException {
+        AlipayBean alipayBean = new AlipayBean();
+        alipayBean.setOut_trade_no(outTradeNo);
+        alipayBean.setSubject(subject);
+        alipayBean.setTotal_amount(totalAmount);
+        alipayBean.setBody(body);
+        double cmoney = Double.parseDouble(totalAmount);
+
+        String result = payService.aliPay(alipayBean);
+        System.out.println(result);
+
+           System.out.println("支付成功");
+
+           request.getSession().setAttribute("cmoney",cmoney);
+//            Integer uid = (Integer) request.getSession().getAttribute("uid");
+            Integer uid = 9;
+//            coachService.addCmoneyByUid(cmoney,uid);
+        //加入订单
+        coachService.addOrderByUid(outTradeNo, subject, cmoney, uid);
+        //把订单号放入session
+        request.getSession().setAttribute("conum",outTradeNo);
+       return result;
+    }
+
+}

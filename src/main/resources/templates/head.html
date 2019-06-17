@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/materialize/css/materialize.min.css}" media="screen,projection" />
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/fancybox/jquery.fancybox.css}" rel="stylesheet">
+    <link th:href="@{/css/flexslider.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <div th:fragment="head">
+        <!-- 头部导航栏区域 -->
+        <header>
+            <div class="navbar navbar-default navbar-static-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" th:href="@{/index.html}"><i class="icon-info-blocks material-icons">location_on</i>tutu健身</a>
+                    </div>
+                    <div class="navbar-collapse collapse ">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a class="waves-effect waves-dark" th:href="@{/index.html}">主页面</a></li>
+                            <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark">关于我们<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="waves-effect waves-dark" th:href="@{/about.html}">公司详情</a></li>
+                                </ul>
+                            </li>
+                            <li><a class="waves-effect waves-dark" th:href="@{/services.html}">服务</a></li>
+                            <li><a class="waves-effect waves-dark" th:href="@{/gymes.html}">场馆</a></li>
+                            <li><a class="waves-effect waves-dark" th:href="@{/coaches.html}">教练团队</a></li>
+                            <li class="waves-login"><a class="waves-effect waves-dark unLogin" th:href="@{/static-login.html}">登录</a></li>
+                            <li class="waves-register"><a class="waves-effect waves-dark unLogin" th:href="@{/static-register.html}">注册</a></li>
+
+                            <li class="dropdown waves-person loginSuccess" style="display: none">
+                                <a data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark" href="#" ><p id="loginSuccessP" th:text="${session.currentUser} != null ? ${session.currentUser.userName} : null"></p>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <shiro:hasRole th:name="coach" name="coach">
+                                    <li><a class="waves-effect waves-dark" th:href="@{/detail}">个人中心</a> </li>
+                                    <li><a class="waves-effect waves-dark" th:href="@{change}">信息变更</a> </li>
+                                    <li><a class="waves-effect waves-dark" th:href="@{/coach_mystu.html}">我的学员</a></li>
+                                    <li><a class="waves-effect waves-dark" th:href="@{/wallet}">我的钱包</a> </li>
+                                    </shiro:hasRole>
+                                    <shiro:hasRole th:name="student" name="student">
+                                        <li><a class="waves-effect waves-dark" th:href="@{/personal.html}">个人中心</a> </li>
+                                    </shiro:hasRole>
+                                    <li><a class="waves-effect waves-dark" href="#">设置</a></li>
+
+                                </ul>
+                            </li>
+                            <!--<li><a class="waves-effect waves-dark loginSuccess" th:href="@{/student/info/${session.currentUser.uid}}" style="display: none">个人信息</a></li>-->
+                            <li><a class="waves-effect waves-dark loginSuccess" style="display: none" th:href="@{/logout}" href="/logout">退出</a></li>
+                            <!--超级管理员可以进入后台系统-->
+                            <li>
+                                <shiro:hasRole th:name="superadmin" name="superadmin">
+                                    <a class="waves-effect waves-dark" th:href="@{/backmain.html}">点击进入超级管理员后台管理页面</a>
+                                </shiro:hasRole>
+                                <shiro:hasRole th:name="gymadmin" name="gymadmin">
+                                    <a class="waves-effect waves-dark" th:href="@{/backmain.html}">点击进入场馆后台管理页面</a>
+                                </shiro:hasRole>
+                            </li>
+
+
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+    </div>
+
+</body>
+<!-- Placed at the end of the document so the pages load faster -->
+
+
+<script th:src="@{/materialize/js/materialize.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.fancybox.pack.js}"></script>
+<script th:src="@{/js/jquery.fancybox-media.js}"></script>
+<script th:src="@{/js/jquery.flexslider.js}"></script>
+<script th:src="@{/js/animate.js}"></script>
+<!-- Vendor Scripts -->
+<script th:src="@{/js/modernizr.custom.js}"></script>
+<script th:src="@{/js/jquery.isotope.min.js}"></script>
+<script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
+<script th:src="@{/js/animate.js}"></script>
+<script th:src="@{/js/custom.js}"></script>
+<script th:src="@{/js/custom.js}"></script>
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script th:inline="javascript">
+	var text =$("#loginSuccessP").text();
+	if(text != '' ){
+		$(".unLogin").css("display", "none");
+		$(".loginSuccess").css("display","block");
+	}
+</script>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<link rel="stylesheet" th:href="@{/css/themes/default/easyui.css}">
+<link rel="stylesheet" th:href="@{/css/themes/icon.css}">
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/jquery.easyui.min.js}"></script>
+<script th:src="@{/js/easyui-lang-zh_CN.js}"></script>
+</head>
+<body shiro:hasAnyRoles="superadmin,gymadmin">
+<!--定义数据表格-->
+<table id="dg"></table>
+<!--定义工具栏-->
+<div id="toolbar">
+    <!--按钮-->
+    <div th:inline="none">
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deletetrade()">删除</a>
+    </div>
+    <!--模糊查询-->
+    <div>
+        签约学员<input type="text" id="stuname">
+        签约场馆<input type="text" id="gid" class="easyui-combobox" data-options="url:'/gym/list',valueField:'gid',textField:'gname'">
+        签约类型<input type="radio" name="tradeType" value="common">普通
+        <input type="radio" name="tradeType" value="vip">私教
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchTrade()">查找</a>
+    </div>
+</div>
+
+<script th:inline="none">
+    /*创建数据表格*/
+    $(function () {
+        $("#dg").datagrid({
+            url:"/trade/list",
+            title:"交易管理",
+            /*分页*/
+            pagination:true,
+            pageNumber:1,
+            pageSize:5,
+            pageList:[5,10,15],
+            /*自动适应大小*/
+            fitColumns:true,
+            /*行号*/
+            rownumbers:true,
+            /*斑马线*/
+            striped:true,
+            /*工具栏*/
+            toolbar:'#toolbar',
+            /*行数据*/
+            columns:[[
+                {checkbox:true},
+                {field:'tradeId',title:'编号',width:30,align:'center'},
+                {field:'stuname',title:'签约学员',width:100,align:'center',formatter:function (value,rowdata,index) {
+                        return rowdata.student.stuname;
+                    }},
+                {field:'productId',title:'签约产品',width:100,align:'center',formatter:function (value,rowdata,index) {
+                    var productName="";
+                    for (var i = 0; i <rowdata.products.length ; i++) {
+                            productName=productName+rowdata.products[i].productName+",";
+                        }
+                        productName=productName.substring(0,productName.lastIndexOf(','));
+                    return productName;
+                    }},
+                {field:'gid',title:'签约场馆',width:100,align:'center',formatter:function (value,rowdata,index) {
+                        return rowdata.gym.gname;
+                    }},
+                {field:'cid',title:'签约教练',width:100,align:'center',formatter:function (value,rowdata,index) {
+                        if(rowdata.coach!=null){
+                            return rowdata.coach.cname;
+                        };
+                    }},
+                {field:'tradeMoney',title:'签约金额',width:100,align:'center'},
+                {field:'tradeType',title:'签约类型',width:100,align:'center'},
+                {field:'tradeStarttime',title:'签约时间',width:100,align:'center'},
+                {field:'tradeOvertime',title:'逾期时间',width:100,align:'center'},
+                {field:'tradeDesc',title:'备注',width:200,align:'center'},
+            ]]
+        })
+    })
+    /*模糊查询交易*/
+    function searchTrade() {
+        var params={};
+        params.stuname=$("#stuname").val();
+        params.tradeType=$("input[name='tradeType']:checked").val();
+        /*获取下拉列表框的值*/
+        params.gid=$("#gid").combobox("getValue");
+        /*根据参数刷新数据表格*/
+        $("#dg").datagrid("reload",params);
+    }
+
+    /*删除交易*/
+    function deletetrade() {
+        /*获取所选行数据*/
+        var rows=$("#dg").datagrid("getSelections");
+        /*判断所选不能为0*/
+        if(rows.length!=1){
+            $.messager.alert("系统提示","请选择一条数据")
+            return;
+        }
+        /*提示框提示确认删除*/
+        $.messager.confirm("系统提示","确认删除？",function (r) {
+            if(r){
+                /*将所选行的交易id放入数组*/
+                    var stuid=rows[0].student.stuid;
+                /*通过ajax请求发送至后端删除*/
+                $.get("/trade/delete","stuid="+stuid,function (data) {
+                    if(data.code==0){
+                        $.messager.alert("系统提示",data.message);
+                        /*刷新表格*/
+                        $("#dg").datagrid("reload");
+                    }else{
+                        $.messager.alert("系统提示",data.message);
+                    }
+                },"json")
+            }
+        })
+    }
+</script>
+</body>
+</html>

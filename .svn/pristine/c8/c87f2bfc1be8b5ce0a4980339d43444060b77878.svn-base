@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/themes/default/easyui.css}">
+    <link rel="stylesheet" th:href="@{/css/themes/icon.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery.easyui.min.js}"></script>
+    <script th:src="@{/js/easyui-lang-zh_CN.js}"></script>
+</head>
+<body shiro:hasAnyRoles="superadmin,gymadmin">
+<table id="dg"></table>
+
+<div id="toolbar">
+    <div>
+        <a shiro:hasRole="superadmin" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="openAddDialog()">添加</a>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="openModifyDialog()">修改</a>
+        <a shiro:hasRole="superadmin" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deleteStudent()">删除</a>
+    </div>
+    <div>
+        学员名字：<input type="text" id="stuname" size="5">
+        年龄范围：<input type="text" id="stuminage" size="3">--<input type="text" id="stumaxage" size="3">
+        性别：<input type="radio" name="stugender" value="男">男
+            <input type="radio" name="stugender" value="女">女
+        &nbsp;
+        最后登录地点：<input type="text" id="lastlogin" size="7">
+
+        <a  class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchStudent()"></a>
+
+    </div>
+</div>
+
+
+<div id="dlg" class="easyui-dialog"  style="width:600px;height:400px;"
+     data-options="iconCls:'icon-save',closed:true, resizable:true,modal:true,buttons:'#but'">
+    <form id="ff" method="post" enctype="multipart/form-data">
+        <table>
+            <input type="hidden" name="stuid">
+            <tr>
+                <td>学员名字</td>
+                <td>
+                    <input type="text" name="stuname">
+                </td>
+                <td>学员年龄</td>
+                <td>
+                    <input type="text" name="stuage">
+                </td>
+            </tr>
+            <tr>
+                <td>学员性别</td>
+                <td>
+                    <input type="radio" name="stugender" value="男">男
+                    <input type="radio" name="stugender" value="女">女
+                </td>
+            </tr>
+            <tr>
+                <td>学员照片</td>
+                <td>
+                    <input type="hidden" name="stupic">
+                    <input type="file" name="img" id="uploadImg">
+                    <img src="" id="nowImg">
+                </td>
+                <td>学员电话</td>
+                <td>
+                   <input type="text" name="stuphone">
+                </td>
+            </tr>
+            <tr>
+                <td>学员生日</td>
+                <td>
+                    <input type="date" name="stubirth">
+                </td>
+            </tr>
+            <!--以下是添加user表信息-->
+            <tr id="user_tr">
+                <td>用户名</td>
+                <td>
+                    <input type="text" name="user.userName" id="userName">
+                </td>
+                <td>用户密码</td>
+                <td>
+                    <input type="text" name="user.password">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="hidden" name="user.userType" value="4">
+                    <input type="hidden" name="user.role.roleId" value="4">
+                    <input type="hidden" name="user.userDescription" value="学员">
+                    <input type="hidden" name="user.salt" id="salt">
+                </td>
+            </tr>
+
+
+
+        </table>
+    </form>
+</div>
+
+
+
+<div id="but">
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="operate()">保存</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="closeDlg()">关闭</a>
+</div>
+
+
+<script th:inline="none">
+    $(function () {
+        $('#dg').datagrid({
+            url:'/student/listBack',
+            title:"学员管理",
+            pagination:true,
+            rownumbers:true,
+            striped:true,
+            fitColumns:true,
+            toolbar:'#toolbar',
+            pageNumber:1,
+            pageSize:5,
+            pageList:[5,10,15],
+            columns:[[
+                {checkbox:true},
+                {field:'stuid',hidden:true},
+                {field:'stuname',title:'用户名字',width:100,align:'center'},
+                {field:'stuage',title:'用户年龄',width:100,align:'center'},
+                {field:'stugender',title:'用户性别',width:100,align:'center'},
+                {field:'stupic',hidden:true},
+                {field:'lastlogin',title:'最后登录地址',width:200,align:'center'},
+                {field:'stuphone',hidden:true},
+                {field:'stubirth',hidden:true},
+                {field:'gid',hidden:true},
+                {field:'uid',hidden:true}
+            ]]
+        });
+    })
+
+
+    function searchStudent() {
+        var params={};
+        params.stuname=$("#stuname").val();
+        params.stuminage=$("#stuminage").val();
+        params.stumaxage=$("#stumaxage").val();
+        params.stugender=$("input[name='stugender']:checked").val();
+        params.lastlogin=$("#lastlogin").val();
+        $("#dg").datagrid('reload',params);
+    }
+
+
+    var url;
+    function  openAddDialog() {
+        $("#dlg").dialog("open").dialog("setTitle",'添加学员');
+        $("#user_tr").show();//隐藏元素 ;
+        url = '/student/addBack';
+    }
+
+    function operate() {
+        $("#ff").form("submit",{
+            url:url,
+            success:function (result) {
+                result= eval("("+result+")");
+                if(result.code == 0){
+                    $.messager.alert('系统提示','操作成功');
+                    closeDlg();
+
+                    $("#dg").datagrid("reload");
+                }else{
+                    $.messager.alert('系统提示',result.message);
+                }
+            }
+        })
+    }
+
+    function closeDlg() {
+        $("#dlg").dialog("close");
+        $("#ff").form("clear");
+    }
+
+
+    function deleteStudent() {
+        var rows=$("#dg").datagrid("getSelections");
+        if (rows.length==0){
+            $.messager.alert("系统提示",'请选择一条数据');
+            return;
+        }
+        $.messager.confirm("系统提示","确认删除",function (r) {
+            if (r){
+                var arrStuids=new Array();
+                var arrUserIds=new Array();
+                for (var i in rows){
+                    arrStuids.push(rows[i].stuid);
+                    arrUserIds.push(rows[i].uid);
+                }
+
+                $.get("/student/deleteBack",{"stuids":arrStuids.toString(),"userids":arrUserIds.toString()},
+                    function (data) {
+                    if(data.code==0){
+                        $.messager.alert("系统提示",data.message);
+                        $("#dg").datagrid("reload");
+                    }else {
+                        $.messager.alert("系统提示",data.message);
+                    }
+                },"json")
+            }
+        })
+    }
+
+    function openModifyDialog() {
+        var rows=$("#dg").datagrid("getSelections");
+        if (rows.length!=1){
+            $.messager.alert("系统提示",'请选择一条数据');
+            return;
+        }
+        $("#dlg").dialog("open").dialog("setTitle",'修改用户');
+        $("#user_tr").hide();//隐藏元素 ;
+        $("#ff").form("load",rows[0]);
+
+        url = '/student/updateBack';
+    }
+
+
+    $(document).ready(function () {
+        var userName = document.getElementById("userName");
+        userName.onblur = function() {
+            var userName = $("#userName").val();
+            $("#salt").val(userName);
+        }
+    })
+
+
+    //预览图片
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjcectURL != undefined) {
+            url = window.createOjcectURL(file);
+        } else if (window.URL != undefined) {
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) {
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+    //使用方法
+    $("#uploadImg").change(function(){
+        var file = this.files[0];
+        var url = getObjectURL(file);
+        $("#nowImg").attr("src",getObjectURL(file));
+    });
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

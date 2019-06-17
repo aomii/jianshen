@@ -1,0 +1,149 @@
+package com.rabbit.fitness.admin.controller;
+
+import com.github.pagehelper.PageInfo;
+import com.rabbit.fitness.admin.service.AdService;
+import com.rabbit.fitness.pojo.Ad;
+import com.rabbit.fitness.utils.Result;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+@RequestMapping("/ad")
+@RestController
+public class AdController {
+    @Autowired
+    private AdService adService;
+
+
+    /*分页显示*/
+    @RequestMapping("/list")
+    @RequiresRoles(value = "superadmin")
+    public Map<String,Object> list(@RequestParam(value = "page",defaultValue = "1",required = false)Integer currentPage, @RequestParam(
+            value = "rows",defaultValue = "5",required = false)Integer pageSize,String adName){
+        List<Ad> ads=adService.getAll(currentPage,pageSize,adName);
+        /*分页*/
+        PageInfo<Ad> Info=new PageInfo<>(ads);
+        /*返回前端数据*/
+        Map map=new HashMap();
+        map.put("total",Info.getTotal());
+        map.put("rows",Info.getList());
+        return map;
+    }
+
+
+    @Value("${image-path}")
+    public String path;
+
+
+    /*增加*/
+    @RequestMapping("/add")
+    @RequiresRoles(value = "superadmin")
+    public Result addad(MultipartFile adPhoto, Ad ad) throws IOException {
+        /*检查是否存在*/
+        Ad ad1=adService.findAd(ad.getAdName());
+        if(ad1!=null){
+            return Result.error(500,"该广告已经存在");
+        }
+        String fileName = adPhoto.getOriginalFilename();
+        if(fileName!=null&&!"".equals(fileName)){
+//            System.out.println(fileName);
+//            String path="D:/upload/ad";
+            File file = new File(path);
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            fileName = UUID.randomUUID().toString() + fileName;
+            String filePath=path+File.separator+fileName;
+            file = new File(filePath);
+            adPhoto.transferTo(file);   //自动创建文件、写入数据
+            ad.setAdAddress("/upload/"+fileName);
+        }
+        /*添加*/
+        Integer result=adService.addAd(ad);
+        /*判断是否添加成功*/
+        if(result>0){
+            return  Result.success(0,"添加成功");
+        }else{
+            return  Result.error(500,"添加失败");
+        }
+
+    }
+
+    /*修改*/
+    @RequestMapping("/update")
+    @RequiresRoles(value = "superadmin")
+    public Result updatead(MultipartFile adPhoto,Ad ad) throws IOException {
+        /*检查是否重复，可以为自己本身标题*/
+        Ad ad1=adService.findAd(ad.getAdName());
+        if(ad1!=null){
+            if(!ad1.getAdId().equals(ad.getAdId())){
+                return  Result.error(500,"该广告已存在，不允许修改");
+            }
+        }
+        System.out.println(adPhoto.getOriginalFilename());
+        String fileName = adPhoto.getOriginalFilename();
+        if(fileName!=null&&!"".equals(fileName)){
+//            System.out.println(fileName);
+//            String path="D:/upload/ad";
+//            File file = new File(path);
+//            if(!file.exists()){
+//                file.mkdirs();
+//            }
+//            path=path+"/"+fileName;
+//            file = new File(path);
+//            adPhoto.transferTo(file);   //自动创建文件、写入数据
+//            ad.setAdAddress("/pcc/"+fileName);
+            System.out.println(fileName);
+//            String path="D:/upload/ad";
+            File file = new File(path);
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            fileName = UUID.randomUUID().toString() + fileName;
+            String filePath=path+File.separator+fileName;
+            file = new File(filePath);
+            adPhoto.transferTo(file);   //自动创建文件、写入数据
+            ad.setAdAddress("/upload/"+fileName);
+        }
+        /*修改*/
+        int result=adService.updateAd(ad);
+        /*判断是否修改成功*/
+        if(result>0){
+            return Result.success();
+        }else {
+            return Result.error(500,"修改失败");
+        }
+    }
+
+    /*删除*/
+    @RequestMapping("/delete")
+    @RequiresRoles(value = "superadmin")
+    public Result deletead(String adIds){
+        /*分割数组，获取所有要删除的id */
+        String[] arr=adIds.split(",");
+        /*转换为整数数组*/
+        Integer[] adsId=new Integer[arr.length];
+        for (int i = 0; i <arr.length ; i++) {
+            adsId[i]=Integer.parseInt(arr[i]);
+        }
+        /*删除*/
+        int result=adService.deleteAd(adsId);
+        /*判断是否成功*/
+        if(result>0){
+            return Result.success(0,"删除"+result+"条数据成功");
+        }else {
+            return Result.error(500,"删除失败");
+        }
+    }
+}

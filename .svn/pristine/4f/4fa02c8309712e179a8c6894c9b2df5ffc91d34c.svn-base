@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/themes/default/easyui.css}">
+    <link rel="stylesheet" th:href="@{/css/themes/icon.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery.easyui.min.js}"></script>
+    <script th:src="@{/js/easyui-lang-zh_CN.js}"></script>
+</head>
+<body shiro:hasRole="gymadmin">
+
+<div id="dlg">
+    <form id="ff">
+        <table id="table" height="60%" width="60%" align="center">
+            <tr>
+                <td>场馆ID：</td>
+                <td>
+                    <input type="hidden" name="gid"  id="gid_hidden">
+                    <input type="text"  disabled="disabled" id="gid_disabled">
+                </td>
+                <td>场馆名：</td>
+                <td>
+                    <input type="text" name="gname" id="gname">
+                </td>
+            </tr>
+            <tr>
+                <td>场馆描述</td>
+                <td>
+                    <input type="text" name="gtext" id="gtext">
+                </td>
+                <td>场馆地址</td>
+                <td>
+                    <input type="text" name="gaddress" id="gaddress">
+                </td>
+            </tr>
+
+            <tr>
+                <td>场馆电话</td>
+                <td>
+                    <input type="text" name="contact" id="contact">
+                </td>
+
+                <td>场馆照片</td>
+                <td>
+                    <img alt="头像" name="gpic" id="gpic">
+                    <img src="D:/upload/gym/logo2.png">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<br>
+<br>
+<div id="but" align="center">
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="operate()">修改</a>
+
+</div>
+
+
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type:"get",
+            url:"/gym/infor",
+            success:function(result){
+                $("#gid_hidden").val(result.gid);
+                $("#gid_disabled").val(result.gid);
+                $("#gname").val(result.gname);
+                $("#gtext").val(result.gtext);
+                $("#gaddress").val(result.gaddress);
+                $("#contact").val(result.contact);
+                $("#gpic").attr("src",result.gpic);
+            }
+        });
+    })
+
+
+
+
+
+    function operate() {
+        $("#ff").form("submit",{
+            url: "/gym/update",
+            success:function (result){
+                result= eval("("+result+")");
+                if(result.code == 0){
+                    alert("操作成功");
+                    window.location.href="/gym/info";
+                }else{
+                    alert(result.message);
+                }
+            }
+        })
+    }
+
+
+
+</script>
+</body>
+</html>

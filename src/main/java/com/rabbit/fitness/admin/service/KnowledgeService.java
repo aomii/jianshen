@@ -1,0 +1,28 @@
+package com.rabbit.fitness.admin.service;
+
+import com.rabbit.fitness.pojo.Knowledge;
+
+import java.util.List;
+
+public interface KnowledgeService
+{
+    /*分页显示*/
+    List<Knowledge> getAll(Integer currentpage,Integer pageSize);
+
+    /*检查重复*/
+    Knowledge findKnowledge(String knlgTitle);
+
+    /*添加*/
+    Integer addKnowledge(Knowledge knowledge);
+
+    /*修改*/
+    int updateKnowledge(Knowledge knowledge);
+
+    /*批量删除*/
+    int deleteKnowledge(Integer[] knowledgesId);
+
+    Knowledge getKnlgInfoByKnlgId(Integer knlgId);
+
+    /*每次查阅次数加1*/
+    Integer updateKnowLedgeCount(Knowledge knowledge);
+}

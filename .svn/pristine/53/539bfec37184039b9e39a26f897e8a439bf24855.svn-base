@@ -1,0 +1,233 @@
+package com.rabbit.fitness.coach.coachService.serviceImpl;
+
+import com.rabbit.fitness.coach.coachService.CoachService;
+import com.rabbit.fitness.coach.vo.CoachComm;
+import com.rabbit.fitness.coach.vo.CoachVO;
+import com.rabbit.fitness.coach.vo.SelCoachVO;
+import com.rabbit.fitness.dao.*;
+import com.rabbit.fitness.pojo.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+@Transactional
+@Service
+public class CoachServiceImpl implements CoachService {
+
+    @Override
+    public Coach findCoachByUid(Integer uid) {
+        return coachMapper.queryCoachByUid(uid);
+    }
+
+    @Override
+    public List<CoachOrder> getCoachOrderByUid(Integer uid) {
+        return coachMapper.queryCoachOrderByUid(uid);
+    }
+
+    @Override
+    public void updateCorderByConum(String conum) {
+        coachMapper.updCorderByConum(conum);
+    }
+
+    //插入订单
+    @Override
+    public void addOrderByUid(String conum, String coname, double cmoney, Integer uid) {
+        coachMapper.insertCorder(conum, coname, cmoney, uid);
+    }
+
+    @Autowired
+    private CoachMapper coachMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private GymMapper gymMapper;
+
+    @Autowired
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private StudentMapper studentMapper;
+
+    @Override
+    public void signGym(Integer cid, Integer gid) {
+        Gym gym = new Gym();
+        gym.setGid(gid);
+        String newcids = gymMapper.selectByPrimaryKey(gid).getCids()+","+cid;
+        gym.setCids(newcids);
+        coachMapper.signGym(cid,gid);
+        gymMapper.updateByPrimaryKeySelective(gym);
+    }
+
+    @Override
+    public Integer addCmoneyByUid(double totalAmount, Integer uid) {
+        coachMapper.updateCmoneyByUid(totalAmount,uid);
+        return uid;
+    }
+
+    @Override
+    public double selMoneyByUid(Integer uid) {
+        return coachMapper.queryMoneyByUid(uid);
+    }
+
+
+    @Override
+    public List<Order> findOrderByPage(Integer currentPage, Integer pageSize, Integer cid) {
+        return coachMapper.queryOrderByPage(currentPage,pageSize,cid);
+    }
+
+    @Override
+    public List<Student> findCoachByPage(Integer page, Integer cid) {
+        page=(page-1)*SelCoachVO.COUNT;
+        return coachMapper.queryCoachByPage(page,cid, SelCoachVO.COUNT);
+    }
+
+    @Override
+    public void proeOrder(Integer oid) {
+        Order order = orderMapper.queryOrderById(oid);
+        Coach coach = coachMapper.selectByPrimaryKey(order.getOid());
+        Student student = studentMapper.selectByPrimaryKey(order.getStuid());
+        double price = order.getPrice();
+        coach.setCmoney(coach.getCmoney()+price);
+        student.setStumoney(student.getStumoney()-price);
+        coachMapper.updateByPrimaryKeySelective(coach);
+        studentMapper.updateByPrimaryKeySelective(student);
+        order.setOstate("完成");
+        orderMapper.updateOrder(order);
+    }
+    /*教练完善信息*/
+    @Override
+    public Integer addCoach(Coach coach) {
+        return coachMapper.insertSelective(coach);
+    }
+
+    @Override
+    public double findCmoneyByUid(Integer uid) {
+        return coachMapper.queryMoneyByUid(uid);
+    }
+
+    /*教练修改信息*/
+    @Override
+    public Integer changeCoach(Coach coach) {
+        return coachMapper.updateByUidKeySelective(coach);
+    }
+
+
+
+    /*显示教练列表*/
+    @Override
+    public List<Coach> findAllCoach(Integer currentPage, Integer pageSize, CoachVO vo) {
+        int userId=1;
+        Integer gid=gymMapper.findGidByUid(userId);
+        /*根据uid查找gid 添加查询条件*/
+        if(gid!=null){
+            vo.setGid(gid);
+        }
+        return coachMapper.queryCoachAll(currentPage,pageSize,vo);
+    }
+
+    /*后台修改教练*/
+    @Override
+    public int updateCoach(Coach coach) {
+        return coachMapper.updateByPrimaryKeySelective(coach);
+    }
+
+
+    /*后台删除教练*/
+    @Override
+    public int deleteCoach(Integer cid) {
+        /*先根据教练查到uid*/
+        Coach coach=coachMapper.selectByPrimaryKey(cid);
+        Integer userId=coach.getUid();
+        /*删除对应用户*/
+        userMapper.deleteByPrimaryKey(userId);
+        /*删除教练*/
+        coachMapper.deleteByPrimaryKey(cid);
+        return 1;
+    }
+
+    /*查询教练名下学生*/
+    @Override
+    public List<Student> findStudentByCid(int cid) {
+        return coachMapper.queryStudentByCid(cid);
+    }
+
+    @Override
+    public Coach selCoachByUid(Integer uid) {
+        return coachMapper.queryCoachByUid(uid);
+    }
+
+    @Override
+    public Integer selMaxIndex() {
+        return coachMapper.selMaxIndex();
+    }
+
+    @Override
+    public List<Coach> roundSelCoach(int startIndex, Integer count) {
+        return coachMapper.roundSelCoach(startIndex,count);
+    }
+
+
+    //==============am========================
+    @Override
+    public Coach infoBack(Integer cid) {
+        return coachMapper.selectByPrimaryKey(cid);
+    }
+
+    /*后台添加教练*/
+    @Override
+    public int addBackCoach(Coach coach) {
+            User upUser=coach.getUser();
+            /*先添加用户*/
+            userMapper.insertSelective(upUser);
+            /*在获取uid*/
+            User user=userMapper.findUserByName(upUser.getUserName());
+            int uid=user.getUserId();
+            /*在添加教练*/
+            coach.setUid(uid);
+            coachMapper.insertSelective(coach);
+            return 1;
+
+    }
+
+    /*根据主键查找教练*/
+    @Override
+    public Coach selCoachById(Integer cid) {
+        return coachMapper.selectByPrimaryKey(cid);
+    }
+
+    //==========================================
+
+
+
+    @Override
+    public void insertComm(Communication communication) {
+        coachMapper.insertComm(communication);
+    }
+
+    @Override
+    public List<Communication> selChatRecord(String sendName, String receiveName) {
+        return coachMapper.queryChatRecord(sendName,receiveName, CoachComm.startIndex,CoachComm.SEL_COUNT);
+    }
+
+
+    @Override
+    public Integer selAllPage(Integer cid) {
+        Integer count=coachMapper.queryCountByCid(cid);
+        double temp = Math.ceil((double)count/(double)SelCoachVO.COUNT);
+        Integer page=(int)temp;
+        return page;
+    }
+
+    @Override
+    public List<Communication> showTips(Integer uid) {
+        return coachMapper.showTips(uid,CoachComm.COMM_NO);
+    }
+
+    @Override
+    public void updateCommState(String sendName, String receiveName) {
+        coachMapper.updateCommState(sendName,receiveName,CoachComm.COMM_YES);
+    }
+}

@@ -1,0 +1,66 @@
+package com.rabbit.fitness.coach.coachService;
+
+import com.rabbit.fitness.coach.vo.CoachVO;
+import com.rabbit.fitness.pojo.Coach;
+import com.rabbit.fitness.pojo.Communication;
+import com.rabbit.fitness.pojo.Order;
+import com.rabbit.fitness.pojo.Student;
+
+import java.util.List;
+
+public interface CoachService {
+
+
+    List<Student> findCoachByPage(Integer page, Integer cid);
+
+    List<Order> findOrderByPage(Integer currentPage, Integer pageSize, Integer cid);
+
+    void signGym(Integer cid, Integer gid);
+
+    void proeOrder(Integer oid);
+
+    Integer addCoach(Coach coach);
+
+    Integer changeCoach(Coach coach,Integer uid);
+
+
+    List<Coach> findAllCoach(Integer currentPage, Integer pageSize , CoachVO vo);
+
+    int updateCoach(Coach coach);
+
+    int deleteCoach(Integer cid);
+
+    List<Student> findStudentByCid(int cid);
+
+    Integer selMaxIndex();
+
+    List<Coach> roundSelCoach(int startIndex, Integer count);
+
+
+    //============am========================
+    Coach infoBack(Integer cid);
+
+    /*后台添加教练*/
+    int addBackCoach(Coach coach);
+
+
+    /*根据主键查找教练*/
+    Coach selCoachById(Integer cid);
+
+
+    //======================================
+    Coach selCoachByUid(Integer uid);
+
+    void insertComm(Communication communication);
+
+    List<Communication> selChatRecord(String sendName, String receiveName);
+
+
+    String selMoneyByUid(Integer uid);
+
+    Integer addCmoneyByUid(double totalAmount, Integer uid);
+
+
+    Integer selAllPage(Integer cid);
+
+}

@@ -1,0 +1,22 @@
+package com.rabbit.fitness.admin.controller;
+
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.UnauthorizedException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+@ControllerAdvice
+public class NoPermissionException {
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public String handleShiroException(Exception ex) {
+        ex.printStackTrace();
+        System.out.println("无权限");
+        return "403.html";
+    }
+    @ExceptionHandler(AuthorizationException.class)
+    public String AuthorizationException(Exception ex) {
+        System.out.println("权限认证失败");
+        return "403.html";
+    }
+}

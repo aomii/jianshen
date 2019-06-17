@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/themes/default/easyui.css}">
+    <link rel="stylesheet" th:href="@{/css/themes/icon.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery.easyui.min.js}"></script>
+    <script th:src="@{/js/easyui-lang-zh_CN.js}"></script>
+</head>
+<body>
+<table id="dg"></table>
+
+<div id="toolbar">
+    <div>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="openAddDialog()">添加</a>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="openModifyDialog()">修改</a>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deleteAd()">删除</a>
+    </div>
+    <!--模糊查询-->
+    <div>
+        广告名称<input type="text" id="adName">
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchAd()">查找</a>
+    </div>
+</div>
+<!--定义模态框-->
+<div id="dig" class="easyui-dialog" data-options="closed:true,modal:true,buttons:'#but'" style="padding: 20px;height: 400px;width: 600px">
+    <form id="ff" method="post" enctype="multipart/form-data">
+        <input type="hidden" id="aid" name="adId">
+        <table>
+            <tr>
+                <td>广告名称</td>
+                <td>
+                    <input type="text" name="adName" class="eaysui-validatebox" data-options="required:true">
+                </td>
+            </tr>
+            <tr>
+                <td>广告图片</td>
+                <td>
+                    <input type="hidden" name="adAddress">
+                    <input type="file" name="adPhoto">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<!--定义模态框按钮-->
+<div id="but">
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="operate()">保存</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="closeDialog()">关闭</a>
+</div>
+<script th:inline="none">
+    $(function () {
+        $('#dg').datagrid({
+            url:'/ad/list',
+            title:"广告管理",
+            pagination:true,
+            rownumbers:true,
+            striped:true,
+            fitColumns:true,
+            toolbar:'#toolbar',
+            pageNumber:1,
+            pageSize:5,
+            pageList:[5,10,15],
+            columns:[[
+                {checkbox:true},
+                {field:'adId',title:'编号',width:20,align:'center'},
+                {field:'adName',title:'广告名称',width:100,align:'center'},
+                {field:'adAddress',title:'广告图片',width:100,align:'center'}
+            ]]
+        });
+    })
+    /*定义模态框表单访问地址*/
+    var url;
+    /*打开添加模态框*/
+    function openAddDialog() {
+        /*打开模态框并设置标题*/
+        $("#dig").dialog("open").dialog("setTitle","添加广告");
+        /*设置模态框表单访问路径*/
+        url="/ad/add";
+    }
+    /*打开修改模态框*/
+    function openModifyDialog() {
+        /*获取被选中的行数据*/
+        var rows=$("#dg").datagrid("getSelections");
+        /*逻辑判断只能选择一行数据*/
+        if(rows.length!=1){
+            $.messager.alert("系统提示","请选择一条要编辑的数据")
+            return;
+        }
+        /*打开模态框*/
+        $("#dig").dialog("open").dialog("setTitle","修改广告信息");
+        /*通过表格的load函数回显数据*/
+        $("#ff").form("load",rows[0]);
+        /*设置表单提交路径*/
+        url='/ad/update';
+    }
+    /*模态框操作函数*/
+    function operate() {
+        /*提交表单*/
+        $("#ff").form("submit",{
+            url:url,
+            success:function (result) {
+                /*将返回的数据格式化为json格式*/
+                result=eval("("+result+")");
+                if(result.code==0){
+                    $.messager.alert('系统提示','操作成功');
+                    /*关闭模态框*/
+                    closeDialog();
+                    /*清空表单*/
+                    $("#ff").form("clear");
+                    /*刷新数据表格*/
+                    $("#dg").datagrid("reload");
+                }
+                else {
+                    $.messager.alert("系统提示",result.message);
+                }
+            }
+        })
+    }
+    /*关闭模态框*/
+    function closeDialog() {
+        $("#dig").dialog("close");
+        $("#ff").form("clear");
+    }
+
+    /*删除*/
+    function deleteAd() {
+        /*获取所选行数据*/
+        var rows=$("#dg").datagrid("getSelections");
+        /*判断所选不能为0*/
+        if(rows==0){
+            $.messager.alert("系统提示","请至少选择一条数据")
+            return;
+        }
+        /*提示框提示确认删除*/
+        $.messager.confirm("系统提示","确认删除？",function (r) {
+            if(r){
+                /*将所选行的知识id放入数组*/
+                var arr=new Array();
+                for (var i in rows) {
+                    arr.push(rows[i].adId);
+                }
+                /*通过ajax请求发送至后端删除*/
+                $.get("/ad/delete","adIds="+arr,function (data) {
+                    if(data.code==0){
+                        $.messager.alert("系统提示",data.message);
+                        /*刷新表格*/
+                        $("#dg").datagrid("reload");
+                    }else{
+                        $.messager.alert("系统提示",data.message);
+                    }
+                },"json")
+            }
+        })
+        /*模糊查询*/
+        function searchad() {
+            var params={};
+            params.adName=$("#adName").val();
+            /*根据参数刷新数据表格*/
+            $("#dg").datagrid("reload",params);
+        }
+
+    }
+</script>
+</body>
+</html>

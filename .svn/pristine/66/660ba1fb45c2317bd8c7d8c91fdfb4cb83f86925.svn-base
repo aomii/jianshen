@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/themes/default/easyui.css}">
+    <link rel="stylesheet" th:href="@{/css/themes/icon.css}">
+
+
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery.easyui.min.js}"></script>
+    <script th:src="@{/js/easyui-lang-zh_CN.js}"></script>
+</head>
+<body>
+<table id="dg"></table>
+
+<div id="toolbar">
+    <div>
+        <a  class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="openAddDialog()">添加</a>
+        <a  class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="openModifyDialog()">修改</a>
+        <a  class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deleteRecruit()">删除</a>
+
+
+
+
+
+    </div>
+    <div>
+        性别：<input type="radio" name="grgender" value="男"/>男
+        <input type="radio" name="grgender" value="女"/>女
+
+        最低薪资：<input type="number" name="minGrprice" id="minGrprice" size="3">--
+        最高薪资：<input type="number" name="maxGrprice" id="maxGrprice" size="3">
+        场地:<input type="text" id="gname" class="easyui-combobox"
+                    data-options="valueField:'gname',textField:'gname',url:'/gym/list'" />
+        <a  class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchRecruit()"></a>
+    </div>
+</div>
+
+
+<div id="dlg" class="easyui-dialog"  style="width:600px;height:400px;"
+     data-options="iconCls:'icon-save',closed:true, resizable:true,modal:true,buttons:'#but'">
+    <form id="ff">
+        <input type="hidden" name="grid" id="grid">
+        <table>
+            <tr>
+                <td>招聘职位：</td>
+                <td>
+                    <select name="grname" id="grname">
+                        <option value="健美">健美</option>
+                        <option value="健力">健力</option>
+                        <option value="体能">体能</option>
+                        <option value="体操">体操</option>
+                    </select>
+                </td>
+                <td>招聘描述</td>
+                <td>
+                    <input type="text" name="grtext">
+                </td>
+            </tr>
+            <tr>
+                <td>招聘时间</td>
+                <td>
+                    <input type="date" name="grtime">
+                </td>
+                <td>招聘性别</td>
+                <td>
+                    <input type="radio" name="grgender" value="男">男
+                    <input type="radio" name="grgender" value="女">女
+                </td>
+            </tr>
+
+            <tr>
+                <td>最小年龄</td>
+                <td>
+                    <input type="text" name="grminage">--
+                </td>
+                <td>最大年龄</td>
+                <td>
+                    <input type="text" name="grmaxage">
+                </td>
+            </tr>
+
+            <tr>
+                <td>薪资</td>
+                <td>
+                    <input type="text" name="grprice">
+                </td>
+                <td>招聘类型</td>
+                <td>
+                    <select name="type" id="type">
+                        <option value="全职教练">全职教练</option>
+                        <option value="兼职教练">兼职教练</option>
+                        <option value="临时替课教练">临时替课教练</option>
+                    </select>
+                </td>
+
+            </tr>
+            <tr>
+                <td>场地：</td>
+                <td>
+                    <input type="text" id="gym"  name="gym.gid" >
+                </td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<div id="dlg2" class="easyui-dialog" title="投递记录" style="width:600px;height:400px;"
+     data-options="iconCls:'icon-save',closed:true,resizable:true,modal:true">
+    <table id="request" class="table table-hover" style="margin:0 auto; width:100%"></table>
+</div>
+
+<div id="but">
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="operate()">保存</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="closeDlg()">关闭</a>
+</div>
+
+
+<script th:inline="none">
+    $(function () {
+        $('#dg').datagrid({
+            url:'/recruit/list',
+            title:"招聘管理",
+            pagination:true,
+            rownumbers:true,
+            striped:true,
+            fitColumns:true,
+            toolbar:'#toolbar',
+            pageNumber:1,
+            pageSize:5,
+            pageList:[5,10,15],
+            columns:[[
+                {checkbox:true},
+                {field:'grid',title:'编号',width:20,align:'center'},
+                {field:'grgender',title:'招聘性别',width:100,align:'center'},
+                {field:'grname',title:'招聘职位',width:100,align:'center'},
+                {field:'gid',title:'场馆',width:100,align:'center',formatter: function(value,row,index){
+                        if (row.gym){
+                            return row.gym.gname;
+                        } else {
+                            return "";
+                        }
+                    }},
+                {field:'grprice',title:'薪资',width:200,align:'center'}
+            ]]
+        });
+    })
+
+
+    function searchRecruit() {
+        var params={};
+
+        params.grgender=$("input[name='grgender']:checked").val();
+        params.minGrprice=$("#minGrprice").val();
+        params.maxGrprice=$("#maxGrprice").val();
+        params.gname=$("#gname").combobox("getValue");
+        alert(params.grgender);
+        alert(params.minGrprice);
+        $("#dg").datagrid('reload',params);
+    }
+
+
+    var url;
+    function  openAddDialog() {
+        $("#dlg").dialog("open").dialog("setTitle",'添加招聘');
+        $("#gym").combobox({
+            url:'/gym/list',
+            valueField:'gid',
+            textField:'gname'
+        })
+        url = '/recruit/add';
+    }
+
+    function operate() {
+        $("#ff").form("submit",{
+            url:url,
+            success:function (result) {
+                result= eval("("+result+")");
+
+                if(result.code == 0){
+                    $.messager.alert('系统提示','操作成功');
+                    closeDlg();
+                    $("#ff").form("clear");
+                    $("#dg").datagrid("reload");
+                }else{
+                    $.messager.alert('系统提示',result.message);
+                }
+            }
+        })
+    }
+
+    function closeDlg() {
+        $("#dlg").dialog("close");
+        $("#ff").form("clear");
+    }
+
+
+    function deleteRecruit() {
+        var rows=$("#dg").datagrid("getSelections");
+        if (rows.length==0){
+            $.messager.alert("系统提示",'请选择一条数据');
+            return;
+        }
+        $.messager.confirm("系统提示","确认删除",function (r) {
+            if (r){
+                var arr=new Array();
+                for (var i in rows){
+                    console.log(rows[i].grid);
+                    arr.push(rows[i].grid);
+                }
+                $.get("/recruit/delete","grids="+arr,function (data) {
+                    if(data.code==0){
+                        $.messager.alert("系统提示",data.message);
+                        $("#dg").datagrid("reload");
+                    }else {
+                        $.messager.alert("系统提示",data.message);
+                    }
+                },"json")
+            }
+        })
+    }
+
+    function openModifyDialog() {
+        var rows=$("#dg").datagrid("getSelections");
+        if (rows.length!=1){
+            $.messager.alert("系统提示",'请选择一条数据');
+            return;
+        }
+        $("#dlg").dialog("open").dialog("setTitle",'修改招聘');
+        console.log(rows);
+        $("#ff").form("load",rows[0]);
+        $("#gym").combobox({
+            url:'/gym/list',
+            valueField:'gid',
+            textField:'gname'
+        });
+        $("#gym").combobox("select",rows[0].gym.gid);
+        $("#gname").val(rows[0].gname);
+        $("#type").val(rows[0].type);
+
+        url = '/recruit/update';
+    }
+
+
+    //投递记录
+    function selectGrecruitCoach() {
+        var rows=$("#dg").datagrid("getSelections");
+        if (rows.length!=1){
+            $.messager.alert("系统提示",'请选择一条数据');
+            return;
+        }
+        var grid=rows[0].grid;
+        $("#dlg2").dialog("open").dialog("setTitle",'招聘申请');
+        $.ajax({
+            type:"post",
+            url:"/recruitCoach/list",
+            data:{"grid":grid},
+            success:function (result) {
+                var tr=$("<tr></tr>");
+                var th1=$("<th></th>").text("申请记录id");
+                var th2=$("<th></th>").text("招聘id");
+                var th3=$("<th></th>").text("教练名字");
+                var th4=$("<th></th>").text("教练电话");
+                var th5=$("<th></th>").text("申请时间");
+                var th6=$("<th></th>").text("是否处理");
+                var th7=$("<th></th>").text("详情");
+                tr.append(th1);
+                tr.append(th2);
+                tr.append(th3);
+                tr.append(th4);
+                tr.append(th5);
+                tr.append(th6);
+                tr.append(th7);
+                $("#request").append(tr);
+
+                for (var i = 0; i < result.length; i++) {
+                    var total = result[i];//表示每条申请记录
+
+                    var tr = $("<tr></tr>");
+                    var gcId = $("<td></td>").text(total.gcId);
+                    var grid = $("<td></td>").text(total.grid);
+                    var cname = $("<td></td>").text(total.coach.cname);
+
+                    var contact = $("<td></td>").text(total.coach.contact);
+                    var sendTime = $("<td></td>").text(total.sendTime);
+                    var isDispose = $("<td></td>").text(total.isDispose);
+                    var info = $("<td></td>").html("<button id='info' onclick='info("+ total.coach.cid+")'>详情</button>");
+                    tr.append(gcId);
+                    tr.append(grid);
+                    tr.append(cname);
+
+                    tr.append(contact);
+                    tr.append(sendTime);
+                    tr.append(isDispose);
+
+                    tr.append(info);
+
+                    $("#request").append(tr);
+                }
+            }
+        });
+    }
+    
+    function info(cid) {
+        $.ajax({
+            type:"post",
+            url:"/coach/info",
+            data:{"cid":cid},
+            success:function (result) {
+                alert(result);
+            }
+        })
+    }
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.fitness.dao.GymMapper">
+  <select id="findGidByUid" resultType="int">
+      select gid from gym where uid=#{uid}
+  </select>
+  <delete id="deleteGym">
+    delete  from  gym where gid in
+    <foreach collection="array" open="(" close=")" separator="," item="id">
+      #{id}
+    </foreach>
+  </delete>
+
+  <select id="findGymByPage" resultType="com.rabbit.fitness.pojo.Gym">
+      select * from  gym
+      <where>
+        <if test="vo.gname!=null and ''!=vo.gname">
+          and gname =#{vo.gname}
+        </if>
+        <if test="vo.gaddress!=null and ''!=vo.gaddress">
+          and gaddress like  concat('%',#{vo.gaddress},'%')
+        </if>
+      </where>
+  </select>
+
+
+  <select id="findAll" resultType="com.rabbit.fitness.pojo.Gym">
+    select *
+    from gym;
+  </select>
+
+  <resultMap id="BaseResultMap" type="com.rabbit.fitness.pojo.Gym">
+    <id column="gid" jdbcType="INTEGER" property="gid" />
+    <result column="gname" jdbcType="VARCHAR" property="gname" />
+    <result column="gpic" jdbcType="VARCHAR" property="gpic" />
+    <result column="cids" jdbcType="VARCHAR" property="cids" />
+    <result column="gtext" jdbcType="VARCHAR" property="gtext" />
+    <result column="stuids" jdbcType="VARCHAR" property="stuids" />
+    <result column="gpids" jdbcType="INTEGER" property="gpids" />
+    <result column="grids" jdbcType="VARCHAR" property="grids" />
+    <result column="gaddress" jdbcType="VARCHAR" property="gaddress" />
+    <result column="islesson" jdbcType="VARCHAR" property="islesson" />
+    <result column="contact" jdbcType="VARCHAR" property="contact" />
+    <result column="isauth" jdbcType="VARCHAR" property="isauth" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    gid, gname, gpic, cids, gtext, stuids, gpids, grids, gaddress, islesson, contact, 
+    isauth
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from gym
+    where gid = #{gid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from gym
+    where gid = #{gid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rabbit.fitness.pojo.Gym">
+    insert into gym (gid, gname, gpic, 
+      cids, gtext, stuids, 
+      gpids, grids, gaddress, 
+      islesson, contact, isauth
+      )
+    values (#{gid,jdbcType=INTEGER}, #{gname,jdbcType=VARCHAR}, #{gpic,jdbcType=VARCHAR}, 
+      #{cids,jdbcType=VARCHAR}, #{gtext,jdbcType=VARCHAR}, #{stuids,jdbcType=VARCHAR}, 
+      #{gpids,jdbcType=INTEGER}, #{grids,jdbcType=VARCHAR}, #{gaddress,jdbcType=VARCHAR}, 
+      #{islesson,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, #{isauth,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rabbit.fitness.pojo.Gym">
+    insert into gym
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="gid != null">
+        gid,
+      </if>
+      <if test="gname != null">
+        gname,
+      </if>
+      <if test="gpic != null">
+        gpic,
+      </if>
+      <if test="cids != null">
+        cids,
+      </if>
+      <if test="gtext != null">
+        gtext,
+      </if>
+      <if test="stuids != null">
+        stuids,
+      </if>
+      <if test="gpids != null">
+        gpids,
+      </if>
+      <if test="grids != null">
+        grids,
+      </if>
+      <if test="gaddress != null">
+        gaddress,
+      </if>
+      <if test="islesson != null">
+        islesson,
+      </if>
+      <if test="contact != null">
+        contact,
+      </if>
+      <if test="isauth != null">
+        isauth,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="gid != null">
+        #{gid,jdbcType=INTEGER},
+      </if>
+      <if test="gname != null">
+        #{gname,jdbcType=VARCHAR},
+      </if>
+      <if test="gpic != null">
+        #{gpic,jdbcType=VARCHAR},
+      </if>
+      <if test="cids != null">
+        #{cids,jdbcType=VARCHAR},
+      </if>
+      <if test="gtext != null">
+        #{gtext,jdbcType=VARCHAR},
+      </if>
+      <if test="stuids != null">
+        #{stuids,jdbcType=VARCHAR},
+      </if>
+      <if test="gpids != null">
+        #{gpids,jdbcType=INTEGER},
+      </if>
+      <if test="grids != null">
+        #{grids,jdbcType=VARCHAR},
+      </if>
+      <if test="gaddress != null">
+        #{gaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="islesson != null">
+        #{islesson,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null">
+        #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="isauth != null">
+        #{isauth,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.fitness.pojo.Gym">
+    update gym
+    <set>
+      <if test="gname != null">
+        gname = #{gname,jdbcType=VARCHAR},
+      </if>
+      <if test="gpic != null">
+        gpic = #{gpic,jdbcType=VARCHAR},
+      </if>
+      <if test="cids != null">
+        cids = #{cids,jdbcType=VARCHAR},
+      </if>
+      <if test="gtext != null">
+        gtext = #{gtext,jdbcType=VARCHAR},
+      </if>
+      <if test="stuids != null">
+        stuids = #{stuids,jdbcType=VARCHAR},
+      </if>
+      <if test="gpids != null">
+        gpids = #{gpids,jdbcType=INTEGER},
+      </if>
+      <if test="grids != null">
+        grids = #{grids,jdbcType=VARCHAR},
+      </if>
+      <if test="gaddress != null">
+        gaddress = #{gaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="islesson != null">
+        islesson = #{islesson,jdbcType=VARCHAR},
+      </if>
+      <if test="contact != null">
+        contact = #{contact,jdbcType=VARCHAR},
+      </if>
+      <if test="isauth != null">
+        isauth = #{isauth,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where gid = #{gid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rabbit.fitness.pojo.Gym">
+    update gym
+    set gname = #{gname,jdbcType=VARCHAR},
+      gpic = #{gpic,jdbcType=VARCHAR},
+      cids = #{cids,jdbcType=VARCHAR},
+      gtext = #{gtext,jdbcType=VARCHAR},
+      stuids = #{stuids,jdbcType=VARCHAR},
+      gpids = #{gpids,jdbcType=INTEGER},
+      grids = #{grids,jdbcType=VARCHAR},
+      gaddress = #{gaddress,jdbcType=VARCHAR},
+      islesson = #{islesson,jdbcType=VARCHAR},
+      contact = #{contact,jdbcType=VARCHAR},
+      isauth = #{isauth,jdbcType=VARCHAR}
+    where gid = #{gid,jdbcType=INTEGER}
+  </update>
+</mapper>

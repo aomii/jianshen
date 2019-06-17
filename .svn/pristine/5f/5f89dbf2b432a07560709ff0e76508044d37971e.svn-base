@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link  href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="materialize/css/materialize.min.css" media="screen,projection" />
+    <link href="./css/bootstrap.min.css" rel="stylesheet" />
+    <link href="./css/fancybox/jquery.fancybox.css" rel="stylesheet">
+    <link href="./css/flexslider.css" rel="stylesheet" />
+    <link href="./css/style.css" rel="stylesheet" />
+    <style>
+        .table-responsive {
+            color:red;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper" class="home-page">
+    <!-- 头部导航栏区域 -->
+    <header>
+        <div class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html"><i class="icon-info-blocks material-icons">location_on</i>tutu健身</a>
+                </div>
+                <div class="navbar-collapse collapse ">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a class="waves-effect waves-dark" th:href="@{/index.html}">主页面</a></li>
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark">关于我们<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="waves-effect waves-dark" th:href="@{/about.html}">公司详情</a></li>
+                                <li><a class="waves-effect waves-dark" href="#">我们团队</a></li>
+                                <li><a class="waves-effect waves-dark" href="#">相关新闻</a></li>
+                                <li><a class="waves-effect waves-dark" href="#">投资我们</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="waves-effect waves-dark" href="services.html">服务</a></li>
+                        <li><a class="waves-effect waves-dark" href="portfolio.html">场馆</a></li>
+                        <li><a class="waves-effect waves-dark" href="coaches.html">教练团队</a></li>
+                        <li><a class="waves-effect waves-dark" href="contact.html">联系我们</a></li>
+
+                        <li class="waves-login"><a class="waves-effect waves-dark unLogin" href="static-login.html">登录</a></li>
+                        <li class="waves-register"><a class="waves-effect waves-dark unLogin" href="static-register.html">注册</a></li>
+
+                        <li class="dropdown waves-person loginSuccess" style="display: none">
+                            <a data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark" href="#" >欢迎您，<p id="loginSuccessP" th:text="${session.currentUser} != null ? ${session.currentUser.userName} : null"></p>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="waves-effect waves-dark" th:href="@{/personal.html}">个人信息</a></li>
+                                <li><a class="waves-effect waves-dark" href="#">设置</a></li>
+                                <li><a class="waves-effect waves-dark" href="logout">退出</a></li>
+                            </ul>
+                        </li>
+                        <!--超级管理员可以进入后台系统-->
+                        <li>
+                            <shiro:hasRole th:name="superadmin" name="superadmin">
+                                <a class="waves-effect waves-dark" href="./backmain.html">点击进入后台管理页面</a>
+                            </shiro:hasRole>
+                        </li>
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <br>
+    <br>
+    <br>
+    <div class="table-responsive">
+        <table class="table">
+            <caption>健身知识列表</caption>
+            <thead>
+            <tr>
+                <th id="knlgId" name="knlgId">健身知识id</th>
+                <th id="knlgTitle" name="knlgTitle">健身知识标题</th>
+                <th id="knlgContent" name="knlgContent">健身知识内容</th>
+                <th id="knlgPosttime" name="knlgPosttime">发表时间</th>
+                <th id="knlgViewcount" name="knlgViewcount">访问次数</th>
+                <th id="knlfInfo" name="knlgInfo">查看详情</th>
+            </tr>
+            </thead>
+            <tbody id="knlg-body">
+
+
+            </tbody>
+        </table>
+    </div>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        模态框（Modal）标题
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    按下 ESC 按钮退出。
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+
+<!--    <div style="padding-left: 35%; ">
+        <ul class="pagination pagination-lg" id="pagination-ul">
+
+        </ul><br>
+    </div>-->
+
+</body>
+<!-- javascript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="./js/jquery.js"></script>
+<script src="./js/jquery.easing.1.3.js"></script>
+<script src="./materialize/js/materialize.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/jquery.fancybox.pack.js"></script>
+<script src="./js/jquery.fancybox-media.js"></script>
+<script src="./js/jquery.flexslider.js"></script>
+<script src="./js/animate.js"></script>
+<!-- Vendor Scripts -->
+<script src="./js/modernizr.custom.js"></script>
+<script src="./js/jquery.isotope.min.js"></script>
+<script src="./js/jquery.magnific-popup.min.js"></script>
+<script src="./js/animate.js"></script>
+<script>
+	var knlgbody = $("#knlg-body");
+	var neirong;
+
+    $(document).ready(
+        $.ajax({
+            url: '/knowledge/list',
+            type: 'post',
+            dataType: 'json',
+            success: function (data) {
+            	console.log(data);
+                for (var i=0; i<data.info.list.length;i++){
+                	neirong += "            <tr>\n" +
+		                "\t            <td>"+ data.info.list[i].knlgId +"</td>\n" +
+		                "\t            <td>"+ data.info.list[i].knlgTitle+"</td>\n" +
+		                "\t            <td>"+ data.info.list[i].knlgContent+"</td>\n" +
+		                "\t            <td>" +data.info.list[i].knlgPosttime+ "</td>\n" +
+		                "\t            <td>"+ data.info.list[i].knlgViewcount+"</td>\n" +
+		                "\t            <td>"+ "<button data-toggle=\"modal\" data-target=\"#myModal\" onclick='getInfo("+data.info.list[i].knlgId+")'>查看详情</button>"+"</td>\n" +
+		                "\t            </tr>"
+                };
+                knlgbody.append(neirong);
+            },
+            error: function (err) {
+
+            }
+        })
+    );
+
+
+    function getInfo(knlgId) {
+        alert(knlgId);
+        $.ajax({
+            url: '',
+            type: 'post',
+            success: function (data) {
+                console.log(data);
+            }
+        })
+    }
+/*    function changePage(data) {
+        var paginations = $("#pagination-ul");
+        var content= "           <li onclick='changeFirst()'><a href=\"javascript:void(0)\" id=\"first\" >&laquo;</a></li>\n";
+        for(var i=1;i<=data.info.lastPage;i++){
+        	content +=
+		        "            <li onclick='changeAnyPage(i)'><a href=\"javascript:void(0)\" >"+i+"</a></li>\n";
+        }
+        content +="            <li onclick='changeEnd(data.info)'><a href=\"javascript:void(0)\" id=\"end\" >&raquo;</a></li>";
+        paginations.append(content);
+    }
+    //直接加载首页
+    function changeFirst() {
+        $.ajax({
+	        url: '/knowledge/list',
+            type: 'post',
+            dataType: 'json',
+            data:{
+	            "currentPage": 1
+            },
+            success: function (data) {
+	        	knlgbody.empty();
+	            console.log(data);
+	            for (var i=0; i<data.info.list.length;i++){
+		            neirong += "            <tr>\n" +
+			            "\t            <td>"+ data.info.list[i].knlgId +"</td>\n" +
+			            "\t            <td>"+ data.info.list[i].knlgTitle+"</td>\n" +
+			            "\t            <td>"+ data.info.list[i].knlgContent+"</td>\n" +
+			            "\t            <td>" +data.info.list[i].knlgPosttime+ "</td>\n" +
+			            "\t            <td>"+ data.info.list[i].knlgViewcount+"</td>\n" +
+			            "\t            </tr>"
+	            };
+	            changePage(data);
+	            knlgbody.append(neirong);
+            }
+        })
+    }
+
+	function changeEnd(end) {
+    	alert(end.lastPage);
+		$.ajax({
+			url: '/knowledge/list',
+			type: 'post',
+			dataType: 'json',
+			data:{
+				"currentPage": end.lastPage
+			},
+			success: function (data) {
+				knlgbody.empty();
+				console.log(data);
+				for (var i=0; i<data.info.list.length;i++){
+					neirong += "            <tr>\n" +
+						"\t            <td>"+ data.info.list[i].knlgId +"</td>\n" +
+						"\t            <td>"+ data.info.list[i].knlgTitle+"</td>\n" +
+						"\t            <td>"+ data.info.list[i].knlgContent+"</td>\n" +
+						"\t            <td>" +data.info.list[i].knlgPosttime+ "</td>\n" +
+						"\t            <td>"+ data.info.list[i].knlgViewcount+"</td>\n" +
+						"\t            </tr>"
+				};
+				changePage(data);
+				knlgbody.append(neirong);
+			}
+		})
+
+	}*/
+
+</script>
+</html>

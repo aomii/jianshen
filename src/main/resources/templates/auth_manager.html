@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/themes/default/easyui.css}">
+    <link rel="stylesheet" th:href="@{/css/themes/icon.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery.easyui.min.js}"></script>
+    <script th:src="@{/js/easyui-lang-zh_CN.js}"></script>
+</head>
+<body shiro:hasRole="superadmin">
+<!--定义树形表格-->
+<table id="tt"></table>
+<!--定义工具栏-->
+<div id="tools">
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="addAuth()">添加</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="alterAuth()">修改</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deleteAuth()">删除</a>
+</div>
+<!--定义模态框-->
+<div id="dig" class="easyui-dialog" data-options="closed:true,modal:true,buttons:'#but'" style="padding: 20px;height: 400px;width: 600px">
+    <form id="ff">
+        <input type="hidden" id="parentId" name="parentId">
+        <input type="hidden" id="authId" name="authId">
+        <table>
+            <tr>
+                <td>菜单名称</td>
+                <td>
+                    <input type="text" name="authName" class="eaysui-validatebox" data-options="required:true">
+                </td>
+                <td>菜单样式</td>
+                <td>
+                    <input type="text" name="iconCls">
+                </td>
+            </tr>
+            <tr>
+                <td>链接路径</td>
+                <td>
+                    <input type="text" name="authPath">
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td valign="top">备注</td>
+                <td colspan="3">
+                    <textarea name="authDescription" cols="40" rows="10"></textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<!--定义模态框按钮-->
+<div id="but">
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="operate()">保存</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="closeDlg()">关闭</a>
+</div>
+<script th:inline="none">
+    var eventNode;//定义鼠标勾选事件
+    $("#tt").treegrid({
+        url:'/auth/treeTable',
+        idField:'authId',
+        treeField:'authName',
+        /*自动适应大小*/
+        fitColumns:true,
+        /*斑马线*/
+        striped:true,
+        /*工具栏*/
+        toolbar:'#tools',
+        columns:[[
+            {field:'parentId',hidden:true},
+            {title:'菜单编号',field:'authId',width:30,align:'center'},
+            {title:'菜单名称',field:'authName',width:30,align:'center'},
+            {title:'图标',field:'iconCls',width:30,align:'center',formatter:iconFormatter},
+            {title:'链接地址',field:'authPath',width:30,align:'center'},
+            {title:'备注',field:'authDescription',width:30,align:'center'},
+        ]],
+        onLoadSuccess:function(){
+            $("#tt").treegrid('expandAll');
+        }
+    });
+    /*图标格式化*/
+    function iconFormatter(value,rowdata,index) {
+        return "<span class='"+rowdata.iconCls+"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>"
+    }
+    var url;
+    /*添加菜单*/
+    function addAuth(){
+        /*获取选中的行，并判断是否选择一行*/
+        var choice=$("#tt").treegrid("getSelections");
+        if(choice.length!=1){
+            $.messager.alert("系统提示","请选择一个父菜单节点");
+            return;
+        }
+        /*打开模态框并设置标题*/
+        $("#dig").dialog("open").dialog("setTitle","添加菜单");
+        /*将父节点传送至表格*/
+        $("#parentId").val(choice[0].authId);
+        /*设置表单提交路径*/
+        url='/auth/add';
+    }
+    /*修改菜单*/
+    function alterAuth() {
+        /*获取选中的行，并判断是否选择一行*/
+        var choice=$("#tt").treegrid("getSelections");
+        if(choice.length!=1){
+            $.messager.alert("系统提示","请选择一条数据进行修改");
+            return;
+        }
+        $("#dig").dialog("open").dialog("setTitle","修改菜单");
+        /*回显数据*/
+        $("#ff").form("load",choice[0]);
+        /*设置提交路径*/
+        url='/auth/update';
+    }
+    /*模态框表单提交*/
+    function operate(){
+        $("#ff").form("submit",{
+            url:url,
+            success:function(result){//string json
+                result = eval("("+result+")");
+                if(result.code == 0){
+                    $.messager.alert('系统提示','操作成功');
+                    closeDlg();
+                    $("#ff").form("clear");
+                    $("#tt").treegrid("reload");
+                }else{
+                    $.messager.alert('系统提示',result.message);
+                }
+            }
+        })
+    }
+    /*关闭模态框*/
+    function closeDlg(){
+        $("#dig").dialog("close");
+        $("#ff").form("clear");
+    }
+    /*删除菜单*/
+    function deleteAuth() {
+        /*获取选中的所有行，至少为1行*/
+        var choice=$("#tt").treegrid("getSelections");
+        if(choice.length!=1){
+            $.messager.alert('系统提示','请选择一条数据删除');
+            return ;
+        }
+        $.messager.confirm("系统提示","确认删除？",function (r) {
+            if(r){
+                $.get("/auth/delete","authId="+choice[0].authId,function(data){
+                    if(data.code == 0){
+                        $.messager.alert('系统提示',data.message);
+                        $("#tt").treegrid("reload");
+                    }else{
+                        $.messager.alert('系统提示',data.message);
+                    }
+                },"json")
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

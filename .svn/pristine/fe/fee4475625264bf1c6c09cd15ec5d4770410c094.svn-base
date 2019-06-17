@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/themes/default/easyui.css}">
+    <link rel="stylesheet" th:href="@{/css/themes/icon.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery.easyui.min.js}"></script>
+    <script th:src="@{/js/easyui-lang-zh_CN.js}"></script>
+</head>
+<body shiro:hasRole="superadmin">
+<table id="dg"></table>
+
+<div id="toolbar">
+    <div>
+        <a  class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="openAddDialog()">添加</a>
+        <a  class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="openModifyDialog()">修改</a>
+        <a  class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="deleteRecruit()">删除</a>
+    </div>
+    <div>
+        场地名称:<input type="text" id="gname" class="easyui-combobox"
+                    data-options="valueField:'gname',textField:'gname',url:'/gym/list'" />
+        场地地址：<input type="text" id="gaddress">
+        <a  class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchRecruit()"></a>
+
+    </div>
+</div>
+
+
+<div id="dlg" class="easyui-dialog"  style="width:600px;height:400px;"
+     data-options="iconCls:'icon-save',closed:true, resizable:true,modal:true,buttons:'#but'">
+    <form id="ff" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="gid" id="gid">
+        <table>
+            <tr>
+                <td>场地名称</td>
+                <td>
+                    <input type="text" name="gname">
+                </td>
+                <td>场地说明</td>
+                <td>
+                    <input type="text" name="gtext" size="20">
+                </td>
+            </tr>
+            <tr>
+                <td>场地图片</td>
+                <td>
+                    <input type="hidden" name="gpic">
+                    <input type="file" name="img" id="uploadImg">
+                    <img src="" id="nowImg">
+                </td>
+            </tr>
+            <tr>
+                <td>场馆地址</td>
+                <td>
+                    <input type="text" name="gaddress">
+                </td>
+                <td>场馆电话</td>
+                <td>
+                   <input type="text" name="contact">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+
+
+<div id="but">
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="operate()">保存</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="closeDlg()">关闭</a>
+</div>
+
+
+<script th:inline="none">
+    $(function () {
+        $('#dg').datagrid({
+            url:'/gym/listBack',
+            title:"场地管理",
+            pagination:true,
+            rownumbers:true,
+            striped:true,
+            fitColumns:true,
+            toolbar:'#toolbar',
+            pageNumber:1,
+            pageSize:5,
+            pageList:[5,10,15],
+            columns:[[
+                {checkbox:true},
+                {field:'gid',title:'场馆id',width:20,align:'center'},
+                {field:'gname',title:'场馆名字',width:100,align:'center'},
+                {field:'gtext',title:'场馆说明',width:200,align:'center'},
+                {field:'gaddress',title:'场馆地址',width:200,align:'center'},
+                {field:'contact',title:'联系电话',width:200,align:'center'}
+            ]]
+        });
+    })
+
+
+    function searchRecruit() {
+        var params={};
+        params.gname=$("#gname").combobox("getValue");
+        params.gaddress=$("#gaddress").val();
+        $("#dg").datagrid('reload',params);
+    }
+
+
+    var url;
+    function  openAddDialog() {
+        $("#dlg").dialog("open").dialog("setTitle",'添加场地');
+
+        url = '/gym/add';
+    }
+
+    function operate() {
+        alert(url);
+        $("#ff").form("submit",{
+            url:url,
+            success:function (result) {
+                result= eval("("+result+")");
+                if(result.code == 0){
+                    $.messager.alert('系统提示','操作成功');
+                    closeDlg();
+                    $("#ff").form("clear");
+                    $("#dg").datagrid("reload");
+                }else{
+                    $.messager.alert('系统提示',result.message);
+                }
+            }
+        })
+    }
+
+    function closeDlg() {
+        $("#dlg").dialog("close");
+        $("#ff").form("clear");
+    }
+
+
+    function deleteRecruit() {
+        var rows=$("#dg").datagrid("getSelections");
+        if (rows.length==0){
+            $.messager.alert("系统提示",'请选择一条数据');
+            return;
+        }
+        $.messager.confirm("系统提示","确认删除",function (r) {
+            if (r){
+                var arr=new Array();
+                for (var i in rows){
+                    arr.push(rows[i].gid);
+                }
+                $.get("/gym/delete","gids="+arr,function (data) {
+                    if(data.code==0){
+                        $.messager.alert("系统提示",data.message);
+                        $("#dg").datagrid("reload");
+                    }else {
+                        $.messager.alert("系统提示",data.message);
+                    }
+                },"json")
+            }
+        })
+    }
+
+    function openModifyDialog() {
+        var rows=$("#dg").datagrid("getSelections");
+        if (rows.length!=1){
+            $.messager.alert("系统提示",'请选择一条数据');
+            return;
+        }
+        $("#dlg").dialog("open").dialog("setTitle",'修改场馆');
+
+        $("#ff").form("load",rows[0]);
+
+        url = '/gym/update';
+    }
+
+
+
+    //预览图片
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjcectURL != undefined) {
+            url = window.createOjcectURL(file);
+        } else if (window.URL != undefined) {
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) {
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+    //使用方法
+    $("#uploadImg").change(function(){
+        var file = this.files[0];
+        var url = getObjectURL(file);
+        $("#nowImg").attr("src",getObjectURL(file));
+        alert(url);
+    });
+
+
+
+
+</script>
+</body>
+</html>

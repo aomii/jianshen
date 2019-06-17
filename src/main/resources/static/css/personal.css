@@ -1,0 +1,9 @@
+body p:first-child {
+    float: right;
+}
+#show-update-form {
+    margin-top: 50px;
+}
+.stu-info {
+    margin:0 auto;
+}

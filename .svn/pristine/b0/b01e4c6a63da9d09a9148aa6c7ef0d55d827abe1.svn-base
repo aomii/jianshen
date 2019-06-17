@@ -1,0 +1,202 @@
+package com.rabbit.fitness.student.controller;
+
+
+import com.github.pagehelper.PageInfo;
+
+import com.rabbit.fitness.pojo.Addfriend;
+
+import com.rabbit.fitness.pojo.Communication;
+import com.rabbit.fitness.pojo.Student;
+import com.rabbit.fitness.pojo.User;
+import com.rabbit.fitness.student.service.StudentService;
+import com.rabbit.fitness.student.vo.StudentVo;
+import com.rabbit.fitness.user.service.UserUserService;
+import com.rabbit.fitness.utils.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/student")
+public class StudentController {
+    @Resource(name = "studentService")
+    private StudentService studentService;
+
+    //==========后台=======================
+    @Autowired
+    private UserUserService userUserService;
+    //=================================
+    //获取学员信息
+    @RequestMapping("/info/{id}")
+    public Student getStudentInfoById(@PathVariable("id") Integer uid, HttpSession session){
+        Student selStu=studentService.getStudentInfoById(uid);
+        if (selStu!=null) {
+            session.setAttribute("selStu", selStu);
+            return studentService.getStudentInfoById(uid);
+        }
+        return null;
+    }
+
+    @RequestMapping("/finfo/{id}")
+    public Student getFriendInfoById(@PathVariable("id") Integer uid, HttpSession session){
+        return studentService.getStudentInfoById(uid);
+    }
+
+    //完善学员信息
+    @RequestMapping("/perfect")
+    public int perfectStudentById(Student student){
+        //System.out.println(student.getStugender());
+        return studentService.perfectStudentById(student);
+    }
+
+    //查看学员所属场馆有哪些学员
+    @RequestMapping("/find-other-student")
+    public List<Student> findOtherStudentById(Student student){
+        return studentService.findOtherStudentById(student);
+    }
+
+
+    //发送好友请求
+    @RequestMapping("/add-friend")
+    public int addFriend(Addfriend addfriend){
+        return studentService.addFriend(addfriend);
+    }
+    //查看好友请求
+    @RequestMapping("/friendrequests")
+    public List<Addfriend> findFriendRequestsById(Integer uid){
+        return  studentService.findFriendRequestsById(uid);
+    }
+
+    //同意好友请求
+    //更新双方的friendids
+    @RequestMapping("/update-fids")
+    public void updateFids(Student student){
+        studentService.updateFids(student);
+    }
+
+    //更新同意好友请求记录
+    @RequestMapping("/update-agree-status")
+    public int updateAgreeStatus(Integer agreeuid){
+        return studentService.updateAgreeStatus(agreeuid);
+    }
+    //更新拒绝好友请求记录
+    @RequestMapping("/update-reject-status")
+    public int updateRejectStatus(Integer agreeuid){
+//        return studentService.updateRejectStatus(agreeuid);
+        return 0;
+    }
+/*    //好友列表
+    @RequestMapping("/friend-list")
+    public List<Student> friendList(Integer uid){
+        return studentService.friendList(uid);
+    }*/
+    //查看是否为好友
+    @RequestMapping("/isFriend")
+    public  int isFriend( Integer senduid, Integer agreeuid){
+        return studentService.isFriend(senduid, agreeuid);
+    }
+
+    //通过uid查询t_user表中的user_name
+    @RequestMapping("/getUserNameByUid")
+    public User getUserNameByUid(Integer uid){
+        return studentService.getUserNameByUid(uid);
+    }
+
+    //保存聊天记录
+    @RequestMapping("/addChatRecord")
+    public int addChatRecord(Communication communication){
+        return studentService.addChatRecord(communication);
+    }
+
+    /*=====================下面是后台使用===============================*/
+
+    @RequestMapping("/listBack")
+    public Map<String,Object> listBack(@RequestParam(value = "page",defaultValue = "1",required = false)Integer currentPage,
+                                       @RequestParam(value = "rows",defaultValue = "5",required = false)Integer pageSize, StudentVo vo, HttpSession session){
+        //模拟从session中获取用户id
+        Integer uid=1;
+        Integer gid=studentService.findGidByUid(uid);
+        System.out.println(gid);
+        List<Student> list=studentService.findStudentByPage(currentPage,pageSize,vo,gid);
+        PageInfo<Student> pageInfo=new PageInfo<>(list);
+        Map<String,Object> result=new HashMap<>();
+        result.put("total",pageInfo.getTotal());
+        result.put("rows",pageInfo.getList());
+        return  result;
+    }
+
+
+    @RequestMapping("/addBack")
+    public Result addBack(MultipartFile img, Student student) throws IOException {
+        //0.上传图片
+        String fileName = img.getOriginalFilename();
+        if(fileName!=null&&!"".equals(fileName)){
+            System.out.println(fileName);
+            String path="d:/upload/student";
+            File file = new File(path);
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            path=path+File.separator+fileName;
+            file = new File(path);
+            img.transferTo(file);   //自动创建文件、写入数据
+            student.setStupic("/student/"+fileName);
+        }
+
+        //1、判断用户名是否已被注册
+
+        System.out.println(student.getUser());
+        System.out.println(student.getUser().getRole().getRoleId());
+        User _user=userUserService.checkUser(student.getUser().getUserName());
+        if (_user!=null){
+            return Result.error(500,"用户名已存在");
+        }
+
+        //2、插入数据
+        try {
+            studentService.addBack(student);
+            return Result.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error(500,"添加失败");
+        }
+
+    }
+
+
+    @RequestMapping("/updateBack")
+    public Result updateBack(Student student){
+        Integer result = studentService.updateBack(student);
+        if (result>0){
+            return  Result.success();
+        }else{
+            return  Result.error(500,"更新失败");
+        }
+    }
+
+    @RequestMapping("/deleteBack")
+    public Result deleteBack(String stuids,String userids){
+        System.out.println(stuids+userids);
+        try {
+            int result=studentService.deleteBack(stuids,userids);
+            if (result>0){
+                return Result.success(0,"删除"+result+"条数据成功");
+            }else{
+                return Result.error(500,"删除数据失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+           return Result.error(500,"删除数据失败");
+        }
+    }
+    /*=====================上面是后台使用===============================*/
+
+}

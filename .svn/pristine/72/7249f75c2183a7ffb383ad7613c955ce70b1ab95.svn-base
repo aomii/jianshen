@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.fitness.dao.GrecruitMapper">
+
+  <select id="findGrecruitByPage" resultMap="BaseResultMap">
+
+    select * from  grecruit gr left join gym g on gr.gid=g.gid
+    <where>
+      <if test="vo.grgender!=null and ''!=vo.grgender">
+        and gr.grgender=#{vo.grgender}
+      </if>
+      <if test="vo.minGrprice!=null and ''!=vo.minGrprice">
+        and gr.grprice > #{vo.minGrprice}
+      </if>
+      <if test="vo.maxGrprice!=null and ''!=vo.maxGrprice">
+        and #{vo.maxGrprice}>gr.grprice
+      </if>
+      <if test="vo.gname!=null and ''!=vo.gname">
+        and g.gname=#{vo.gname}
+      </if>
+    </where>
+    order by gr.grtime desc
+
+
+
+  </select>
+
+
+
+  <resultMap id="BaseResultMap" type="com.rabbit.fitness.pojo.Grecruit">
+    <id column="grid" jdbcType="INTEGER" property="grid" />
+    <result column="grname" jdbcType="VARCHAR" property="grname" />
+    <result column="grtext" jdbcType="VARCHAR" property="grtext" />
+    <result column="grtime" jdbcType="TIMESTAMP" property="grtime" />
+    <result column="grgender" jdbcType="VARCHAR" property="grgender" />
+    <result column="grminage" jdbcType="VARCHAR" property="grminage" />
+    <result column="grprice" jdbcType="DECIMAL" property="grprice" />
+    <result column="grmaxage" jdbcType="VARCHAR" property="grmaxage" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <association property="gym" javaType="com.rabbit.fitness.pojo.Gym" autoMapping="true">
+      <id column="gid" property="gid"></id>
+
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    grid, grname, grtext, grtime, grgender, grminage, grprice, grmaxage, type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from grecruit
+    where grid = #{grid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from grecruit
+    where grid = #{grid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rabbit.fitness.pojo.Grecruit">
+    insert into grecruit (grid, grname, grtext,
+                          grtime, grgender, grminage,
+                          grprice, grmaxage, type
+    )
+    values (#{grid,jdbcType=INTEGER}, #{grname,jdbcType=VARCHAR}, #{grtext,jdbcType=VARCHAR},
+            #{grtime,jdbcType=TIMESTAMP}, #{grgender,jdbcType=VARCHAR}, #{grminage,jdbcType=VARCHAR},
+            #{grprice,jdbcType=DECIMAL}, #{grmaxage,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}
+           )
+  </insert>
+  <insert id="insertSelective" parameterType="com.rabbit.fitness.pojo.Grecruit">
+    insert into grecruit
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="grid != null">
+        grid,
+      </if>
+      <if test="grname != null">
+        grname,
+      </if>
+      <if test="grtext != null">
+        grtext,
+      </if>
+      <if test="grtime != null">
+        grtime,
+      </if>
+      <if test="grgender != null">
+        grgender,
+      </if>
+      <if test="grminage != null">
+        grminage,
+      </if>
+      <if test="grprice != null">
+        grprice,
+      </if>
+      <if test="grmaxage != null">
+        grmaxage,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="grid != null">
+        #{grid,jdbcType=INTEGER},
+      </if>
+      <if test="grname != null">
+        #{grname,jdbcType=VARCHAR},
+      </if>
+      <if test="grtext != null">
+        #{grtext,jdbcType=VARCHAR},
+      </if>
+      <if test="grtime != null">
+        #{grtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="grgender != null">
+        #{grgender,jdbcType=VARCHAR},
+      </if>
+      <if test="grminage != null">
+        #{grminage,jdbcType=VARCHAR},
+      </if>
+      <if test="grprice != null">
+        #{grprice,jdbcType=DECIMAL},
+      </if>
+      <if test="grmaxage != null">
+        #{grmaxage,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.fitness.pojo.Grecruit">
+    update grecruit
+    <set>
+      <if test="grname != null">
+        grname = #{grname,jdbcType=VARCHAR},
+      </if>
+      <if test="grtext != null">
+        grtext = #{grtext,jdbcType=VARCHAR},
+      </if>
+      <if test="grtime != null">
+        grtime = #{grtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="grgender != null">
+        grgender = #{grgender,jdbcType=VARCHAR},
+      </if>
+      <if test="grminage != null">
+        grminage = #{grminage,jdbcType=VARCHAR},
+      </if>
+      <if test="grprice != null">
+        grprice = #{grprice,jdbcType=DECIMAL},
+      </if>
+      <if test="grmaxage != null">
+        grmaxage = #{grmaxage,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where grid = #{grid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rabbit.fitness.pojo.Grecruit">
+    update grecruit
+    set grname = #{grname,jdbcType=VARCHAR},
+        grtext = #{grtext,jdbcType=VARCHAR},
+        grtime = #{grtime,jdbcType=TIMESTAMP},
+        grgender = #{grgender,jdbcType=VARCHAR},
+        grminage = #{grminage,jdbcType=VARCHAR},
+        grprice = #{grprice,jdbcType=DECIMAL},
+        grmaxage = #{grmaxage,jdbcType=VARCHAR},
+        type = #{type,jdbcType=VARCHAR}
+    where grid = #{grid,jdbcType=INTEGER}
+  </update>
+</mapper>

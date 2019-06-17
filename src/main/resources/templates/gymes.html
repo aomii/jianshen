@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <title>教练团队</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <!-- css -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/materialize/css/materialize.min.css}" media="screen,projection" />
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/fancybox/jquery.fancybox.css}" rel="stylesheet">
+    <link th:href="@{/css/flexslider.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <script th:src="@{/js/coach/coach.js}"></script>
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+
+    <![endif]-->
+
+</head>
+<body>
+<div id="wrapper">
+    <!--引入头部-->
+    <div th:insert="head::head"></div>
+
+
+    <section id="inner-headline">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="pageTitle">场馆展示</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content">
+        <section id="pricing">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="about-logo">
+                            <h3>我们的<span class="color">场馆</span></h3>
+                            <p>经过六年的发展，tutu健身有限公司在全国已拥有12家连锁店，已成为西南地区营业规模最大、连锁店数量最多、健身设施数量最多、拥有会员人数最多的专业健身服务公司。活力多也已不再仅仅是单纯的健身品牌，而是发展成为涵盖健康休闲会所管理、销售、培训 加盟；高尔夫会所经营管理；游泳场馆经营管理；瑜伽馆经营管理；商务会所经营管理；美容SPA护理；保健养生理疗；专业健康体检；健身器材、运动服装、运动营养品销售；商业演出等多种行业的康体休闲服务管理公司。 活力多！ 自信多！ 魅力多！</p>
+                            </div>
+                    </div>
+                </div>
+                <div class="row" id="randomSelCoachList">
+                    <iframe src="gym_list.html" th:width="1200px" th:height="700px"></iframe>
+                </div>
+            </div>
+        </section>
+    </section>
+    <!--引入底部文件-->
+    <div th:insert="tail::tail">
+</div>
+</div>
+<a href="#" class="scrollup waves-effect waves-dark"><i class="fa fa-angle-up active"></i></a>
+<!-- javascript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<script th:src="@{/js/jquery.easing.1.3.js}"></script>
+<script th:src="@{/materialize/js/materialize.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.fancybox.pack.js}"></script>
+<script th:src="@{/js/jquery.fancybox-media.js}"></script>
+<script th:src="@{/js/jquery.flexslider.js}"></script>
+<script th:src="@{/js/animate.js}"></script>
+<!-- Vendor Scripts -->
+<script th:src="@{/js/modernizr.custom.js}"></script>
+<script th:src="@{/js/jquery.isotope.min.js}"></script>
+<script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
+<script th:src="@{/js/animate.js}"></script>
+<script th:src="@{/js/custom.js}"></script>
+<script th:src="@{/js/custom.js}"></script>
+<script th:inline="javascript">
+    /*	window.onload = test();
+    function test() {
+        $.ajax({
+            url: './coach/selCoach',
+            type: 'post',
+            dataType: 'json',
+            success:function(data){
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+    }*/
+
+    //randomSelCoach();
+
+</script>
+<script th:inline="javascript">
+    var text =$("#loginSuccessP").text();
+    if(text != '' ){
+        $(".unLogin").css("display", "none");
+        $(".loginSuccess").css("display","block");
+    }
+</script>
+</body>
+</html>

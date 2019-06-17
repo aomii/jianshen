@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<!-- css -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="materialize/css/materialize.min.css" media="screen,projection" />
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<link href="css/fancybox/jquery.fancybox.css" rel="stylesheet">
+<link href="css/flexslider.css" rel="stylesheet" />
+<link href="css/style.css" rel="stylesheet" />
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+<div id="wrapper">
+	<!-- start header -->
+    <header>
+        <div class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html"><i class="icon-info-blocks material-icons">location_on</i>tutu健身</a>
+                </div>
+                <div class="navbar-collapse collapse ">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a class="waves-effect waves-dark" th:href="@{/index.html}">主页面</a></li>
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark">关于我们<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="waves-effect waves-dark" th:href="@{/about.html}">公司详情</a></li>
+                                <li><a class="waves-effect waves-dark" href="#">我们团队</a></li>
+                                <li><a class="waves-effect waves-dark" href="#">相关新闻</a></li>
+                                <li><a class="waves-effect waves-dark" href="#">投资我们</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="waves-effect waves-dark" href="services.html">服务</a></li>
+                        <li><a class="waves-effect waves-dark" href="portfolio.html">场馆</a></li>
+                        <li><a class="waves-effect waves-dark" href="coaches.html">教练团队</a></li>
+                        <li><a class="waves-effect waves-dark" href="contact.html">联系我们</a></li>
+                        <li class="waves-login"><a class="waves-effect waves-dark unLogin" href="static-login.html">登录</a></li>
+                        <li class="waves-register"><a class="waves-effect waves-dark unLogin" href="static-register.html">注册</a></li>
+
+                        <li class="dropdown waves-person loginSuccess" style="display: none">
+                            <a data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark" href="#" >欢迎您，<p id="loginSuccessP" th:text="${session.currentUser} != null ? ${session.currentUser.userName} : null"></p>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="waves-effect waves-dark" th:href="@{/personal.html}">个人信息</a></li>
+                                <li><a class="waves-effect waves-dark" href="#">设置</a></li>
+                                <li><a class="waves-effect waves-dark" href="/logout">退出</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section id="inner-headline">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<h2 class="pageTitle">服务</h2>
+			</div>
+		</div>
+	</div>
+	</section>
+	<section id="content">
+		<div class="container content">		
+        <!-- Service Blcoks -->
+						<div class="row"> 
+							<div class="col-md-12">
+								<div class="about-logo">
+									<h3>最优质的 <span class="color">服务</span></h3>
+									 <p>我们仍然秉承了矩阵式，功能性训练计划体系！我们的训练计划仍然是保持了每一周都会更新，每周都会不同！每三个月会有周期性的调整。当然很重要的一点我们不会提前让你知道训练内容！你只有来到课堂上才会知道当天的训练计划！她就像你的生活一样，你永远无法预知将来会发生什么，但我们可以通过周期性的训练来应对任何未知的挑战！我们的每一堂课中都包含了身体控制，力量训练，心肺训练并且更令人兴奋的是我们还为新学员加入了更多的基础动作教学！可以让想练但不知道怎么练的你有一个更好的选择！同时在我们专业的训练计划和教练的指导下，可以让你练得更科学，更系统，更安全，更好的获得身体全面发展，更好的展示生活中自信的你！当然还有更好的体型！哦对了最后还要补充一点那就是当你已经参加满20节左右的HyperShock基础课程后，你将可以更好的在我们的Hyper Shock Basic课程中来挑战和展示自己！来吧动起来，做自己生活中的强者！</p>
+								</div>
+							</div>
+						</div>
+						 
+		    <!-- Info Blcoks -->
+        <div class="row" id="InfoBlock1">
+
+        </div>
+        <!-- End Info Blcoks -->
+
+       
+        <!-- Info Blcoks -->
+        <div class="row">
+            <div class="col-sm-4 info-blocks">
+                <i class="icon-info-blocks fa fa-code"></i>
+                <div class="info-blocks-in">
+                    <h3>LESMILLS GRITCardio</h3>
+                    <p>LESMILLS GRITCardio 是一项时长为30分钟的高强度间歇训练（HIIT）课程，可以改善心血管健康、提升身体速度并最大程度燃烧卡路里。这项课程需要进行各种各样的自重训练，其难度和强度正是希望快速产生健身效果的你所需要的。
+                        LESMILLS GRITCardio 课程采用最先进的HIIT，配合强劲的音乐。不断给你鼓舞的教练将会与你一块儿锻炼，鼓励你再加把劲儿、让身体更好、动作更敏捷。</p>
+                </div>
+            </div>
+            <div class="col-sm-4 info-blocks">
+                <i class="icon-info-blocks fa fa-compress"></i>
+                <div class="info-blocks-in">
+                    <h3>RPM课程</h3>
+                    <p>RPM课程是我们开设的室内脚踏车课程，配有动感十足的音乐节奏，达到快速健身的效果。
+
+                        学习骑脚踏车的所有基本动作，如站起、坐下、改变手扶位置、加速和减速。自行掌控自己的阻力水平和冲刺速度，逐渐加大自己的训练强度。</p>
+                </div>
+            </div>
+            <div class="col-sm-4 info-blocks">
+                <i class="icon-info-blocks fa fa-html5"></i>
+                <div class="info-blocks-in">
+                    <h3>BODYVIVE</h3>
+                    <p>BODYVIVE如果你想获得力量、有氧和核心肌肉训练的最佳组合，本项课程正是你想要的。走进BODYVIVE课堂，开始全方位锻炼。具有挑战性的训练将跳跃冲击、深蹲、跑步和弹力带训练结合起来，将帮助你燃烧卡路里，让健身效果更上一层楼。走出课堂时，你将感到精力充沛，感觉全面开启了健康生活模式。</p>
+                </div>
+            </div>
+        </div>
+        <!-- End Info Blcoks -->
+        <div class="row service-v1 margin-bottom-40">
+            <div class="col-md-4 md-margin-bottom-40">
+					<div class="card small">
+                        <div class="card-image">
+                             <img class="img-responsive" src="img/service1.jpg" alt="">  
+                            <span class="card-title">肌肉拉伸</span>
+                        </div>
+                        <div class="card-content">
+                            <p>
+                                拉伸运动是一种健身方法，拉伸运动可以使韧带肌肉和关节与关节之间的配合更加柔和，减少受伤可能性。包括主动拉伸和被动拉伸。
+                            </p>
+                        </div>
+                    </div>        
+            </div>
+			   <div class="col-md-4 md-margin-bottom-40">
+					<div class="card small">
+                        <div class="card-image">
+                             <img class="img-responsive" src="img/service2.jpg" alt="">  
+                            <span class="card-title">杠铃健身</span>
+                        </div>
+                        <div class="card-content">
+                            <p>
+                                举杠铃是项普遍的健身项目。是人类通过臂力将杠铃由下而上举起的运动。标准方式是：站立，将杠铃放在胸部利用臂力及胸部背部肌肉，由双臂举起至双臂伸直，与地面垂直。
+                            </p>
+                        </div>
+                    </div>        
+            </div>
+			   <div class="col-md-4 md-margin-bottom-40">
+					<div class="card small">
+                        <div class="card-image">
+                             <img class="img-responsive" src="img/service3.jpg" alt="">  
+                            <span class="card-title">养生瑜伽</span>
+                        </div>
+                        <div class="card-content">
+                            <p>
+                                养生瑜伽通过特定的瑜伽体式，被动有效地调节身体的神经系统和肾上腺素之间的平衡，使身体整体走向平衡，以便平衡我们的繁忙生活。
+                            </p>
+                        </div>
+                    </div>        
+            </div> 
+        </div>
+        <!-- End Service Blcoks -->
+ 
+     
+
+        
+    </div>
+    </section>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="widget">
+                        <h5 class="widgetheading">联系方式</h5>
+                        <address>
+                            <strong>Bootstrap company Inc</strong><br>
+                            JC Main Road, Near Silnile tower<br>
+                            Pin-21542 NewYork US.</address>
+                        <p>
+                            <i class="icon-phone"></i> (123) 456-789 - 1255-12584 <br>
+                            <i class="icon-envelope-alt"></i> email@domainname.com
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="widget">
+                        <h5 class="widgetheading">友情链接</h5>
+                        <ul class="link-list">
+                            <li><a class="waves-effect waves-dark" href="#">Latest Events</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Terms and conditions</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Privacy policy</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Career</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Contact us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="widget">
+                        <h5 class="widgetheading">最新动态</h5>
+                        <ul class="link-list">
+                            <li><a class="waves-effect waves-dark" href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Pellentesque et pulvinar enim. Quisque at tempor ligula</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Natus error sit voluptatem accusantium doloremque</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="widget">
+                        <h5 class="widgetheading">相关新闻</h5>
+                        <ul class="link-list">
+                            <li><a class="waves-effect waves-dark" href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Pellentesque et pulvinar enim. Quisque at tempor ligula</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Natus error sit voluptatem accusantium doloremque</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+<a href="#" class="scrollup waves-effect waves-dark"><i class="fa fa-angle-up active"></i></a>
+<!-- javascript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="js/jquery.js"></script>
+<script src="js/jquery.easing.1.3.js"></script>
+<script src="materialize/js/materialize.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.fancybox.pack.js"></script>
+<script src="js/jquery.fancybox-media.js"></script>
+<script src="js/jquery.flexslider.js"></script>
+<script src="js/animate.js"></script>
+<!-- Vendor Scripts -->
+<script src="js/modernizr.custom.js"></script>
+<script src="js/jquery.isotope.min.js"></script>
+<script src="js/jquery.magnific-popup.min.js"></script>
+<script src="js/animate.js"></script>
+<script src="js/custom.js"></script>
+<script th:inline="javascript">
+	var text =$("#loginSuccessP").text();
+	if(text != '' ){
+		$(".unLogin").css("display", "none");
+		$(".loginSuccess").css("display","block");
+	}
+
+	var InfoBlock1 = $("#InfoBlock1");
+
+	$(document).ready(
+		$.ajax({
+			url: '/course/list',
+			type: 'post',
+			dataType: 'json',
+			success: function (data) {
+				console.log(data);
+				var content ="";
+				for (var i=0; i < 3;i++){
+                    content += "            <div class=\"col-sm-4 info-blocks\" onclick='courseInfo("+data.rows[i].webcId+")'>\n" +
+	                    "                <i class=\"icon-info-blocks fa fa-bell-o\"></i>\n" +
+	                    "                <div class=\"info-blocks-in\">\n" +
+	                    "                    <h3>"+data.rows[i].webcTitle+"</h3>\n" +
+	                    "                    <p>"+data.rows[i].webcDesc+"</p>\n" +
+	                    "                </div>\n" +
+	                    "            </div>\n" ;
+					};
+				InfoBlock1.append(content);
+			},
+			error: function (err) {
+
+			}
+		})
+	);
+	function courseInfo(webcId) {
+		alert(webcId);
+        $.ajax({
+            url: ''
+        })
+	}
+</script>
+</body>
+</html>

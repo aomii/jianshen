@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+    <meta charset="UTF-8">
+    <title>THREE Image Transition</title>
+
+
+
+    <link rel="stylesheet" href="/css/threecss/style.css">
+
+
+</head>
+
+<body>
+
+<div id="three-container"></div>
+
+<script src='/js/threejs/1.js'></script>
+<script src='/js/threejs/2.js'></script>
+<script src='/js/threejs/3.js'></script>
+<script src='/js/threejs/4.js'></script>
+<script  src="/js/threejs/index.js"></script>
+</body>
+
+</html>

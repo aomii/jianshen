@@ -1,0 +1,25 @@
+package com.rabbit.fitness.gym.service;
+
+import com.rabbit.fitness.gym.vo.GymVo;
+import com.rabbit.fitness.pojo.Gym;
+
+import java.util.List;
+
+public interface GymService {
+
+    List<Gym> findAll();
+
+    Gym info(int gid);
+
+    List<Gym> findGymByPage(Integer currentPage, Integer pageSize, GymVo vo);
+
+    Integer add(Gym gym);
+
+    int updateGym(Gym gym);
+
+    int deleteGym(Integer[] gids);
+
+    Integer findGidByUid(Integer userId);
+
+    Gym findGymByGid(int gymId);
+}

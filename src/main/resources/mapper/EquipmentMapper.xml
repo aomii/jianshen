@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.fitness.dao.EquipmentMapper">
+  <!--批量删除-->
+  <delete id="deleteEquips">
+    delete from equipment where equip_id in
+    <foreach collection="array" open="(" close=")" separator="," item="id">
+      #{id}
+    </foreach>
+  </delete>
+  <!--分页显示-->
+  <select id="selEquipByPage" resultMap="BaseResultMap">
+    select *from equipment
+    <where>
+      <if test="equipName!=null and ''!=equipName">
+        and equip_name like concat('%',#{equipName},'%')
+      </if>
+    </where>
+  </select>
+  <resultMap id="BaseResultMap" type="com.rabbit.fitness.pojo.Equipment">
+    <id column="equip_id" jdbcType="INTEGER" property="equipId" />
+    <result column="equip_name" jdbcType="VARCHAR" property="equipName" />
+    <result column="equip_desc" jdbcType="VARCHAR" property="equipDesc" />
+    <result column="equip_count" jdbcType="INTEGER" property="equipCount" />
+    <result column="equip_img" jdbcType="VARCHAR" property="equipImg" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    equip_id, equip_name, equip_desc, equip_count, equip_img
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from equipment
+    where equip_id = #{equipId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from equipment
+    where equip_id = #{equipId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.rabbit.fitness.pojo.Equipment">
+    insert into equipment (equip_id, equip_name, equip_desc, 
+      equip_count, equip_img)
+    values (#{equipId,jdbcType=INTEGER}, #{equipName,jdbcType=VARCHAR}, #{equipDesc,jdbcType=VARCHAR}, 
+      #{equipCount,jdbcType=INTEGER}, #{equipImg,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.rabbit.fitness.pojo.Equipment">
+    insert into equipment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="equipId != null">
+        equip_id,
+      </if>
+      <if test="equipName != null">
+        equip_name,
+      </if>
+      <if test="equipDesc != null">
+        equip_desc,
+      </if>
+      <if test="equipCount != null">
+        equip_count,
+      </if>
+      <if test="equipImg != null">
+        equip_img,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="equipId != null">
+        #{equipId,jdbcType=INTEGER},
+      </if>
+      <if test="equipName != null">
+        #{equipName,jdbcType=VARCHAR},
+      </if>
+      <if test="equipDesc != null">
+        #{equipDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="equipCount != null">
+        #{equipCount,jdbcType=INTEGER},
+      </if>
+      <if test="equipImg != null">
+        #{equipImg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.fitness.pojo.Equipment">
+    update equipment
+    <set>
+      <if test="equipName != null and ''!=equipName">
+        equip_name = #{equipName,jdbcType=VARCHAR},
+      </if>
+      <if test="equipDesc != null and ''!=equipDesc">
+        equip_desc = #{equipDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="equipCount != null">
+        equip_count = #{equipCount,jdbcType=INTEGER},
+      </if>
+      <if test="equipImg != null and ''!=equipImg">
+        equip_img = #{equipImg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where equip_id = #{equipId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rabbit.fitness.pojo.Equipment">
+    update equipment
+    set equip_name = #{equipName,jdbcType=VARCHAR},
+      equip_desc = #{equipDesc,jdbcType=VARCHAR},
+      equip_count = #{equipCount,jdbcType=INTEGER},
+      equip_img = #{equipImg,jdbcType=VARCHAR}
+    where equip_id = #{equipId,jdbcType=INTEGER}
+  </update>
+</mapper>

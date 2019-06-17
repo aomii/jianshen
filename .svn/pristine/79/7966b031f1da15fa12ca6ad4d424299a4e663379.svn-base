@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+    <script th:src="@{/js/jquery-3.4.0.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<p>欢迎您：<span style="color: red" th:text="${session.selStu.stuname}"></span>     您上次登录地址为:<span th:text="${session.selStu.lastlogin}"></span></p>
+<button id="show-update-form">完善/修改个人信息</button>
+<div class="stu-info">
+
+    <div id="info-left">
+    <p id="profile-pic"><img th:src="${session.selStu.stupic}" alt="头像"></p>
+        <div id="venue-person-list">
+            <h6 id="venue-title" class="btn btn-danger">场馆圈</h6>
+            <ul></ul>
+        </div>
+
+        <div id="friend-request-list">
+            <h4 style="color: red"> 好友请求</h4>
+            <ul></ul>
+        </div>
+
+        <div id="friend-list">
+            <h4 style="color: red"> 好友列表</h4>
+            <ul></ul>
+        </div>
+    </div>
+    <div id="info-right">
+    <p>用户名:<span th:text="${session.selStu.stuname}"></span></p>
+    <p>年龄:<span th:text="${session.selStu.stuage}"></span></p>
+    <p>性别:<span th:text="${session.selStu.stugender}"></span></p>
+    <p>电话号码:<span th:text="${session.selStu.stuphone}"></span></p>
+    <p>生日:<span th:text="${session.selStu.stubirth}"></span></p>
+    </div>
+</div>
+<div id="update-stu-form">
+    <h4 style="color: red">更改/完善个人信息</h4>
+    <input type="hidden" th:value="${session.selStu.stuid}" id="stuid">
+    头像：<p><img th:src="${session.selStu.stupic}" alt="头像" id="stupic"></p>
+    <div>
+        <input type="file"   name="portrait" id="upload">
+        <input type="submit" value="上传"  id="upload-submit">
+    </div>
+    用户名：<input type="text" th:value="${session.selStu.stuname}" id="stuname"><br>
+    年龄：<input type="text" th:value="${session.selStu.stuage}" id="stuage"><br>
+    性别：<input type="radio" th:value="男" name="stugender" th:checked="${session.selStu.stugender=='男'?true:false}">男
+    <input type="radio" th:value="女" name="stugender" th:checked="${session.selStu.stugender=='女'?true:false}">女<br>
+    电话号码：<input type="text" th:value="${session.selStu.stuphone}" id="stuphone"><br>
+    生日：<input type="date" th:value="${session.selStu.stubirth}" id="stubirth"><br>
+    <button type="button" id="update-stu-submit">保存修改</button>
+</div>
+<div id="datas" style="display: none">
+        <div id="uid" th:text="${session.selStu.uid}"></div>
+         <div id="gid" th:text="${session.selStu.gid}"></div>
+</div>
+
+
+
+<style>
+    #update-stu-form{
+        display: none;
+    }
+    body{
+        width: 1000px;
+        margin: 0 auto;
+    }
+    #profile-pic{
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+        position: relative;
+    }
+    #profile-pic img{
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    #info-left{
+        float: left;
+    }
+    #info-right{
+        float:right;
+    }
+
+</style>
+
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+
+        $("#show-update-form").click(function(){
+            $("#update-stu-form").show();
+        })
+
+        $("#update-stu-submit").click(function () {
+            $.ajax({
+                url:"/student/perfect",
+                type:"post",
+                data:{
+                    "stuid":$("#stuid").val(),
+                    "stupic":$("#stupic").attr("src"),
+                    "stuname":$("#stuname").val(),
+                    "stuage":$("#stuage").val(),
+                    "stugender":$("input[name='stugender']:checked").val(),
+                    "stuphone":$("#stuphone").val(),
+                    "stubirth":$("#stubirth").val()
+                },
+
+                success:function (data) {
+                    if (data!=0){
+                        alert("修改成功");
+                        $("#update-stu-form").hide();
+                    }else{
+                        alert("修改失败");
+                    }
+                }
+            });
+
+
+        })
+
+
+        $("#upload").change(function () {
+            var f = document.getElementById('upload').files[0];
+            src = window.URL.createObjectURL(f);
+            document.getElementById('stupic').src = src
+        })
+
+        $("#upload-submit").click(function () {
+            var formData = new FormData();
+            formData.append('portrait', $('#upload')[0].files[0]);
+            $.ajax({
+                url:"/upload/img",
+                type:"post",
+                data:formData,
+                contentType: false,
+                processData: false,
+                success:function (data) {
+                    alert("上传成功");
+                }
+            })
+        })
+        //查看是否为好友
+        function isFriend(sendrequestId,agreerequestId){
+            var result = false;
+            $.ajax({
+                url:"/student/isFriend",
+                type:"post",
+                async:false,
+                data:{
+                    "senduid":sendrequestId,
+                    "agreeuid":agreerequestId
+                },
+                success:function (data) {
+                    if (data!=0){
+                        result=true;
+                    }
+                }
+            })
+            return result;
+        }
+        //场馆圈子
+        $.ajax({
+            url:"/student/find-other-student",
+            type:"post",
+            data:{
+                "gid":$("#gid").text(),
+                "uid":$("#uid").text()
+            },
+            success:function (data) {
+
+                for (var i = 0; i < data.length; i++) {
+
+                        var student= data[i];
+                        var sendrequestId=$("#uid").text();
+                        var agreerequestId=student.uid;
+                        var flag=isFriend(sendrequestId,agreerequestId);
+
+                    alert(1343434343888888);
+                        if (flag){
+                            var li=$("<span id='sendrequest-id' style='display: none'>"+sendrequestId+"</span>" +
+                                "<span id='response-id' style='display: none'>"+student.uid+"</span>" +
+                                "<li>"+student.stuname+"</li>");
+                        }else{
+                            var li=$("<span id='sendrequest-id' style='display: none'>"+sendrequestId+"</span>" +
+                                "<span id='response-id' style='display: none'>"+student.uid+"</span>" +
+                                "<li>"+student.stuname+"<button id='add-friend'>添加好友</button></li>");
+                        }
+                        $("#venue-person-list ul").append(li);
+                }
+            }
+        })
+
+        //发送好友请求
+       $(document).on("click","#add-friend",function () {
+                    $.ajax({
+                        url:"/student/add-friend",
+                        type:"post",
+                        data:{
+                            "senduid":$("#sendrequest-id").text(),
+                            "agreeuid":$("#response-id").text()
+                        },
+                        success:function (data) {
+                            if (data!=0){
+                                alert("已发送好友请求");
+                            }
+                        }
+                    })
+       })
+        //好友请求列表
+        $.ajax({
+            url:"/student/friendrequests",
+            type:"post",
+            data:{"uid":$("#uid").text()},
+            success:function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var friendrequest = data[i];
+                    var flag = isFriend(friendrequest.senduid,friendrequest.agreeuid);
+                    if (!flag){
+                        var li=$("<li>" +
+                            "<span id='agree-id' style='display: none;'>"+friendrequest.agreeuid+"</span>" +
+                            "<span id='send-id' style='display: none;'>"+friendrequest.senduid+"</span>"+
+                            ""+friendrequest.sendname+"" +
+                            "<button id='agree-request'>同意</button>" +
+                            "<button id='reject-request'>拒绝</button>" +
+                            "</li>")
+                    }
+
+                    $("#friend-request-list ul").append(li);
+                }
+            }
+        })
+        //获取同意方的friendids
+        function agreeFridenIds(){
+                var result="";
+                $.ajax({
+                    url:"/student/finfo/"+agreeId,
+                    type:"post",
+                    async:false,
+                    success:function (data) {
+                        result=data.friendids;
+
+                    }
+                })
+                return result;
+        }
+        //获取请求方的friendids
+        function sendFridenIds(){
+            var result="";
+            $.ajax({
+                url:"/student/finfo/"+sendId,
+                type:"post",
+                async:false,
+                success:function (data) {
+                    result=data.friendids;
+
+                }
+            })
+            return result;
+        }
+        //更新同意方的friendids
+        function updateAgreeFids(){
+                $.ajax({
+                    url:"/student/update-fids",
+                    type:"post",
+                    data:{
+                        "friendids":aids.toString(),
+                        "uid":agreeId
+                    },
+                    success:function (data) {
+                        alert("请求发送成功")
+                    }
+                })
+        }
+        //更新请求方的friendids
+        function updateSendFids(){
+            $.ajax({
+                url:"/student/update-fids",
+                type:"post",
+                data:{
+                    "friendids":sids.toString(),
+                    "uid":sendId
+                },
+                success:function (data) {
+                    alert("请求发送成功")
+                }
+            })
+        }
+        //更新同意好友请求记录状态
+        function updateAgreeStatus(){
+            $.ajax({
+                url:"/student/update-agree-status",
+                type:"post",
+                data:{"agreeuid":$("#uid").text()},
+                success:function () {
+
+                }
+            })
+        }
+        //同意好友请求
+        $(document).on("click","#agree-request",function () {
+            agreeId  = $(this).parent().find("#agree-id").text();
+            sendId = $(this).parent().find("#send-id").text();
+            //好友方的friendids
+           aids = agreeFridenIds();
+            //改善请求方的friendids
+            sids = sendFridenIds();
+
+            alert("同意方："+aids);
+            alert("请求方："+sids);
+
+            if (aids==''||aids ==null){
+                aids = new Array();
+                aids.push(sendId);
+            }else{
+                aids = aids.split(",");
+                aids.push(sendId);
+            }
+
+            if (sids==''||sids ==null){
+                sids = new Array();
+                sids.push(agreeId);
+            }else{
+                sids = sids.split(",");
+                sids.push(agreeId);
+            }
+            //更新同意方好友列表
+            updateAgreeFids();
+            //更新请求方好友列表
+            updateSendFids();
+            //更新同意好友请求记录状态
+            updateAgreeStatus();
+
+        })
+
+        //拒绝好友请求
+        $(document).on("click","#reject-request",function () {
+            $.ajax({
+                url:"/student/update-reject-status",
+                type:"post",
+                data:{"agreeuid":$("#uid").text()},
+                success:function (data) {
+                    if (data!=0){
+                        alert("拒绝好友请求")
+                    }
+
+                }
+            })
+        })
+
+
+
+
+        //好友列表
+        $.ajax({
+            url:"/student/friend-list",
+            type:"post",
+            data:{"uid":$("#uid").text()},
+            success:function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var friend = data[i];
+                    var li=$("<li><span id='friend-id' style='display: none;'>"+friend.uid+"</span>"+friend.stuname+"" +
+                        "<button id='check-friend-info'>查看好友信息</button><button id='go-chat'>聊天</button></li>")
+                    $("#friend-list ul").append(li);
+                }
+            }
+        })
+
+        //查看好友信息
+        $(document).on("click","#check-friend-info",function () {
+            var fid=$(this).parent().find("#friend-id").text();
+            //alert(fid);
+            $.ajax({
+                url:"/student/finfo/"+fid,
+                type:"post",
+                success:function (data) {
+                    alert("对象"+data);
+                }
+            })
+        })
+
+        //获取发起聊天方的名字
+        function getSendUserName(){
+            var userName="";
+            $.ajax({
+                url:"/student/getUserNameByUid",
+                type:"post",
+                async:false,
+                data:{"uid":$("#uid").text()},
+                success:function (data) {
+                    userName=data.userName;
+                }
+            })
+                    return userName;
+        }
+
+        //获取聊天对方的名字
+        function getReceiveUserName(fid){
+            var userName="";
+            $.ajax({
+                url:"/student/getUserNameByUid",
+                type:"post",
+                async:false,
+                data:{"uid":fid},
+                success:function (data) {
+                    userName=data.userName;
+                }
+            })
+            return userName;
+        }
+
+        //发起聊天
+        $(document).on("click","#go-chat",function () {
+                var userSendName=getSendUserName(); //发起聊天方的名字
+                var fid=$(this).parent().find("#friend-id").text();
+                var userReceiveName=getReceiveUserName(fid);
+
+                location.href="/web/websocket/"+userSendName+"?receiveName="+userReceiveName;
+
+        })
+    })
+</script>
+</body>
+</html>

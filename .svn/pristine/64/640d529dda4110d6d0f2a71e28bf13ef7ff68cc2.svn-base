@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width,user-scalable=no" />
+
+    <meta name="description" content="" />
+
+    <title>个人信息</title>
+    <script th:src="@{/js/jquery-3.4.0.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/materialize/css/materialize.min.css}" media="screen,projection" />
+    <link th:href="@{/css/fancybox/jquery.fancybox.css}" rel="stylesheet">
+    <link th:href="@{/css/flexslider.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.3/style/weui.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.1/css/jquery-weui.min.css">
+</head>
+<body>
+<div id="wrapper">
+    <header>
+        <div class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html"><i class="icon-info-blocks material-icons">location_on</i>tutu健身</a>
+                </div>
+                <div class="navbar-collapse collapse ">
+                    <ul class="nav navbar-nav">
+                        <li><a class="waves-effect waves-dark" href="/index.html">主页面</a></li>
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark">关于我们<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="waves-effect waves-dark" href="/about.html">公司详情</a></li>
+                                <li><a class="waves-effect waves-dark" href="#">我们团队</a></li>
+                                <li><a class="waves-effect waves-dark" href="#">相关新闻</a></li>
+                                <li><a class="waves-effect waves-dark" href="#">投资我们</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="waves-effect waves-dark" href="services.html">服务</a></li>
+                        <li><a class="waves-effect waves-dark" href="portfolio.html">场馆</a></li>
+                        <li><a class="waves-effect waves-dark" href="coaches.html">教练团队</a></li>
+                        <li><a class="waves-effect waves-dark" href="contact.html">联系我们</a></li>
+                        <li class="waves-login"><a class="waves-effect waves-dark unLogin" th:href="@{/static-login.html}">登录</a></li>
+                        <li class="waves-register"><a class="waves-effect waves-dark unLogin" th:href="@{/static-register.html}">注册</a></li>
+
+                        <li class="dropdown waves-person loginSuccess" style="display: none">
+                            <a data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark" href="#" >欢迎您，<p id="loginSuccessP" th:text="${session.currentUser} != null ? ${session.currentUser.userName} : null"></p>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <shiro:hasRole th:name="coach" name="coach">
+                                    <li><a class="waves-effect waves-dark" th:href="@{/detail}">个人中心</a> </li>
+                                    <li><a class="waves-effect waves-dark" th:href="@{change}">信息变更</a> </li>
+                                    <li><a class="waves-effect waves-dark" th:href="@{/wallet}">我的钱包</a> </li>
+                                </shiro:hasRole>
+                                <shiro:hasRole th:name="student" name="student">
+                                    <li><a class="waves-effect waves-dark" th:href="@{/personal.html}">个人中心</a> </li>
+                                </shiro:hasRole>
+                                <li><a class="waves-effect waves-dark" href="#">设置</a></li>
+
+                            </ul>
+                        </li>
+                        <!--<li><a class="waves-effect waves-dark loginSuccess" th:href="@{/student/info/${session.currentUser.uid}}" style="display: none">个人信息</a></li>-->
+                        <li><a class="waves-effect waves-dark loginSuccess" style="display: none" th:href="@{/logout}" href="/logout">退出</a></li>
+                        <!--超级管理员可以进入后台系统-->
+                        <li>
+                            <shiro:hasRole th:name="superadmin" name="superadmin">
+                                <a class="waves-effect waves-dark" href="/backmain.html">点击进入超级管理员后台管理页面</a>
+                            </shiro:hasRole>
+                            <shiro:hasRole th:name="gymadmin" name="gymadmin">
+                                <a class="waves-effect waves-dark" href="/backmain.html">点击进入场馆后台管理页面</a>
+                            </shiro:hasRole>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+<section id="inner-headline">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="pageTitle">个人信息</h2>
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="about-logo">
+                <h3>学员<span class="color">个人信息</span></h3>
+                <p>您上一次登录的地址为：<span th:text="${session.selStu.lastlogin}"></span></p>
+                <p>tutu健身，立足短三角，专注健身14年，拥有10+家签约及开业的直营门店。累计发展会员人数150余万，每年新增约45万会员，每天约15万会员在全国各分店享受专业健身服务</p></div>
+        </div>
+    </div>
+
+
+    <div class="stu-info">
+
+        <div id="info-left">
+            <div class="row">
+                <div class="col-md-6 student-field">
+                    <div class="input-field" id="profile-pic">
+                        <img th:src="${session.selStu.stupic}" id="stupic">
+                        <label for="stupic" class="active" style="color: #e62026">   头像 </label>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+                <div class="col-md-6 student-field">
+                <div class="input-field">
+                    <input type="text" class="form-control"  id="stuname" readonly="readonly" style="background: #1c1c1c;color: #eeeeee" th:value="${session.selStu.stuname}">
+                    <label for="stuname" class="active" style="color: #e62026">   昵称 </label>
+                    <p class="help-block"></p>
+                </div>
+            </div>
+
+                <div class="col-md-6 student-field">
+                    <div class="input-field">
+                        <input type="text" class="form-control"  id="stuage" readonly="readonly" style="background: #1c1c1c;color: #eeeeee" th:value="${session.selStu.stuage}">
+                        <label for="stuage" class="active" style="color: #e62026">   年龄 </label>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 student-field">
+                    <div class="input-field">
+                        <input type="text" class="form-control"  id="stugender" readonly="readonly" style="background: #1c1c1c;color: #eeeeee" th:value="${session.selStu.stugender}">
+                        <label for="stugender" class="active" style="color: #e62026">   性别 </label>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 student-field">
+                    <div class="input-field">
+                        <input type="text" class="form-control"  id="stuphone" readonly="readonly" style="background: #1c1c1c;color: #eeeeee" th:value="${session.selStu.stuphone}">
+                        <label for="stuphone" class="active" style="color: #e62026">   电话号码 </label>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 student-field">
+                    <div class="input-field">
+                        <input type="text" class="form-control"  id="stubirth" readonly="readonly" style="background: #1c1c1c;color: #eeeeee" th:value="${session.selStu.stubirth}">
+                        <label for="stubirth" class="active" style="color: #e62026">   生日 </label>
+                        <p class="help-block"></p>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">完善/修改个人信息</button>
+            </div>
+        </div>
+        <div id="info-right">
+
+            <div class="btn-group" id="venue-person-list">
+                <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown">
+                    场馆圈子 <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu"> </ul>
+
+            </div>
+
+            <div class="btn-group" id="friend-request-list">
+                <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown">
+                    好友请求 <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu"> </ul>
+            </div>
+
+
+            <div class="btn-group" id="friend-list">
+                <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown">
+                    好友列表 <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu"> </ul>
+            </div>
+
+            <div class="btn-group" id="coach-list">
+                <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown">
+                    我的教练 <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu"> </ul>
+            </div>
+
+            <div class="btn-group" id="card-list">
+                <button type="button" class="btn  dropdown-toggle" data-toggle="dropdown">
+                    我的产品 <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu"> </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- 完善/修改学生信息模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h6 class="modal-title" id="myModalLabel">更改完善个人信息</h6>
+            </div>
+            <div class="modal-body">
+                <div id="update-stu-form">
+                    <input type="hidden" th:value="${session.selStu.stuid}" id="stuid">
+                    头像：<p id="profile-pic"><img th:src="${session.selStu.stupic}" alt="头像" id="stupic-inform"></p>
+                    <div>
+                        <input type="file"   name="portrait" id="upload">
+                        <input type="submit" value="上传"  id="upload-submit">
+                    </div>
+                    用户名：<input type="text" th:value="${session.selStu.stuname}" id="stuname"><br>
+                    年龄：<input type="text" th:value="${session.selStu.stuage}" id="stuage"><br>
+                    性别：<input type="radio" th:value="男" name="stugender" th:checked="${session.selStu.stugender=='男'?true:false}">男
+                    <input type="radio" th:value="女" name="stugender" th:checked="${session.selStu.stugender=='女'?true:false}">女<br>
+                    电话号码：<input type="text" th:value="${session.selStu.stuphone}" id="stuphone"><br>
+                    生日：<input type="date" th:value="${session.selStu.stubirth}" id="stubirth"><br>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="update-stu-submit">提交更改</button>
+            </div>
+        </div><!-- /.modal -->
+    </div>
+
+    <!-- 查看好友资料-->
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModal2Label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h6 class="modal-title" id="myModal2Label">好友资料</h6>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal -->
+    </div>
+
+    <!-- 查看教练资料-->
+    <!-- 查看好友资料-->
+    <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModal3Label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h6 class="modal-title" id="myModal3Label">教练信息</h6>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal -->
+    </div>
+
+    <div id="datas" style="display: none">
+        <div id="uid" th:text="${session.selStu.uid}"></div>
+        <div id="gid" th:text="${session.selStu.gid}"></div>
+        <div id="cid" th:text="${session.selStu.cid}"></div>
+    </div>
+</div>
+
+<style>
+    h3{
+        font-size: 24px;
+    }
+
+    .stu-info{
+        overflow: hidden;
+    }
+    .btn{
+        width:auto;
+    }
+
+    #profile-pic{
+        width: 100px;
+        height: 100px;
+
+        position: relative;
+    }
+    #profile-pic img{
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    #info-left{
+        float: left;
+        width: 72%;
+    }
+    #info-right{
+        float:right;
+        width: 20%;
+        margin-top: 26px;
+    }
+    .student-field{
+        padding-left: 24px;
+    }
+    .input-field input{
+        background: #272727 !important;
+    }
+    .caret{
+        border: 6px solid transparent;
+        border-right: 6px solid;
+    }
+    .dropdown-menu{
+        position: relative;
+        background: white;
+        color: #ff5722;
+        margin: 0px;
+        width: 100%;
+        padding: 0px;
+    }
+    .dropdown-menu li{
+        padding:5px;
+        border-bottom: 1px solid #ec4141;
+    }
+    .btn-group{
+        width: 100%;
+    }
+    .btn-group .dropdown-toggle{
+        width:100%;
+    }
+    .btn-group.open .caret{
+        border: 6px solid transparent;
+        border-top: 6px solid;
+    }
+    #check-coach-info,
+    #break-coach,
+    #check-friend-info,
+    #go-chat,
+    #agree-request,
+    #reject-request,
+    #add-friend{
+        border-radius: 5px !important;
+        margin-left: 5px;
+        border: none;
+        padding: 2px 3px;
+        background: #ec4141;
+        color:white;
+    }
+    .modal-title{
+        color:#ec4141;
+    }
+    [type="radio"]{
+        position: relative !important;
+        opacity: 1 !important;
+        left: 0 !important;
+    }
+    .modal-footer button{
+        margin-left: 5px;
+    }
+    .Zi--Comments{
+        margin-top: 5px;
+    }
+    .msg-count{
+        position: absolute;
+        bottom: 50%;
+        left: 50%;
+        padding: 0 4px;
+        font-size: 11px;
+        color: #fff;
+        background-color: #f1403c;
+        border: 2px solid #fff;
+        border-radius: 22px;
+        text-align: center;
+        line-height: 17px;
+    }
+    #msg-from{
+        background: #fff;
+        width: 304px;
+        padding: 10px 20px;
+        font-size: 14px;
+        position: absolute;
+        top: 69px;
+        z-index: 1000;
+        right: 89px;
+        border-radius: 5px;
+        display: none;
+    }
+    #msg-from:before{
+        content: '';
+        border: 8px solid transparent;
+        border-bottom: 8px solid #fff;
+        position: absolute;
+        top: -16px;
+        left: 136px;
+
+    }
+    #friend-data div{
+        margin-bottom: 5px;
+        border-bottom: 1px solid #e62026;
+    }
+    #friend-data p{
+        color: #e62026;
+        font-size: 0.6rem;
+        margin-bottom:0px
+    }
+</style>
+
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+        function loadStudentInfo(userId){
+           $.ajax({
+               url:"/student/info/"+userId,
+               type:"post",
+           })
+        }
+        $("#update-stu-submit").click(function () {
+            $.ajax({
+                url:"/student/perfect",
+                type:"post",
+                data:{
+                    "stuid":$("#update-stu-form #stuid").val(),
+                    "stupic":$("#update-stu-form #stupic-inform").attr("src"),
+                    "stuname":$("#update-stu-form #stuname").val(),
+                    "stuage":$("#update-stu-form #stuage").val(),
+                    "stugender":$("#update-stu-form input[name='stugender']:checked").val(),
+                    "stuphone":$("#update-stu-form #stuphone").val(),
+                    "stubirth":$("#update-stu-form #stubirth").val()
+                },
+
+                success:function (data) {
+                    if (data!=0){
+                        var uid=$("#uid").text();
+                        loadStudentInfo(uid);
+                        alert("修改成功");
+                        location.reload(true);
+
+                    }else{
+                        alert("修改失败");
+                    }
+                }
+            });
+
+
+        })
+
+
+        $("#upload").change(function () {
+            var f = document.getElementById('upload').files[0];
+            src = window.URL.createObjectURL(f);
+            document.getElementById('stupic-inform').src = src;
+        })
+
+        $("#upload-submit").click(function () {
+            var formData = new FormData();
+            formData.append('portrait', $('#upload')[0].files[0]);
+            $.ajax({
+                url:"/upload/img",
+                type:"post",
+                data:formData,
+                contentType: false,
+                processData: false,
+                success:function (data) {
+                    alert("上传成功");
+                }
+            })
+        })
+        //查看是否为好友
+        function isFriend(sendrequestId,agreerequestId){
+            var result = false;
+            $.ajax({
+                url:"/student/isFriend",
+                type:"post",
+                async:false,
+                data:{
+                    "senduid":sendrequestId,
+                    "agreeuid":agreerequestId
+                },
+                success:function (data) {
+                    if (data!=0){
+                        result=true;
+                    }
+                }
+            })
+            return result;
+        }
+        //场馆圈子
+        $.ajax({
+            url:"/student/find-other-student",
+            type:"post",
+            data:{
+                "gid":$("#gid").text(),
+                "uid":$("#uid").text()
+            },
+            success:function (data) {
+
+                for (var i = 0; i < data.length; i++) {
+
+                        var student= data[i];
+                        var sendrequestId=$("#uid").text();
+                        var agreerequestId=student.uid;
+                        var flag=isFriend(sendrequestId,agreerequestId);
+
+                        if (flag){
+                            var li=$("<span id='sendrequest-id' style='display: none'>"+sendrequestId+"</span>" +
+                                "<span id='response-id' style='display: none'>"+student.uid+"</span>" +
+                                "<li>"+student.stuname+"</li>");
+                        }else{
+                            var li=$("<span id='sendrequest-id' style='display: none'>"+sendrequestId+"</span>" +
+                                "<span id='response-id' style='display: none'>"+student.uid+"</span>" +
+                                "<li>"+student.stuname+"<button id='add-friend'>添加好友</button></li>");
+                        }
+                        $("#venue-person-list ul").append(li);
+                }
+            }
+        })
+
+        //发送好友请求
+       $(document).on("click","#add-friend",function () {
+                    $.ajax({
+                        url:"/student/add-friend",
+                        type:"post",
+                        data:{
+                            "senduid":$("#sendrequest-id").text(),
+                            "agreeuid":$("#response-id").text()
+                        },
+                        success:function (data) {
+                            if (data!=0){
+                                alert("已发送好友请求");
+                            }
+                        }
+                    })
+       })
+        //好友请求列表
+        $.ajax({
+            url:"/student/friendrequests",
+            type:"post",
+            data:{"uid":$("#uid").text()},
+            success:function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var friendrequest = data[i];
+                    var flag = isFriend(friendrequest.senduid,friendrequest.agreeuid);
+                    if (!flag){
+                        var li=$("<li>" +
+                            "<span id='agree-id' style='display: none;'>"+friendrequest.agreeuid+"</span>" +
+                            "<span id='send-id' style='display: none;'>"+friendrequest.senduid+"</span>"+
+                            ""+friendrequest.sendname+"" +
+                            "<button id='agree-request'>同意</button>" +
+                            "<button id='reject-request'>拒绝</button>" +
+                            "</li>")
+                    }
+
+                    $("#friend-request-list ul").append(li);
+                }
+            }
+        })
+        //获取同意方的friendids
+        function agreeFridenIds(){
+                var result="";
+                $.ajax({
+                    url:"/student/finfo/"+agreeId,
+                    type:"post",
+                    async:false,
+                    success:function (data) {
+                        result=data.friendids;
+
+                    }
+                })
+                return result;
+        }
+        //获取请求方的friendids
+        function sendFridenIds(){
+            var result="";
+            $.ajax({
+                url:"/student/finfo/"+sendId,
+                type:"post",
+                async:false,
+                success:function (data) {
+                    result=data.friendids;
+
+                }
+            })
+            return result;
+        }
+        //更新同意方的friendids
+        function updateAgreeFids(){
+                $.ajax({
+                    url:"/student/update-fids",
+                    type:"post",
+                    data:{
+                        "friendids":aids.toString(),
+                        "uid":agreeId
+                    },
+                    success:function (data) {
+                        //alert("请求发送成功")
+                    }
+                })
+        }
+        //更新请求方的friendids
+        function updateSendFids(){
+            $.ajax({
+                url:"/student/update-fids",
+                type:"post",
+                data:{
+                    "friendids":sids.toString(),
+                    "uid":sendId
+                },
+                success:function (data) {
+                    //alert("请求发送成功")
+                }
+            })
+        }
+        //更新同意好友请求记录状态
+        function updateAgreeStatus(){
+            $.ajax({
+                url:"/student/update-agree-status",
+                type:"post",
+                data:{"agreeuid":$("#uid").text()},
+                success:function () {
+
+                }
+            })
+        }
+        //同意好友请求
+        $(document).on("click","#agree-request",function () {
+            agreeId  = $(this).parent().find("#agree-id").text();
+            sendId = $(this).parent().find("#send-id").text();
+            //好友方的friendids
+           aids = agreeFridenIds();
+            //改善请求方的friendids
+            sids = sendFridenIds();
+
+            // alert("同意方："+aids);
+            // alert("请求方："+sids);
+
+            if (aids==''||aids ==null){
+                aids = new Array();
+                aids.push(sendId);
+            }else{
+                aids = aids.split(",");
+                aids.push(sendId);
+            }
+
+            if (sids==''||sids ==null){
+                sids = new Array();
+                sids.push(agreeId);
+            }else{
+                sids = sids.split(",");
+                sids.push(agreeId);
+            }
+            //更新同意方好友列表
+            updateAgreeFids();
+            //更新请求方好友列表
+            updateSendFids();
+            //更新同意好友请求记录状态
+            updateAgreeStatus();
+
+        })
+
+        //拒绝好友请求
+        $(document).on("click","#reject-request",function () {
+            $.ajax({
+                url:"/student/update-reject-status",
+                type:"post",
+                data:{"agreeuid":$("#uid").text()},
+                success:function (data) {
+                    if (data!=0){
+                        alert("拒绝好友请求")
+                    }
+
+                }
+            })
+        })
+
+
+
+
+        //好友列表
+        $.ajax({
+            url:"/student/friend-list",
+            type:"post",
+            data:{"uid":$("#uid").text()},
+            success:function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var friend = data[i];
+                    var li=$("<li><span id='friend-id' style='display: none;'>"+friend.uid+"</span>"+friend.stuname+"" +
+                        "<button id='check-friend-info' data-toggle=\"modal\" data-target=\"#myModal2\">查看</button><button id='go-chat'>聊天</button></li>")
+                    $("#friend-list ul").append(li);
+                }
+            }
+        })
+
+        //查看好友信息
+        $(document).on("click","#check-friend-info",function () {
+            var fid=$(this).parent().find("#friend-id").text();
+            //alert(fid);
+            $.ajax({
+                url:"/student/finfo/"+fid,
+                type:"post",
+                success:function (data) {
+                    var friendData=$("<div id='friend-data'>" +
+                        "<div><p id='profile-pic'><img src='"+data.stupic+"'></p></div>" +
+                        "<div><p>姓名:</p>"+data.stuname+"</div>"+
+                        "<div><p>年龄:</p>"+data.stuage+"</div>"+
+                        "<div><p>性别:</p>"+data.stugender+"</div>"+
+                        "<div><p>电话号码:</p>"+data.stuphone+"</div>"+
+                        "<div><p>生日:</p>"+data.stubirth+"</div>"+
+                        "</div>");
+
+                    $("#myModal2 .modal-body").append(friendData);
+
+                }
+            })
+        })
+
+        //获取发起聊天方的名字
+        function getSendUserName(){
+            var userName="";
+            $.ajax({
+                url:"/student/getUserNameByUid",
+                type:"post",
+                async:false,
+                data:{"uid":$("#uid").text()},
+                success:function (data) {
+                    userName=data.userName;
+                }
+            })
+                    return userName;
+        }
+
+        //获取聊天对方的名字
+        function getReceiveUserName(fid){
+            var userName="";
+            $.ajax({
+                url:"/student/getUserNameByUid",
+                type:"post",
+                async:false,
+                data:{"uid":fid},
+                success:function (data) {
+                    userName=data.userName;
+                }
+            })
+            return userName;
+        }
+
+        //发起聊天
+        userSendName=getSendUserName(); //发起聊天方的名字
+        $(document).on("click","#go-chat",function () {
+                var fid=$(this).parent().find("#friend-id").text();
+                var userReceiveName=getReceiveUserName(fid); //聊天接收方的名字
+                location.href="/web/stuwebsocket/"+userSendName+"?receiveName="+userReceiveName;
+        })
+
+        //获取有几个用户向当前用户发送了消息
+            $.ajax({
+                url:"/student/getAnotherSideName",
+                type:"post",
+                data:{"userName":userSendName},
+                success:function (data) {
+                    var ul=$("<ul id='msg-from'>");
+                    for (var i = 0; i < data.length; i++) {
+                        var anotherSideName = data[i];
+                        var li=$("<li>用户"+anotherSideName+"向您发送了消息   <a href='/web/stuwebsocket/"+userSendName+"?receiveName="+anotherSideName+"'>点击查看</a></li>");
+                        ul.append(li);
+                        $("body").append(ul);
+                    }
+                }
+            })
+
+        //获取未读消息数量
+            $.ajax({
+                url:"/student/getUnreadMsgCountByName",
+                type:"post",
+                data:{"userName":userSendName},
+                success:function (data) {
+                    if (data>0){
+                        //alert("您有未读消息");
+                        var msgCount=$("<li><a href='javascript:;' class='show-msg-box'>" +
+                            "<svg class=\"Zi Zi--Comments\" fill=\"#fff\" viewBox=\"0 0 24 24\" width=\"22\" height=\"22\"><path d=\"M11 2c5.571 0 9 4.335 9 8 0 6-6.475 9.764-11.481 8.022-.315-.07-.379-.124-.78.078-1.455.54-2.413.921-3.525 1.122-.483.087-.916-.25-.588-.581 0 0 .677-.417.842-1.904.064-.351-.14-.879-.454-1.171A8.833 8.833 0 0 1 2 10c0-3.87 3.394-8 9-8zm10.14 9.628c.758.988.86 2.009.86 3.15 0 1.195-.619 3.11-1.368 3.938-.209.23-.354.467-.308.722.12 1.073.614 1.501.614 1.501.237.239-.188.562-.537.5-.803-.146-1.495-.42-2.546-.811-.29-.146-.336-.106-.563-.057-2.043.711-4.398.475-6.083-.927 5.965-.524 8.727-3.03 9.93-8.016z\" fill-rule=\"evenodd\"></path></svg>" +
+                                "<span class='msg-count'>"+data+"</span>"+
+                            "</a></li>")
+                        $(".navbar-nav").append(msgCount)
+                    }
+                }
+            })
+
+        //打开/关闭消息提示框
+        $(document).on("click",".show-msg-box",function () {
+            $("#msg-from").toggle();
+        })
+        //获取学员签约的私教
+        $.ajax({
+            url:"/student/getCoachByCid",
+            type:"post",
+            data:{"cid":$("#cid").text()},
+            success:function (data) {
+                var li=$("<li>"+data.cname+"" +
+                    "<button id='check-coach-info' data-toggle=\"modal\" data-target=\"#myModal3\">查看</button><button id='break-coach'>解约</button></li>");
+                $("#coach-list ul").append(li);
+
+                //将教练信息加载到模态框中
+                var coachData=$("<div id='coach-data'>" +
+                    "<div><p id='profile-pic'><img src='"+data.cpic+"'></p></div>" +
+                    "<div><p>姓名:"+data.cname+"</p></div>"+
+                    "<div><p>性别:"+data.cgender+"</p></div>"+
+                    "<div><p>年龄:"+data.cage+"</p></div>"+
+                    "<div><p>职业类别:"+data.type+"</p></div>"+
+                    "<div><p>流派:"+data.liupai+"</p></div>"+
+                    "<div><p>是否可接课:"+data.jieke+"</p></div>"+
+                    "<div><p>价格:"+data.cprice+"</p></div>"+
+                    "<div><p>电话号码:"+data.contact+"</p></div>"+
+                    "<div><p>是否认证:"+data.isauth+"</p></div>"+
+                    "<div><p>空闲时间:"+data.freetime+"</p></div>"+
+                    "<div><p>空闲日期:"+data.freeday+"</p></div>"+
+                    "</div>");
+
+                $("#myModal3 .modal-body").append(coachData);
+            }
+        })
+
+        //解约教练
+        function breakCoach(){
+
+            $.ajax({
+                type: "get",
+                url: "/contract/breakCoachConstract",
+                data: {},
+                success: function (data) {
+                    var resultInfo = data;
+
+                    alert(resultInfo.message);
+                    location.reload();
+                },
+                error: function (data) {
+                    var result = data;
+
+                    alert(resultInfo.message);
+                    location.reload();
+                }
+            });
+        }
+
+        $(document).on("click","#break-coach",function () {
+            breakCoach();
+        })
+
+        //我的产品
+        $.ajax({
+            url:"/student/selConInfo",
+            type:"post",
+            success:function (data) {
+                var div=$("<div><p>办卡类型:"+data.productName+"</p>" +
+                    "<p>所属场馆:"+data.gymName+"</p>" +
+                    "<p>开始时间:"+data.begin+"</p>"+
+                    "<p>结束时间:"+data.end+"</p>"+
+                    "</div>");
+                $("#card-list ul").append(div);
+            }
+        })
+    })
+</script>
+<script th:inline="javascript">
+	var text =$("#loginSuccessP").text();
+	if(text != '' ){
+		$(".unLogin").css("display", "none");
+		$(".loginSuccess").css("display","block");
+	}
+</script>
+
+</body>
+</html>

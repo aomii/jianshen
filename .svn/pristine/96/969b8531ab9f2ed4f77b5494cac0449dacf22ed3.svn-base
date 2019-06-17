@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <style type="text/css">
+        html{height:100%}
+        body{height:100%;margin:0px;padding:0px}
+    </style>
+    <!-- css -->
+    <script th:src="@{/js/jquery-3.4.0.min.js}"></script>
+    <script src="https://cdn.bootcss.com/jquery-weui/1.2.1/js/jquery-weui.min.js"></script>
+    <script th:src="@{/js/jquery.easing.1.3.js}"></script>
+    <script th:src="@{/materialize/js/materialize.min.js}"></script>
+    <!--<script th:src="@{/js/bootstrap.min.js}"></script>-->
+    <script th:src="@{/js/jquery.fancybox.pack.js}"></script>
+    <script th:src="@{/js/jquery.fancybox-media.js}"></script>
+    <script th:src="@{/js/jquery.flexslider.js}"></script>
+    <script th:src="@{/js/animate.js}"></script>
+    <!-- Vendor Scripts -->
+    <script th:src="@{/js/modernizr.custom.js}"></script>
+    <script th:src="@{/js/jquery.isotope.min.js}"></script>
+    <script th:src="@{/js/jquery.magnific-popup.min.js}"></script>
+    <script th:src="@{/js/animate.js}"></script>
+    <script th:src="@{/js/custom.js}"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/fancybox/jquery.fancybox.css}" rel="stylesheet">
+    <link th:href="@{/css/flexslider.css}" rel="stylesheet" />
+    <link th:href="@{/css/style.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.3/style/weui.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.1/css/jquery-weui.min.css">
+    <link rel="stylesheet" th:href="@{/materialize/css/materialize.min.css}" media="screen,projection" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <![endif]-->
+
+</head>
+<body>
+<div id="wrapper">
+    <!-- start header -->
+    <header>
+        <div class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html"><i class="icon-info-blocks material-icons"></i>tutu健身</a>
+                </div>
+                <div class="navbar-collapse collapse ">
+                    <ul class="nav navbar-nav">
+                        <li><a class="waves-effect waves-dark" th:href="@{/index.html}">主页面</a></li>
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark">关于我们<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="waves-effect waves-dark" th:href="@{/about.html}">公司详情</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="waves-effect waves-dark" href="services.html">服务</a></li>
+                        <li><a class="waves-effect waves-dark" th:href="@{/gym/listPrevious}">场馆</a></li>
+                        <li><a class="waves-effect waves-dark" href="coaches.html">教练团队</a></li>
+                        <li class="waves-login"><a class="waves-effect waves-dark unLogin" href="static-login.html">登录</a></li>
+                        <li class="waves-register"><a class="waves-effect waves-dark unLogin" href="static-register.html">注册</a></li>
+
+                        <li class="dropdown waves-person loginSuccess" style="display: none">
+                            <a data-toggle="dropdown" class="dropdown-toggle waves-effect waves-dark" href="#" ><p id="loginSuccessP" th:text="${session.currentUser} != null ? ${session.currentUser.userName} : null"></p>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <shiro:hasRole th:name="coach" name="coach">
+                                    <li><a class="waves-effect waves-dark" th:href="@{/detail}">个人信息</a></li>
+                                    <li><a class="waves-effect waves-dark" th:href="@{/change}">更改个人信息</a></li>
+                                    <li><a class="waves-effect waves-dark" th:href="@{/coach_mystu.html}">我的学员</a></li>
+                                    <li><a class="waves-effect waves-dark" th:href="@{/wallet}">我的钱包</a></li>
+                                </shiro:hasRole>
+                            </ul>
+                        </li>
+                        <li><a class="waves-effect waves-dark loginSuccess" style="display: none" th:href="@{/logout}" href="/logout">退出</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header><!-- end header -->
+    <section id="inner-headline">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="pageTitle">个人信息</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="content">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="about-logo">
+                        <h3>教练<span class="color">信息</span></h3>
+                        <p>您上一次登录的地址为：</p>
+                        <p>tutu健身，立足短三角，专注健身14年，拥有10+家签约及开业的直营门店。累计发展会员人数150余万，每年新增约45万会员，每天约15万会员在全国各分店享受专业健身服务</p></div>
+                </div>
+            </div>
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-field">
+                    <img src="" id="cpic">
+                    <label for="cpic" class="">   头像 </label>
+                    <p class="help-block"></p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-field">
+                    <label style="color: #e62026">   昵称 </label>
+                    <input type="text" name="cnickname" class="form-control"
+                           id="cnickname"  readonly="readonly" style="background: #1c1c1c;color: #eeeeee;font-size: 35px;"/>
+
+                </div>
+            </div>
+
+            <div class="col-md-6">
+            <div class="input-field">
+                <input type="text" name="cname" class="form-control"
+                       id="cname"
+                       readonly="readonly" style="background: #1c1c1c;color: #eeeeee;font-size: 40px;"/>
+                <label for="cname" class="" style="color: #e62026">   姓名 </label>
+                <p class="help-block"></p>
+
+            </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-field">
+                    <input type="text" name="cgender" class="form-control"
+                       id="cgender"  readonly="readonly" style="background: #1c1c1c;color: #eeeeee;font-size: 30px;"/>
+                    <label for="cgender" class="" style="color: #e62026">   性别 </label>
+                    <p class="help-block"></p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-field">
+                    <input type="text" name="cage" class="form-control"
+                           id="cage"  readonly="readonly" style="background: #1c1c1c;color: #eeeeee;font-size: 20px;"/>
+                    <label for="cage" class="" style="color: #e34364">   年龄 </label>
+                    <p class="help-block"></p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-field">
+                    <input type="text" name="contact" class="form-control"
+                           id="contact"  readonly="readonly" style="background: #1c1c1c;color: #eeeeee"/>
+                    <label for="contact" class="" style="color: #e23436">   联系方式 </label>
+                    <p class="help-block"></p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-field">
+                    <input type="text" name="cprice" class="form-control"
+                           id="cprice"  readonly="readonly" style="background: #1c1c1c;color: #eeeeee"/>
+                    <label for="cprice" class="" style="color: #e62026">   课时价格 </label>
+                    <p class="help-block"></p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-field">
+                    <input type="text" name="freeday" class="form-control"
+                           id="freeday"  readonly="readonly" style="background: #1c1c1c;color: #eeeeee;font-size: 30px;"/>
+                    <label for="freeday" class="" style="color: #e62026">   空闲的日子 </label>
+                    <p class="help-block"></p>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="input-field">
+                    <input type="text" name="jieke" class="form-control"
+                           id="jieke"  readonly="readonly" style="background: #1c1c1c;color: #eeeeee;font-size: 25px;"/>
+                    <label for="jieke" class="" style="color: #e62026">   是否接课 </label>
+                    <p class="help-block"></p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-field">
+                    <input type="text" name="liupai" class="form-control"
+                           id="liupai"  readonly="readonly" style="background: #1c1c1c;color: #eeeeee;font-size: 25px;"/>
+                    <label for="liupai" class="" style="color: #e62026">   流派 </label>
+                    <p class="help-block"></p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-field">
+                    <input type="text" name="type" class="form-control"
+                           id="type"  readonly="readonly" style="background: #1c1c1c;color: #eeeeee;font-size: 25px;"/>
+                    <label for="type" class="" style="color: #e62026">   教练类型 </label>
+                    <p class="help-block"></p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="input-field">
+                    <input type="text" name="isauth" class="form-control"
+                           id="isauth"  readonly="readonly" style="background: #1c1c1c;color: #eeeeee;font-size: 25px;"/>
+                    <label for="isauth" class="" style="color: #e62026">   是否被场馆认证 </label>
+                    <p class="help-block"></p>
+                </div>
+            </div>
+
+        </div>
+
+        </div>
+    </section>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="widget">
+                        <h5 class="widgetheading">联系方式</h5>
+                        <address>
+                            <strong>Bootstrap company Inc</strong><br>
+                            JC Main Road, Near Silnile tower<br>
+                            Pin-21542 NewYork US.</address>
+                        <p>
+                            <i class="icon-phone"></i> (123) 456-789 - 1255-12584 <br>
+                            <i class="icon-envelope-alt"></i> email@domainname.com
+                        </p>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="widget">
+                        <h5 class="widgetheading">友情链接</h5>
+                        <ul class="link-list">
+                            <li><a class="waves-effect waves-dark" href="#">Latest Events</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Terms and conditions</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Privacy policy</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Career</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Contact us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="widget">
+                        <h5 class="widgetheading">最新动态</h5>
+                        <ul class="link-list">
+                            <li><a class="waves-effect waves-dark" href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Pellentesque et pulvinar enim. Quisque at tempor ligula</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Natus error sit voluptatem accusantium doloremque</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="widget">
+                        <h5 class="widgetheading">相关新闻</h5>
+                        <ul class="link-list">
+                            <li><a class="waves-effect waves-dark" href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Pellentesque et pulvinar enim. Quisque at tempor ligula</a></li>
+                            <li><a class="waves-effect waves-dark" href="#">Natus error sit voluptatem accusantium doloremque</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+<a href="#" class="scrollup waves-effect waves-dark"><i class="fa fa-angle-up active"></i></a>
+<!-- javascript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+
+
+<script>
+    $.get('coach/selCoachByUid' ,function (data) {
+        $("#cpic").attr('src',data.cpic);
+        $("#cname").val(data.cname);
+        $("#cnickname").val(data.cnickname);
+        $("#cage").val(data.cage);
+        $("#cgender").val(data.cgender);
+        $("#contact").val(data.contact);
+        $("#cprice").val(data.cprice);
+        $("#freeday").val(data.freeday+","+data.freetime);
+        $("#jieke").val(data.jieke);
+        $("#isauth").val(data.isauth);
+        $("#type").val(data.type);
+        $("#liupai").val(data.liupai);
+    });
+</script>
+<script th:inline="javascript">
+    var text =$("#loginSuccessP").text();
+    if(text != '' ){
+        $(".unLogin").css("display", "none");
+        $(".loginSuccess").css("display","block");
+    }
+</script>
+</body>
+</html>

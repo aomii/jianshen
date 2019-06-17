@@ -1,0 +1,566 @@
+package com.rabbit.fitness.coach.controller;
+
+import com.github.pagehelper.PageInfo;
+import com.rabbit.fitness.coach.coachService.CoachService;
+import com.rabbit.fitness.coach.vo.CoachComm;
+import com.rabbit.fitness.coach.vo.CoachVO;
+import com.rabbit.fitness.coach.vo.SelCoachVO;
+import com.rabbit.fitness.constant.SysConstant;
+import com.rabbit.fitness.gym.service.GymService;
+import com.rabbit.fitness.pojo.*;
+import com.rabbit.fitness.utils.Result;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.jws.soap.SOAPBinding;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+@Controller
+@RequestMapping("/coach")
+@Api("CoachController|教练类")
+public class CoachController {
+
+    @Autowired
+    private CoachService coachService;
+
+    @Autowired
+    private GymService gymService;
+
+    //==================以下:前端使用==================================
+    /*前端渲染器材列表*/
+    @RequestMapping("/listPrevious")
+    public ModelAndView listPrevious(@RequestParam(value = "page",defaultValue = "1",required = false)Integer currentPage, @RequestParam(
+            value = "rows",defaultValue = "6",required = false)Integer pageSize, CoachVO vo){
+        List<Coach> coaches = coachService.findAllCoach(currentPage, pageSize,vo);
+        PageInfo<Coach> info = new PageInfo<>(coaches);
+        ModelAndView modelAndView=new ModelAndView("fitness_coach");
+        modelAndView.addObject("info",info);
+        //设置分页page.html中请求路径
+        modelAndView.addObject("property","/coach/listPrevious");
+        return modelAndView;
+    }
+    //详情
+    @RequestMapping("/info")
+    public ModelAndView info(Integer cid){
+        Coach coach = coachService.selCoachById(cid);
+        ModelAndView modelAndView=new ModelAndView("coach_details");
+        modelAndView.addObject("details",coach);
+        return  modelAndView;
+    }
+
+
+    //==================以上========================================
+
+
+    /*
+    分页查看所有签约学员
+     */
+    @PostMapping("/myStuList")
+    @ResponseBody
+    @RequiresRoles(value = "coach")
+    public List<Student> stuList(Integer page,Integer uid){
+        Integer cid = coachService.selCoachByUid(uid).getCid();
+        List<Student> list = coachService.findCoachByPage(page,cid);
+        return  list;
+    }
+
+    /*
+    分页查看历史订单
+     */
+    @PostMapping("/orderList")
+    @ResponseBody
+    @RequiresRoles(value = "coach")
+    public Map<String,Object> orderList(@RequestParam(value = "page",defaultValue = "1",required = false)Integer currentPage,
+                                   @RequestParam(value = "rows",defaultValue = "5",required = false) Integer pageSize,Integer cid){
+        List<Order> list = coachService.findOrderByPage(currentPage,pageSize,cid);
+        PageInfo<Order> pageInfo = new PageInfo<>(list);
+        Map<String,Object> result = new HashMap<String, Object>();
+        result.put("total",pageInfo.getTotal());
+        result.put("rows",pageInfo.getList());
+        return  result;
+    }
+
+    /*
+    签订场馆
+     */
+    @PostMapping("/signGym")
+    public void signGym(Integer cid,Integer gid){
+        coachService.signGym(cid,gid);
+    }
+
+    /*
+    学员支付订单
+     */
+    @PostMapping("/procOrder")
+    public void procOrder(Integer oid){
+        coachService.proeOrder(oid);
+    }
+
+
+    /**
+    教练插入
+     * @param request http请求
+     *                我把数据都放到Formdata中了 详见coach_add
+     * @return String ：插入是否成功 格式json
+    */
+    @ApiOperation(value = "教师信息完善",notes = "用Formdata传的详见coach_add")
+    @ApiImplicitParam(name="request",required=true,paramType="query",allowMultiple = true)
+    @PostMapping(value = "/addCoach")
+    @ResponseBody
+    @RequiresRoles(value = "coach")
+    public String addCoach(HttpServletRequest request) throws IOException {
+        MultipartHttpServletRequest mrequest = (MultipartHttpServletRequest) request;
+        MultipartFile mfile = mrequest.getFile("file");
+        String cname = request.getParameter("cname");
+        String cgender = request.getParameter("cgender");
+        String contact = request.getParameter("contact");
+        String cagestr = request.getParameter("cage");
+        String secret = request.getParameter("secret");
+        String cpricestr = request.getParameter("cprice");
+        String freeday = request.getParameter("freeday");
+        String freetime = request.getParameter("freetime");
+        String jieke = request.getParameter("jieke");
+        String liupai = request.getParameter("liupai");
+        String type = request.getParameter("type");
+        String cnickname = request.getParameter("cnickname");
+        if (cname == null || cname.equals("") ||
+                cgender == null || cgender.equals("") ||
+                contact == null || contact.equals("") ||
+                cagestr == null || cagestr.equals("") ||
+                secret == null || secret.equals("") ||
+                freeday == null || freeday.equals("") ||
+                freetime == null || freetime.equals("") ||
+                jieke == null || jieke.equals("") ||
+                liupai == null || liupai.equals("") ||
+                type == null || type.equals("") ||
+                cnickname == null || cnickname.equals("") ||
+                cpricestr == null || cpricestr.equals("") ||
+                mfile == null
+        ) {
+            return "含有*号的数据不能为空";
+        } else {
+            Integer cage = Integer.parseInt(cagestr);
+            User user = (User)request.getSession().getAttribute(SysConstant.CURRENT_USER);
+            Integer uid = user.getUserId();
+            double cprice = Double.parseDouble(cpricestr);
+            String fileName = mfile.getOriginalFilename();
+            String path = request.getServletContext().getRealPath("");
+            System.out.println(path);
+            path = path.substring(0, path.lastIndexOf("\\"));
+            path = path.substring(0, path.lastIndexOf("\\"));
+            path = path + "\\upload";
+            File file = new File(path);
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            fileName = UUID.randomUUID().toString() + fileName;
+            path = path+File.separator+fileName;
+            file = new File(path);
+            mfile.transferTo(file);
+            String cpic = "/upload/"+fileName;
+            double cmoney = 0;
+            String isauth = "否";
+            Coach coach = coachService.findCoachByUid(uid);
+            if (coach == null) {
+                Integer count = coachService.addCoach(new Coach(cname,cgender,cpic,cmoney,type,contact,isauth,freetime,freeday,uid,secret,cage,liupai,jieke,cprice,cnickname));
+                if (count > 0) {
+                    return "信息提交成功";
+                } else {
+                    return "信息提交失败";
+                }
+            }else {
+                return "信息已提交";
+            }
+
+        }
+    }
+
+    /**
+     * 教练修改（和后台重复代码）
+     * @param request http请求
+     *                我把数据都放到Formdata中了 详见coach_add
+     * @return String json格式
+        */
+    @ApiOperation(value = "教师信息更改",notes = "用Formdata传的详见coach_add")
+    @ApiImplicitParam(name="request",required=true,paramType="query",allowMultiple = true)
+    @PostMapping(value = "/changeCoach")
+    @ResponseBody
+    @RequiresRoles(value = "coach")
+    public String changeCoach(HttpServletRequest request) throws IOException {
+        MultipartHttpServletRequest mrequest = (MultipartHttpServletRequest) request;
+        MultipartFile mfile = mrequest.getFile("file");
+        String cname = request.getParameter("cname");
+        String cgender = request.getParameter("cgender");
+        String contact = request.getParameter("contact");
+        String cagestr = request.getParameter("cage");
+
+        String secret = request.getParameter("secret");
+        String cpricestr = request.getParameter("cprice");
+        String freeday = request.getParameter("freeday");
+        String freetime = request.getParameter("freetime");
+        String jieke = request.getParameter("jieke");
+        String liupai = request.getParameter("liupai");
+        String type = request.getParameter("type");
+        String cnickname = request.getParameter("cnickname");
+        if (cname == null || cname.equals("") ||
+                cgender == null || cgender.equals("") ||
+                contact == null || contact.equals("") ||
+                cagestr == null || cagestr.equals("") ||
+                secret == null || secret.equals("") ||
+
+                freeday == null || freeday.equals("") ||
+                freetime == null || freetime.equals("") ||
+                jieke == null || jieke.equals("") ||
+                liupai == null || liupai.equals("") ||
+                type == null || type.equals("") ||
+                cnickname == null || cnickname.equals("") ||
+                cpricestr == null || cpricestr.equals("") ||
+                mfile == null
+        ) {
+            return "含有*号的数据不能为空";
+        } else {
+            Integer cage = Integer.parseInt(cagestr);
+            double cprice = Double.parseDouble(cpricestr);
+            String fileName = mfile.getOriginalFilename();
+            String path = request.getServletContext().getRealPath("");
+            path = path.substring(0, path.lastIndexOf("\\"));
+            path = path.substring(0, path.lastIndexOf("\\"));
+            path = path + "\\upload";
+            File file = new File(path);
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            fileName = UUID.randomUUID().toString() + fileName;
+            path = path+File.separator+fileName;
+            file = new File(path);
+            mfile.transferTo(file);
+            String cpic = "\\upload\\"+fileName;
+            double cmoney = 0;
+            String isauth = "否";
+            HttpSession session = request.getSession();
+            User user =(User) session.getAttribute(SysConstant.CURRENT_USER);
+            Integer uid = user.getUserId();
+            Integer count = (Integer) coachService.changeCoach(new Coach(cname,cgender,cpic,cmoney,type,contact,isauth,freetime,freeday,uid,secret,cage,liupai,jieke,cprice,cnickname));
+            if (count > 0) {
+                return "信息提交成功";
+            } else {
+                return "信息提交失败";
+            }
+        }
+    }
+
+
+
+    /**
+    * 查询所有教练 动态sql
+    * 姓名 年龄 性别 流派 类型 空闲时间 空闲天
+    * @param page  现在的页数
+     * @param rows  每页含有的条目
+    * */
+    @ApiOperation(value = "动态查询教师",notes = "pagehalper分页查询")
+    @PostMapping(value = "/selCoach")
+    @ResponseBody
+    @RequiresPermissions(value = "sys:coach:list")
+    public Map<String, Object> selCoach(@RequestParam(value = "page",defaultValue = "1",required = false)Integer currentPage,
+                                        @RequestParam(value = "rows",defaultValue = "5",required = false) Integer pageSize,
+                                        @ModelAttribute CoachVO vo,HttpSession session) {
+        //在session中得到user，再得到gid;
+        //模拟从session中获取用户id
+        User user=(User) session.getAttribute(SysConstant.CURRENT_USER);
+        Integer gid=gymService.findGidByUid(user.getUserId());
+        vo.setGid(gid);
+
+        List<Coach> coaches = coachService.findAllCoach(currentPage, pageSize,vo);
+        PageInfo<Coach> pageInfo = new PageInfo<>(coaches);
+        Map<String, Object> result = new HashMap<>();
+        result.put("total", pageInfo.getTotal());
+        result.put("rows", pageInfo.getList());
+        return result;
+    }
+
+    /*
+    backmain页面添加教练
+     */
+    @RequestMapping("/simAddCoach")
+    @ResponseBody
+    @RequiresPermissions(value = "sys:coach:add")
+    public Result simAddCoach(MultipartFile cPhoto,Coach coach,HttpServletRequest request) throws IOException {
+        if(coach.getCname()==null || coach.getCname()=="" || coach.getContact()==null || coach.getContact()=="" ){
+            return  new Result(400,"请填写必要的信息");
+        }
+        String fileName = cPhoto.getOriginalFilename();
+        if(fileName!=null&&!"".equals(fileName)){
+            System.out.println(fileName);
+            String path = request.getServletContext().getRealPath("");
+            path = path.substring(0, path.lastIndexOf("\\"));
+            path = path.substring(0, path.lastIndexOf("\\"));
+            path = path + "\\upload";
+            File file = new File(path);
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            path=path+"/"+fileName;
+            file = new File(path);
+            cPhoto.transferTo(file);   //自动创建文件、写入数据
+            coach.setCpic("/cpc/"+fileName);
+        }
+        try {
+            coachService.addBackCoach(coach);
+        } catch (Exception e) {
+            return new Result(400,"未知异常");
+        }
+            return new Result(0,"添加成功");
+
+    }
+
+    /*
+    修改信息
+     */
+    @RequestMapping("/updateCoach")
+    @ResponseBody
+    @RequiresPermissions(value = "sys:coach:update")
+    public Result updateCoach(MultipartFile cPhoto,Coach coach,HttpServletRequest request) throws IOException {
+        if(coach.getCname()==null || coach.getCname()=="" || coach.getContact()==null || coach.getContact()=="" ){
+            return  new Result(400,"请填写必要的信息");
+        }
+        String fileName = cPhoto.getOriginalFilename();
+        if(fileName!=null&&!"".equals(fileName)){
+            System.out.println(fileName);
+            String path = request.getServletContext().getRealPath("");
+            path = path.substring(0, path.lastIndexOf("\\"));
+            path = path.substring(0, path.lastIndexOf("\\"));
+            path = path + "\\upload";
+            File file = new File(path);
+            if(!file.exists()){
+                file.mkdirs();
+            }
+            path=path+"/"+fileName;
+            file = new File(path);
+            cPhoto.transferTo(file);   //自动创建文件、写入数据
+            coach.setCpic("/cpc/"+fileName);
+        }
+        int res =coachService.updateCoach(coach);
+        if(res>0){
+            return new Result(0,"修改成功");
+        }
+        return new Result(400,"未知异常");
+    }
+
+
+    /*
+    后台删除教练
+     */
+    @RequestMapping("/deleteCoach")
+    @ResponseBody
+    @RequiresPermissions(value = "sys:coach:delete")
+    public Result deleteCoach(Integer cid){
+        //通过cid查询教练名下学生
+        List<Student> list = coachService.findStudentByCid(cid);
+        if (list.size() > 0) {
+            return new Result(500,"该教练还有学生，无法删除");
+        }
+        /*根据cid查询教练*/
+        Coach coach=coachService.selCoachById(cid);
+        if(coach.getGid()!=null&&!coach.getGid().equals("")){
+            return new Result(500,"该教练还有签约场馆，无法删除");
+        }
+        /*删除教练*/
+        try {
+            coachService.deleteCoach(cid);
+            return new Result(0,"删除成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(400,"未知异常");
+        }
+    }
+
+    /*
+    展示教练信息
+     */
+    @RequestMapping("/randomSelCoach")
+    @ResponseBody
+    public List<Coach> randomSelCoach(){
+        return new SelCoachVO().randomSelCoach(coachService);
+    }
+
+
+
+    //=============am===============
+    @RequestMapping("/infoBack")
+    @ResponseBody
+    @RequiresRoles(value = "gymadmin")
+    public Coach infoBack(Integer cid){
+        Coach coach=coachService.infoBack(cid);
+        return coach;
+    }
+
+    //==============================
+
+    /**
+     * 查看教师通过uid
+     */
+    @RequestMapping("/selCoachByUid")
+    @ResponseBody
+    @RequiresAuthentication
+    public Coach findCoachByUid(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute(SysConstant.CURRENT_USER);
+        Integer uid = user.getUserId();
+        return coachService.selCoachByUid(uid);
+    }
+
+
+
+    /*
+    插入聊天信息
+     */
+    @RequestMapping("/insertComm")
+    @ResponseBody
+    @RequiresRoles(value = {"coach","student"},logical = Logical.OR)
+    public void webInsertComm(Communication communication) {
+        System.out.println(communication);
+        communication.setIsRead(CoachComm.COMM_NO);
+        coachService.insertComm(communication);
+    }
+
+    /*
+    查询聊天信息
+     */
+    @RequestMapping("/showChatRecord")
+    @ResponseBody
+    @RequiresRoles(value = {"coach","student"},logical = Logical.OR)
+    public List<Communication> selChatRecord(String sendName,String receiveName){
+        List<Communication> list = coachService.selChatRecord(sendName,receiveName);
+        return  list;
+    }
+
+
+    /**
+     * 教师余额
+     */
+    @RequestMapping("/findMoneyByUid")
+    @ResponseBody
+    @RequiresRoles(value = "coach")
+    public double findMoneyByUid(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute(SysConstant.CURRENT_USER);
+        Integer uid = user.getUserId();
+        return coachService.selMoneyByUid(uid);
+    }
+
+    //充值成功后向数据库中加入数据
+    @RequestMapping("/updataMoneyByUid")
+    @RequiresRoles(value = {"coach","student"},logical = Logical.OR)
+    public String updateCmoney(HttpServletRequest request) {
+        //Integer uid = (Integer) request.getSession().getAttribute("uid");
+        User user = (User) request.getSession().getAttribute(SysConstant.CURRENT_USER);
+        Integer uid = user.getUserId();
+        Coach coach = coachService.findCoachByUid(uid);
+
+
+        //如果是教师
+        if (coach!=null) {
+            String conum = (String) request.getSession().getAttribute("conum");
+            double cmoney = (double) request.getSession().getAttribute("cmoney");
+            coachService.addCmoneyByUid(cmoney,uid);
+            if (!conum.startsWith("y")) {
+                coachService.updateCorderByConum(conum);
+            }
+            return "redirect:/wallet";
+        }else {//如果不是教师
+            String conum = (String) request.getSession().getAttribute("conum");
+            if (conum.startsWith("q")){//如果是签约
+                return "forward:/contract/dateCoach";//需要的教练id怎么
+            }else{//如果是办卡
+                return "forward:/contract/buyCard";//需要的教练id怎么
+            }
+            //return "redire获取ct:/index.html";
+        }
+
+    }
+
+    //提现
+    @RequestMapping("/updataMoneyByUid.2")
+    @ResponseBody
+    @RequiresRoles(value = "coach")
+    public String updateCmoney_2(double cmoney,HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute(SysConstant.CURRENT_USER);
+        Integer uid = user.getUserId();
+
+        double ccmoney = coachService.findCmoneyByUid(uid);
+        if (ccmoney >= cmoney){
+            coachService.addCmoneyByUid(cmoney * (-1), uid);
+            return "提现成功";
+        }else {
+            return "余额不足";
+        }
+    }
+
+    @RequestMapping("/CoachOrder")
+    @ResponseBody
+    public List<CoachOrder> coachOrder(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute(SysConstant.CURRENT_USER);
+        Integer uid = user.getUserId();
+        return coachService.getCoachOrderByUid(uid);
+    }
+
+    @RequestMapping("/showPage")
+    @ResponseBody
+    @RequiresRoles(value = "coach")
+    public Integer showPage(Integer uid){
+        Integer cid = coachService.selCoachByUid(uid).getCid();
+        Integer allPage=coachService.selAllPage(cid);
+        return allPage;
+    }
+
+
+    @RequestMapping("/showTips")
+    @ResponseBody
+    @RequiresRoles(value = "coach")
+    public List<Communication> showTips(Integer uid){
+        List<Communication> list = coachService.showTips(uid);
+        return list;
+    }
+
+
+    @RequestMapping("/uodateChatState")
+    @ResponseBody
+    @RequiresRoles(value = "coach")
+    public void  uodateChatState(String sendName,String receiveName){
+        coachService.updateCommState(sendName,receiveName);
+    }
+
+    @RequestMapping("/weizhifu")
+    @ResponseBody
+    public String  weizhifu(String conum,double price,HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute(SysConstant.CURRENT_USER);
+        Integer uid = user.getUserId();
+        //通过uid查出还有多少钱
+        double cmoney = coachService.findCmoneyByUid(uid);
+        if (cmoney >= price){
+            coachService.addCmoneyByUid(price * (-1), uid);
+            coachService.updateCorderByConum(conum);
+            return "支付成功";
+        }else {
+            return "余额不足";
+        }
+
+    }
+
+}

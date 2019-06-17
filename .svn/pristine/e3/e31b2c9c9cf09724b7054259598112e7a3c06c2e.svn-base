@@ -1,0 +1,165 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>注册页面</title>
+<script src="js/jquery.js"></script>
+<!-- Custom Theme files -->
+<link href="css/loginStyle.css" rel="stylesheet" type="text/css" media="all"/>
+<!--按钮css-->
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- for-mobile-apps -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<meta name="keywords" content="Classy Login form Responsive, Login form web template, Sign up Web Templates, Flat Web Templates, Login signup Responsive web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+<!-- //for-mobile-apps -->
+<!--Google Fonts-->
+<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+	<style>
+		.sub-btn {
+			background: #ff3366;
+			color: #FFF;
+			font-size: 26px;
+			padding: 0.3em 1.2em;
+			width: 100%;
+			font-weight: 500;
+			transition: 0.5s all;
+			-webkit-transition: 0.5s all;
+			-moz-transition: 0.5s all;
+			-o-transition: 0.5s all;
+			display: inline-block;
+			cursor: pointer;
+			outline: none;
+			border: none;
+			border-radius: 3px;
+			font-family: 'Roboto Condensed', sans-serif;
+		}
+	</style>
+</head>
+<body>
+<!--header start here-->
+<div class="header">
+		<div class="header-main">
+		       <h1>注册</h1>
+			<div class="header-bottom">
+				<div class="header-right w3agile">
+					
+					<div class="header-left-bottom agileinfo">
+						
+					 <div>
+						<input type="text"  value="手机号" id="userName" name="userName" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '用户名';}"/>
+						<input type="password"  value="密码" name="password" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '密码';}"/>
+						<input type="text"  value="验证码" name="verifyCode" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '验证码';}"/>
+						 <br><input type="radio" name="optionsRadios" id="optionsRadios1" value="3" checked><span style="color: white">教练</span>
+						 <input type="radio" name="optionsRadios" id="optionsRadios2" value="4"><span style="color: white">学员</span>
+						 <button type="button" id="numbtn" class="btn btn-info" style="float: right">获取短信验证码</button>
+						<!-- <div class="radio">
+							 <label>
+								 <input type="radio" name="optionsRadios" id="optionsRadios1" value="3" checked>教练
+							 </label>
+						 </div>
+						 <div class="radio">
+							 <label>
+								 <input type="radio" name="optionsRadios" id="optionsRadios2" value="4">学员
+							 </label>
+						 </div>-->
+
+					 </div>
+						 <input type="button" value="注册" class="sub-btn"/>
+				</div>
+				</div>
+			  
+			</div>
+		</div>
+</div>
+
+
+
+<script>
+	// 获取验证码倒计时
+	var countdown = 60;
+	$('#numbtn').on('click',function(){
+		var len=document.getElementById("userName").value.length;
+		// var txttile = $('#userName').val();
+		if (len!=11){
+			alert('手机号码格式不对');
+			return;
+		}
+		var obj = $("#numbtn");
+		settime(obj);
+	})
+	function settime(obj) { //发送验证码倒计时
+		if (countdown == 0) {
+			obj.attr('disabled', false);
+//obj.removeattr("disabled");
+			obj.html("免费获取验证码");
+			countdown = 60;
+			return;
+		} else {
+			obj.attr('disabled', true);
+			obj.html("重新发送(" + countdown + ")");
+			countdown--;
+		}
+		setTimeout(function () {
+					settime(obj)
+				}
+				, 1000)
+	}
+</script>
+<script>
+	$(function () {
+//发送验证码
+		$(".btn-info").on("click", function () {
+			var userName = $("input[name=userName]").val();
+			$.ajax({
+				url: "/users/sendSms",
+				async: true,
+				type: "post",
+				dataType: "json",
+				data: {"userName": userName},
+				success: function (data) {
+					if (data == 'fail') {
+						alert("发送验证码失败");
+						return;
+					}
+				}
+			});
+		})
+//提交
+		$(".sub-btn").on("click", function () {
+			var data = {};
+			data.userName = $.trim($("input[name=userName]").val());
+			data.password = $.trim($("input[name=password]").val());
+			data.verifyCode = $.trim($("input[name=verifyCode]").val());
+			data.roleId = $('input:radio:checked').val();
+			$.ajax({
+				url:  "/users/register",
+				async: true,
+				type: "post",
+				// dataType: "json",
+				data: data,
+				success: function (data) {
+					// alert(data);
+					if (data == 'fail') {
+						alert("注册失败");
+						return;
+					}else if (data=="success") {
+						alert("注册成功");
+						location.href="static-login.html";
+					}else {
+						alert(data)
+					}
+
+				}
+			});
+		})
+	});
+</script>
+
+<!--footer end here-->
+</body>
+
+</html>

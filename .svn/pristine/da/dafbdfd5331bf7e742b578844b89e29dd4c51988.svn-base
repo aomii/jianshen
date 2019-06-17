@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/themes/default/easyui.css}">
+    <link rel="stylesheet" th:href="@{/css/themes/icon.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/jquery.easyui.min.js}"></script>
+    <script th:src="@{/js/easyui-lang-zh_CN.js}"></script>
+</head>
+<body shiro:hasRole="gymadmin">
+<table id="dg"></table>
+
+<div id="toolbar">
+    <div>
+        <a  class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="info()">查看详情</a>
+
+    </div>
+    <div>
+        招聘信息编号:<input type="text" id="grid" class="easyui-combobox"
+                      data-options="valueField:'grid',textField:'grname',url:'/recruit/listSelect'" />
+        <a  class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchRecruit()"></a>
+    </div>
+</div>
+
+
+<div id="dlg" class="easyui-dialog"  style="width:600px;height:400px;"
+     data-options="iconCls:'icon-save',closed:true, resizable:true,modal:true,buttons:'#but'">
+    <input id="gcId" type="hidden"/>
+    <input id="cid" type="hidden">
+    <div>
+        <img id="cpic" width="100px" height="100px" align="center">
+    </div>
+    <div style="background-color:#d3d3d3;width:930px;padding:10px 10px;margin:10px 0 10px 0;">
+        <strong>教练名字:</strong> <strong id="cname"></strong>
+    </div>
+    <div style="background-color:#d3d3d3;width:930px;padding:10px 10px;margin:10px 0 10px 0;">
+        <strong>教练电话:</strong> <strong id="contact"></strong>
+    </div>
+    <div style="background-color:#d3d3d3;width:930px;padding:10px 10px;margin:10px 0 10px 0;">
+        <strong>教练性别:</strong> <strong id="cgender"></strong>
+    </div>
+    <div style="background-color:#d3d3d3;width:930px;padding:10px 10px;margin:10px 0 10px 0;">
+        <strong>教练年龄:</strong> <strong id="cage"></strong>
+    </div>
+    <div style="background-color:#d3d3d3;width:930px;padding:10px 10px;margin:10px 0 10px 0;">
+        <strong>教练类型:</strong> <strong id="type"></strong>
+    </div>
+
+
+</div>
+
+<div id="but">
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="operate()">接受</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="closeDlg()">关闭</a>
+</div>
+
+
+<script th:inline="none">
+    $(function () {
+        $('#dg').datagrid({
+            url:'/recruitCoach/list',
+            title:"申请记录",
+            pagination:true,
+            rownumbers:true,
+            striped:true,
+            fitColumns:true,
+            toolbar:'#toolbar',
+            pageNumber:1,
+            pageSize:5,
+            pageList:[5,10,15],
+            columns:[[
+                {checkbox:true},
+                {field:'gcId',title:'申请记录id',width:30,align:'center'},
+                {field:'grid',title:'招聘记录id',width:30,align:'center'},
+                {field:'cname',title:'教练名字',width:80,align:'center',formatter: function(value,row,index){
+                        if (row.coach){
+                            return row.coach.cname;
+                        } else {
+                            return "";
+                        }
+                    }},
+                {field:'contact',title:'教练电话',width:80,align:'center',formatter: function(value,row,index){
+                        if (row.coach){
+                            return row.coach.contact;
+                        } else {
+                            return "";
+                        }
+                    }},
+                {field:'sendTime',title:'申请时间',width:80,align:'center'},
+                {field:'isDispose',title:'是否处理',width:80,align:'center'},
+
+
+            ]]
+        });
+    })
+
+    function searchRecruit() {
+        var params={};
+        params.grid=$("#grid").combobox("getValue");
+        $("#dg").datagrid('reload',params);
+    }
+
+
+    var url;
+    function  info() {
+        var rows=$("#dg").datagrid("getSelections");
+        if (rows.length!=1){
+            $.messager.alert("系统提示",'请选择一条数据');
+            return;
+        }
+
+        $("#dlg").dialog("open").dialog("setTitle",'详情');
+        var parms={};
+        parms.gcId=rows[0].gcId;
+        $.ajax({
+            url:"/recruitCoach/info",
+            type:"post",
+            data:parms,
+            success:function (result) {
+                var coach=result.coach;
+                $("#gcId").val(result.gcId);
+                $("#cid").val(coach.cid);
+
+
+                $("#cname").text(coach.cname);
+                $("#contact").text(coach.contact);
+                $("#cgender").text(coach.cgender);
+                $("#cage").text(coach.cage);
+                $("#type").text(coach.type);
+
+            }
+        });
+    }
+
+    function operate() {
+        var gcId=$("#gcId").val();
+        var cid=$("#cid").val();
+        var params={"gcId":gcId,"coach.cid":cid}
+        $.ajax({
+            url:"/recruitCoach/update",
+            data:params,
+            success:function (result) {
+                if(result.code == 0){
+                    $.messager.alert('系统提示','操作成功');
+                    closeDlg();
+                }else{
+                    $.messager.alert('系统提示',result.message);
+                }
+            }
+        })
+    }
+
+    function closeDlg() {
+        $("#dlg").dialog("close");
+        $("#dg").datagrid("reload");
+    }
+
+
+    function deleteRecruit() {
+        var rows=$("#dg").datagrid("getSelections");
+        if (rows.length==0){
+            $.messager.alert("系统提示",'请选择一条数据');
+            return;
+        }
+        $.messager.confirm("系统提示","确认删除",function (r) {
+            if (r){
+                var arr=new Array();
+                for (var i in rows){
+                    arr.push(rows[i].gid);
+                }
+                $.get("/gym/delete","gids="+arr,function (data) {
+                    if(data.code==0){
+                        $.messager.alert("系统提示",data.message);
+                        $("#dg").datagrid("reload");
+                    }else {
+                        $.messager.alert("系统提示",data.message);
+                    }
+                },"json")
+            }
+        })
+    }
+
+    function openModifyDialog() {
+        var rows=$("#dg").datagrid("getSelections");
+        if (rows.length!=1){
+            $.messager.alert("系统提示",'请选择一条数据');
+            return;
+        }
+        $("#dlg").dialog("open").dialog("setTitle",'修改场馆');
+
+        $("#ff").form("load",rows[0]);
+
+        url = '/gym/update';
+    }
+
+
+
+    //预览图片
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjcectURL != undefined) {
+            url = window.createOjcectURL(file);
+        } else if (window.URL != undefined) {
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) {
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+    //使用方法
+    $("#uploadImg").change(function(){
+        var file = this.files[0];
+        var url = getObjectURL(file);
+        $("#nowImg").attr("src",getObjectURL(file));
+        alert(url);
+    });
+
+
+
+
+</script>
+</body>
+</html>
